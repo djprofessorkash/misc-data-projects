@@ -1,13 +1,16 @@
 """
-Title: double_pendulum.py
-Description: This is a working file of the common chaos model, the double pendulum. 
+TITLE: double_pendulum.py
+DESCRIPTION: This is a working file of the common chaos model, the double pendulum.
+
+WARNING: In order to generate the animated GIF from collected figures, you must install
+the ImageMagick library via Homebrew or other package installers in the command line.
 
 Created and maintained by Aakash Sudhakar.
 (C) October 2017
 
 Improved upon from the Double Pendulum example on SciPython's Blog.
-Link: https://scipython.com/blog/the-double-pendulum/ 
-Credit: @christian (SciPython Blogger)
+LINK: https://scipython.com/blog/the-double-pendulum/ 
+CREDIT: @christian (SciPython Blogger)
 """
 
 
@@ -132,6 +135,7 @@ class Double_Pendulum(object):
         return
 
     # ========================= METHOD TO ANIMATE SIMULATION =========================
+    # NOTE: Function will break if ImageMagick is not installed
     def animate_model(self):
         # Create sorted list of simulation figures based on numerical order
         list.sort(self.fig_dir, key = lambda img: int(img.split("_")[1].split(".png")[0]))
@@ -191,6 +195,7 @@ def main():
         dbl_pdm.make_plot(ax, x1, x2, y1, y2, pos, drv_pos, max_trail)
 
     # Modifies set of figures into animated GIF on parent directory
+    # NOTE: Function call will break if ImageMagick is not installed
     dbl_pdm.animate_model()
     print("Process complete. Model has been constructed and saved to current directory.\n")
     return
