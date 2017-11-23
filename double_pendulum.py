@@ -3,19 +3,20 @@ Title: double_pendulum.py
 Description: This is a working file of the common chaos model, the double pendulum. 
 
 Created and maintained by Aakash Sudhakar.
-(C) 2017
+(C) October 2017
 
 Improved upon from the Double Pendulum example on SciPython's Blog.
 Link: https://scipython.com/blog/the-double-pendulum/ 
 Credit: @christian (SciPython Blogger)
 """
 
+
 # ================================================================================
 # ============================== IMPORT STATEMENTS ===============================
 # ================================================================================
 
 import os                                   # Library for basic operating system mechanics
-import glob                                 # Library for aggregating multiple files
+import glob                                 # Library for operating on sets of multiple files
 import numpy as np                          # Library for simple linear mathematical operations
 import matplotlib.pyplot as plt             # Module for MATLAB-like plotting capability
 from matplotlib.patches import Circle       # Module for modelling simple circular dynamics
@@ -56,7 +57,7 @@ class Double_Pendulum(object):
     # ===================== METHOD TO SOLVE DIFFERENTIAL EQUATION ====================
     def calculate_derivative(self, y, t, L1, L2, M1, M2):
         # Define zero- and first-order derivatives of angle (position- and velocity-oriented)
-        theta1, phi1, theta2, phi2 = y
+        theta1, theta2, phi1, phi2 = y
 
         const_cos = np.cos(theta1 - theta2)
         const_sin = np.sin(theta1 - theta2)
@@ -98,8 +99,9 @@ class Double_Pendulum(object):
             ax.plot(x2[pos_min:pos_max], y2[pos_min:pos_max], c="r", solid_capstyle="butt", lw=2, alpha=alpha)
 
         # Centers the modelled image on the fixed circle
-        ax.set_xlim(-(self.L1 + self.L2 + self.r), self.L1 + self.L2 + self.r)
-        ax.set_ylim(-(self.L1 + self.L2 + self.r), self.L1 + self.L2 + self.r)
+        lim_param = self.L1 + self.L2 + self.r
+        ax.set_xlim(-lim_param, lim_param)
+        ax.set_ylim(-lim_param, lim_param)
 
         # Sets axes' aspects to be equivalent
         ax.set_aspect("equal", adjustable="box")
