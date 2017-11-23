@@ -1,7 +1,8 @@
 """
-double_pendulum.py
+Title: double_pendulum.py
+Description: This is a working file of the common chaos model, the double pendulum. 
 
-Created and maintained by Aakash Sudhakar
+Created and maintained by Aakash Sudhakar.
 (C) 2017
 
 Improved upon from the Double Pendulum example on SciPython's Blog.
