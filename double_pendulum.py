@@ -63,13 +63,29 @@ class Double_Pendulum(object):
         const_cos = np.cos(theta1 - theta2)
         const_sin = np.sin(theta1 - theta2)
 
-        # Calculate the first- and second-order derivatives of angle (velocity- and acceleration-oriented)
-        # TODO: Second-order derivatives are clunky and hard-to-read; create dummy constants?
+        # Calculate the first-order derivatives of angular motion (velocity)
         drv_theta1 = phi1
         drv_theta2 = phi2
-        drv_phi1 = ((self.M2 * self.g * np.sin(theta2)) - ((self.M2 * const_sin) * ((self.L1 * (drv_theta1 ** 2) * const_cos) + (self.L2 * (drv_theta2 ** 2)))) - ((self.M1 + self.M2) * self.g * np.sin(theta1))) / (self.L1 * (self.M1 + (self.M2 * (const_sin ** 2))))
-        drv_phi2 = (((self.M1 + self.M2) * ((self.L1 * (drv_theta1 ** 2) * const_sin) - (self.g * np.sin(theta2)) + (self.g * np.sin(theta1) * const_cos))) + (self.M2 * self.L2 * (drv_theta2 ** 2) * const_cos * const_sin)) / (self.L2 * (self.M1 + (self.M2 * (const_sin ** 2))))
 
+        # Create dummy constants to hold hard-to-read summative terms
+        U1 = self.M2 * self.g * np.sin(theta2) * const_cos
+        U2 = -self.M2 * const_sin
+        U3 = self.L1 * const_cos * (drv_theta1 ** 2)
+        U4 = self.L2 * (drv_theta2 ** 2)
+        U5 = -((self.M1 + self.M2) * self.g * np.sin(theta1))
+        U6 = self.L1 * (self.M1 + (self.M2 * (const_sin ** 2)))
+
+        V1 = self.M1 + self.M2
+        V2 = self.L1 * const_sin * (drv_theta1 ** 2)
+        V3 = -(self.g * np.sin(theta2))
+        V4 = self.g * np.sin(theta1) * const_cos
+        V5 = self.M2 * self.L2 * const_cos * const_sin * (drv_theta2)
+        V6 = self.L2 * (self.M1 + (self.M2 * (const_sin ** 2)))
+
+        # Calculate the second-order derivatives of angular motion (acceleration)
+        drv_phi1 = (U1 + (U2 * (U3 + U4)) + U5) / U6
+        drv_phi2 = ((V1 * (V2 + V3 + V4)) + V5) / V6
+        
         return drv_theta1, drv_theta2, drv_phi1, drv_phi2
 
     # ======================= METHOD TO CREATE SIMULATION MODEL ======================
