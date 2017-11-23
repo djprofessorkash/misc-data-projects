@@ -31,6 +31,7 @@ from time import time                       # Module for tracking modular and pr
 class Double_Pendulum(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
+    # TODO: Allow all set parameters to be user-inputted
     def __init__(self):
         # Lengths of the pendulum rods
         self.L1 = 1
@@ -63,6 +64,7 @@ class Double_Pendulum(object):
         const_sin = np.sin(theta1 - theta2)
 
         # Calculate the first- and second-order derivatives of angle (velocity- and acceleration-oriented)
+        # TODO: Second-order derivatives are clunky and hard-to-read; create dummy constants?
         drv_theta1 = phi1
         drv_theta2 = phi2
         drv_phi1 = ((self.M2 * self.g * np.sin(theta2)) - ((self.M2 * const_sin) * ((self.L1 * (drv_theta1 ** 2) * const_cos) + (self.L2 * (drv_theta2 ** 2)))) - ((self.M1 + self.M2) * self.g * np.sin(theta1))) / (self.L1 * (self.M1 + (self.M2 * (const_sin ** 2))))
@@ -107,6 +109,7 @@ class Double_Pendulum(object):
         ax.set_aspect("equal", adjustable="box")
 
         # Dynamically updates axes for plot model
+        # TODO: Allow user to specify where frames will be saved
         plt.axis("off")
         plt.savefig("frames/fig_{:04d}.png".format(int(pos / drv_pos)))
         plt.cla()
@@ -118,11 +121,13 @@ class Double_Pendulum(object):
         list.sort(self.fig_dir, key = lambda img: int(img.split("_")[1].split(".png")[0]))
 
         # Iterate through all figures and add addresses to text file
+        # TODO: Allow user to specify what filename the frames are stored to
         with open("fig_dir.txt", "w") as file:
             for item in self.fig_dir:
                 file.write("%s\n" % item)
 
         # Convert text file of figure addresses to animated GIF (ImageMagick)
+        # TODO: Allow user to specify which file frames are read from
         os.system("convert @fig_dir.txt {}.gif".format(self.model_name))
         return
 
@@ -164,6 +169,7 @@ def main():
     print("\nStarting construction of model.\n\nProcess running...\n")
 
     # Creates figure of model for each selected position and saves to ./frames/ directory
+    # TODO: Current runtime is O(n^2) due to nested for loops; can improve? 
     for pos in range(0, t.size, drv_pos):
         # print(pos // drv_pos, "/", t.size // drv_pos)
         dbl_pdm.make_plot(ax, x1, x2, y1, y2, pos, drv_pos, max_trail)
