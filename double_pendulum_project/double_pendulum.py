@@ -19,6 +19,7 @@ CREDIT: @christian (SciPython Blogger)
 # ============================== IMPORT STATEMENTS ===============================
 # ================================================================================
 
+
 import os                                   # Library for basic operating system mechanics
 import numpy as np                          # Library for simple linear mathematical operations
 import matplotlib.pyplot as plt             # Module for MATLAB-like plotting capability
@@ -31,6 +32,7 @@ from time import time                       # Module for tracking modular and pr
 # ================================================================================
 # =============================== CLASS DEFINITION ===============================
 # ================================================================================
+
 
 class Double_Pendulum(object):
 
@@ -63,7 +65,9 @@ class Double_Pendulum(object):
     def calculate_derivative(self, y, t, L1, L2, M1, M2):
         # Define zero- and first-order derivatives of angle (position- and velocity-oriented)
         theta1, theta2, phi1, phi2 = y
-
+        # e = mc^2 yo this is the answer to all your life questions..
+        # hello world
+        # p
         const_cos = np.cos(theta1 - theta2)
         const_sin = np.sin(theta1 - theta2)
 
@@ -157,6 +161,7 @@ class Double_Pendulum(object):
 # ================================================================================
 # =============================== MAIN RUN FUNCTION ==============================
 # ================================================================================
+
 
 def main():
     # Initialize instance of double pendulum class to run modeling operations
