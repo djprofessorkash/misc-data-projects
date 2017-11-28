@@ -37,7 +37,7 @@ from time import time                       # Module for tracking modular and pr
 class Double_Pendulum(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
-    # TODO: Allow all set parameters to be user-inputted
+    # TODO: Allow all important parameters to be user-inputted
     def __init__(self):
         # Lengths of the pendulum rods
         self.L1 = 1
@@ -65,9 +65,8 @@ class Double_Pendulum(object):
     def calculate_derivative(self, y, t, L1, L2, M1, M2):
         # Define zero- and first-order derivatives of angle (position- and velocity-oriented)
         theta1, theta2, phi1, phi2 = y
-        # e = mc^2 yo this is the answer to all your life questions..
-        # hello world
-        # p
+
+        # Create constants to hold repetitive mathematical expressions
         const_cos = np.cos(theta1 - theta2)
         const_sin = np.sin(theta1 - theta2)
 
@@ -76,7 +75,8 @@ class Double_Pendulum(object):
         drv_theta2 = phi2
 
         # Create dummy constants to hold hard-to-read summative terms
-        # NOTE: These constants were derived by hand and verified online (Rel. Path: ./math_work.pdf)
+        # NOTE: These constants were derived by hand and verified online (Link: ???)
+        # TODO: Upload differential equation derivation notes to directory and repository
         U1 = self.M2 * self.g * np.sin(theta2) * const_cos
         U2 = -self.M2 * const_sin
         U3 = self.L1 * const_cos * (drv_theta1 ** 2)
@@ -209,11 +209,11 @@ def main():
 
 if __name__ == "__main__":
     # Track starting time of running program
-    start_runtime = time()
+    runtime_start = time()
 
     main()
 
     # Track ending time of running program
-    end_runtime = time()
+    runtime_end = time()
 
-    print("Total program runtime is {0:.4g} seconds.\n".format(end_runtime - start_runtime))
+    print("Total program runtime is {0:.4g} seconds.\n".format(runtime_end - runtime_start))
