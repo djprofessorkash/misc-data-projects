@@ -22,9 +22,7 @@
 <br></br>
 ### <strong>[VARIOUS KAGGLE PROJECTS](https://github.com/AakashSudhakar/misc-data-projects/tree/master/kaggle_projects)</strong>
 
-> DESCRIPTION: 
-
->> Collection of projects from Kaggle, ranging from beginner tutorials to advanced applications.
+> DESCRIPTION: <ul>Collection of projects from Kaggle, ranging from beginner tutorials to advanced applications.</ul>
 
 > LANGUAGES: 
 > - Python<br>
@@ -38,9 +36,7 @@
 <br></br>
 ### <strong>[INTRODUCTORY MACHINE LEARNING ALGORITHMS](https://github.com/AakashSudhakar/misc-data-projects/tree/master/machine_learning_in_action)</strong>
 
-> DESCRIPTION: 
-
->> Collection of algorithms and mini-projects from Peter Harrington's <i>Machine Learning in Action</i> textbook.
+> DESCRIPTION: <ul>Collection of algorithms and mini-projects from Peter Harrington's <i>Machine Learning in Action</i> textbook.</ul>
 
 > LANGUAGES: 
 > - Python<br>
@@ -55,11 +51,7 @@
 <br></br>
 ### <strong>[DATA SCIENCE CLUB AT MAKE SCHOOL](https://github.com/mike-kane/ms_data_science_club)</strong>
 
-> DESCRIPTION:
-
->> Assorted tutorial walkthroughs, interesting datasets, and important resources for students on the Data Science track at the Make School Product College.
-
->> NOTE: This is a submodule cloned from the Make School's Data Science Club repository, owned by Product College instructor Mike Kane. 
+> DESCRIPTION:<ul>Assorted tutorial walkthroughs, interesting datasets, and important resources for students on the Data Science track at the Make School Product College.<br><br>NOTE: This is a submodule cloned from the Make School's Data Science Club repository, owned by Product College instructor Mike Kane.</ul>
 
 > LANGUAGES: 
 > - Python<br>
