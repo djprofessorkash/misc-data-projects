@@ -1,0 +1,3 @@
+[submodule "ms_data_science_club"]
+	path = ms_data_science_club
+	url = https://github.com/mike-kane/ms_data_science_club
