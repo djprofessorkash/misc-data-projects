@@ -1,5 +1,6 @@
 # Tutorial program to apply the k-Nearest Neighbor ML Algorithm
 # All source code is available at www.manning.com/MachineLearningInAction 
+#
 # Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 
 
