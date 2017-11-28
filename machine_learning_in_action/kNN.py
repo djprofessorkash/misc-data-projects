@@ -1,4 +1,5 @@
 # Tutorial program to apply the k-Nearest Neighbor ML Algorithm
+# Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 
 
 from numpy import *
