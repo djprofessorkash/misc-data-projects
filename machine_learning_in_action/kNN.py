@@ -1,17 +1,21 @@
-# Tutorial program to apply the k-Nearest Neighbor ML Algorithm
-# All source code is available at www.manning.com/MachineLearningInAction 
-#
-# Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
+"""
+Tutorial program to apply the k-Nearest Neighbor ML Algorithm
+All source code is available at www.manning.com/MachineLearningInAction 
+
+Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
+"""
 
 
 from numpy import *
 import operator
 
+# Function that creates data set from given arrays and labels
 def createDataSet():
     group = array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ["A", "A", "B", "B"]
     return group, labels
 
+# Function that classifies inputted array based on control dataset
 def classify0(inX, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
 
@@ -33,6 +37,7 @@ def classify0(inX, dataSet, labels, k):
     sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)
     return sortedClassCount[0][0]
 
+# Function that converts data from text file into dataset and relative labels 
 def file2matrix(filename):
     fr = open(filename)
 
