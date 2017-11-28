@@ -30,3 +30,14 @@ def classify0(inX, dataSet, labels, k):
     # Sort dictionary
     sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)
     return sortedClassCount[0][0]
+
+def file2matrix(filename):
+    fr = open(filename)
+
+    # Get number of lines in file
+    numberOfLines = len(fr.readlines())
+
+    # Create NumPy matrix to return
+    returnMat = zeros((numberOfLines, 3))
+    classLabelVector = []
+    fr = open(filename)
