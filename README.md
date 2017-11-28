@@ -9,9 +9,7 @@
 
 ### <strong>[DOUBLE PENDULUM PROJECT](https://github.com/AakashSudhakar/misc-data-projects/tree/master/double_pendulum_project)</strong>
 
-> DESCRIPTION:
-
-<ul> Project to model the common chaos example of a double pendulum. </ul>
+> DESCRIPTION:<ul> Project to model the common chaos example of a double pendulum. </ul>
 
 > LANGUAGES: 
 > - Python
