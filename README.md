@@ -11,7 +11,7 @@
 
 > DESCRIPTION:
 
->> Project to model the common chaos example of a double pendulum. 
+<ul> Project to model the common chaos example of a double pendulum. </ul>
 
 > LANGUAGES: 
 > - Python
