@@ -1,0 +1,3 @@
+## Miscellaneous Data Science and Applied Data Projects
+
+#### My name is Aakash Sudhakar, and I am an aspiring data scientist and web developer. Most of my GitHub is full of web development related projects, but I have a special place in my heart for data and I decided that my GitHub deserves a special place for data too! Feel free to peruse my assorted projects and assignments as I dive into the wonderful world of data science! :-)
