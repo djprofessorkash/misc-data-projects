@@ -8,6 +8,7 @@ Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 
 
 from numpy import *
+from matplotlib import pyplot as plt
 import operator
 
 # Function that creates data set from given arrays and labels
@@ -17,10 +18,10 @@ def createDataSet():
     return group, labels
 
 """
-To run the createDataSet() function in the Python interpreter, type the following:
+To run the createDataSet() function in the Python interpreter, write the following:
 
 >>> import kNN                              # NOTE: Imports main file in the interpreter
->>> group, labels = kNN.createDataSet()     # NOTE: Runs createDataSet() function
+>>> group, labels = kNN.createDataSet()     # NOTE: Creates data sets from given data
 >>> group                                   # NOTE: Displays created data set
 >>> labels                                  # NOTE: Displays created labels
 """
@@ -47,6 +48,18 @@ def classify0(inX, dataSet, labels, k):
     sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)
     return sortedClassCount[0][0]
 
+"""
+To run the classify0() function in the Python interpreter, write the following:
+
+>>> import kNN                                  # NOTE: Imports main file in the interpreter
+>>> group, labels = kNN.createDataSet()         # NOTE: Creates data set from given data
+>>> kNN.classify0(inX, dataSet, labels, k)      # NOTE: Runs classifier function on dataset
+        - inX:      [0, 0] or other 2x1 array between [0, 0] and [1, 1].
+        - dataSet:  group
+        - labels:   labels
+        - k:        3 
+"""
+
 # Function that converts data from text file into dataset and relative labels 
 def file2matrix(filename):
     fr = open(filename)
@@ -70,3 +83,19 @@ def file2matrix(filename):
         index += 1
 
     return returnMat, classLabelVector
+
+"""
+To run the file2matrix() function in the Python interpreter, write the following:
+
+>>> import kNN                                                          # NOTE: Imports main file in the interpreter
+>>> datingDataMat, datingLabels = kNN.file2matrix("datingTestSet.txt")  # NOTE: Runs file2matrix conversion 
+>>> datingDataMat                                                       # NOTE: Displays created data set
+>>> datingLabels                                                        # NOTE: Displays created labels
+
+>>> from matplotlib import pyplot as plt                    # NOTE: Installs plotting capabilities
+>>> from array import array                                 # NOTE: Installs array constructors
+>>> fig = plt.figure()                                      # NOTE: Initializes plot
+>>> ax = fig.add_subplot(111)                               # NOTE: Creates unit plot in first quadrant
+>>> ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])    # NOTE: Generates scatter data across plot
+>>> plt.show()                                              # NOTE: Renders plot
+"""
