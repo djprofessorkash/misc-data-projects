@@ -1,7 +1,8 @@
 """
-Tutorial program to apply the k-Nearest Neighbor ML Algorithm
-All source code is available at www.manning.com/MachineLearningInAction 
+kNN.py (data_projects/machine_learning_in_action/algo_ch01/)
+Tutorial program to apply the k-Nearest Neighbor ML Algorithm.
 
+All source code is available at www.manning.com/MachineLearningInAction. 
 Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 """
 
@@ -14,6 +15,15 @@ def createDataSet():
     group = array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ["A", "A", "B", "B"]
     return group, labels
+
+"""
+To run the createDataSet() function in the Python interpreter, type the following:
+
+>>> import kNN                              # NOTE: Imports main file in the interpreter
+>>> group, labels = kNN.createDataSet()     # NOTE: Runs createDataSet() function
+>>> group                                   # NOTE: Displays created data set
+>>> labels                                  # NOTE: Displays created labels
+"""
 
 # Function that classifies inputted array based on control dataset
 def classify0(inX, dataSet, labels, k):
@@ -56,7 +66,7 @@ def file2matrix(filename):
         listFromLine = line.split("\t")
         returnMat[index, :] = listFromLine[0:3]
 
-        classLabelVector.append(int(listFromLine[-1]))
+        classLabelVector.append(str(listFromLine[-1]))
         index += 1
 
     return returnMat, classLabelVector
