@@ -1,7 +1,7 @@
 ## Miscellaneous Data Science and Applied Data Projects
 
 ***
-<strong><h3>My name is Aakash Sudhakar, and I am a web developer and aspiring data engineer.</h3></strong> 
+<strong><h3>My name is Aakash Sudhakar, and I am a web developer and aspiring data engineer.</h3></strong>
 
 <h7>Most of my GitHub is full of web development related projects, but I have a special place in my heart for data and I decided that my GitHub deserves a special place for data too!</h7><br><br>
 <h7>Feel free to peruse my assorted projects and assignments as I dive into the wonderful world of data science and engineering!</h7>
@@ -9,9 +9,9 @@
 
 ### <strong>[DOUBLE PENDULUM PROJECT](https://github.com/AakashSudhakar/misc-data-projects/tree/master/double_pendulum_project)</strong>
 
-> DESCRIPTION:<ul> Project to model the common chaos example of a double pendulum. </ul>
+> DESCRIPTION:<ul>Project to model the common chaos example of a double pendulum.</ul>
 
-> LANGUAGES: 
+> LANGUAGES:
 > - Python
 
 > MAJOR RESOURCES: 
