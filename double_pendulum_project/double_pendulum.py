@@ -34,6 +34,8 @@ from time import time                       # Module for tracking modular and pr
 # ================================================================================
 
 
+# TODO: Create Wolfram Alpha distribution for correct equation
+#       Plug in data points from current model 
 class Double_Pendulum(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
