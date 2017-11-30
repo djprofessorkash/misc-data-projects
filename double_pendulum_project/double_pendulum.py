@@ -166,6 +166,9 @@ class Double_Pendulum(object):
 
 
 def main():
+    # Track starting time of running program
+    runtime_start = time()
+
     # Initialize instance of double pendulum class to run modeling operations
     dbl_pdm = Double_Pendulum()
 
@@ -207,15 +210,11 @@ def main():
     # NOTE: Function call will break if ImageMagick is not installed
     dbl_pdm.animate_model()
     print("Process complete. Model has been constructed and saved to current directory.\n")
-    return
-
-if __name__ == "__main__":
-    # Track starting time of running program
-    runtime_start = time()
-
-    main()
 
     # Track ending time of running program
     runtime_end = time()
-
     print("Total program runtime is {0:.4g} seconds.\n".format(runtime_end - runtime_start))
+    return
+
+if __name__ == "__main__":
+    main()
