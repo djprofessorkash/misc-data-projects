@@ -1,4 +1,4 @@
-## The Double Pendulum
+## THE DOUBLE PENDULUM
 
 ***
 <strong><h3>The double pendulum is a common introductory example of chaos theory
