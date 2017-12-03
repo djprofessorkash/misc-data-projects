@@ -18,7 +18,7 @@ $$y_2 = y_1~-~L_2~cos~\theta_2$$
 
 Using basic single-variable calculus, we can calculate the derivatives of each of the position functions to determine the velocity functions in the x- and y-directions for both pendulum arms.
 
-$$v_{x,1} = \tfrac{\partial}{\partial t}(x_1) = L_1~cos~\theta_1$$
-$$v_{y,1} = \tfrac{\partial}{\partial t}(y_1) = \theta_1'~L_1~sin~\theta_1$$
-$$v_{x,2} = \tfrac{\partial}{\partial t}(x_2) = v_{x,1}~+~\theta_2'~L_2~cos~\theta_2$$
-$$v_{y,2} = \tfrac{\partial}{\partial t}(y_2) = v_{y,1}~+~\theta_2'~L_2~sin~\theta_2$$
+$$v_{x,1} = \tfrac{\partial}{\partial t}(x_1) = L_1~cos~\theta_1$$ (1)
+$$v_{y,1} = \tfrac{\partial}{\partial t}(y_1) = \theta_1'~L_1~sin~\theta_1$$ (2)
+$$v_{x,2} = \tfrac{\partial}{\partial t}(x_2) = v_{x,1}~+~\theta_2'~L_2~cos~\theta_2$$ (3)
+$$v_{y,2} = \tfrac{\partial}{\partial t}(y_2) = v_{y,1}~+~\theta_2'~L_2~sin~\theta_2$$ (4)
