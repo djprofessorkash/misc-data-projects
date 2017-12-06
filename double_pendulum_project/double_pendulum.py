@@ -82,21 +82,33 @@ class Double_Pendulum(object):
         # NOTE: These constants were derived by hand and verified online (Link: ???)
         # TODO: Upload differential equation derivation notes to directory and repository
         U1 = self.M2 * self.g * np.sin(theta2) * const_cos
+        # U1 = -self.g * ((2 * self.M1) * self.M2) * np.sin(theta1)
         U2 = -self.M2 * const_sin
+        # U2 = -self.M2 * self.g * np.sin(theta1 - (2 * theta2))
         U3 = self.L1 * const_cos * (drv_theta1 ** 2)
+        # U3 = -2 * self.M2 * np.sin(theta1 - theta2)
         U4 = self.L2 * (drv_theta2 ** 2)
+        # U4 = self.L2 * (drv_theta2 ** 2)
         U5 = -((self.M1 + self.M2) * self.g * np.sin(theta1))
+        # U5 = self.L1 * (drv_theta1 ** 2) * np.cos(theta1 - theta2)
         U6 = self.L1 * (self.M1 + (self.M2 * (const_sin ** 2)))
+        # U6 = self.L1 * ((2 * self.M1) + self.M2 - (self.M2 * np.cos((2 * theta1) - (2 * theta2))))
 
         V1 = self.M1 + self.M2
+        # V1 = 2 * np.sin(theta1 - theta2)
         V2 = self.L1 * const_sin * (drv_theta1 ** 2)
+        # V2 = self.L1 * (drv_theta1 ** 2) * (self.M1 + self.M2)
         V3 = -(self.g * np.sin(theta2))
+        # V3 = self.g * (self.M1 + self.M2) * np.cos(theta1)
         V4 = self.g * np.sin(theta1) * const_cos
+        # V4 = self.L2 * self.M2 * (drv_theta2 ** 2) * np.cos(theta1 - theta2)
         V5 = self.M2 * self.L2 * const_cos * const_sin * (drv_theta2)
+        # V5 = self.L2 * ((2 * self.M1) + self.M2 - (self.M2 * np.cos((2 * theta1) - (2 * theta2))))
         V6 = self.L2 * (self.M1 + (self.M2 * (const_sin ** 2)))
 
         # Calculate the second-order derivatives of angular motion (acceleration)
         drv_phi1 = (U1 + (U2 * (U3 + U4)) + U5) / U6
+        # drv_phi1 = (U1 + U2 + (U3 * ()))
         drv_phi2 = ((V1 * (V2 + V3 + V4)) + V5) / V6
         
         return drv_theta1, drv_theta2, drv_phi1, drv_phi2
