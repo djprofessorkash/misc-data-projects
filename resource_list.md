@@ -47,4 +47,5 @@
 * [Uber's Data Science Team Links Uber Rides and Prostitution (Miscellaneous Article)](https://venturebeat.com/2014/11/24/uber-removed-blog-post-from-data-science-team-that-examined-link-between-prostitution-and-rides/)
 * [2016 Data Science Salary Survey (Miscellaneous Report)](http://www.oreilly.com/data/free/2016-data-science-salary-survey.csp)
 * [The Three Breakthroughs that have Finally Unleashed AI to the World (Wired Article)](https://www.wired.com/2014/10/future-of-artificial-intelligence/)
+* [Data Skeptic Podcast (Miscellaneous Podcast)](https://dataskeptic.com/)
 ***
