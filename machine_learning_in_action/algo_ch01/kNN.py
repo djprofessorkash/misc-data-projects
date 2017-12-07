@@ -7,14 +7,14 @@ Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 """
 
 
-from numpy import *
+import numpy as np
 from matplotlib import pyplot as plt
-# from array import array
+from array import array
 import operator
 
 # Function that creates data set from given arrays and labels
 def createDataSet():
-    group = array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
+    group = array("u", [[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ["A", "A", "B", "B"]
     return group, labels
 
@@ -82,7 +82,7 @@ def main():
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
-    # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], 15.0 * array(datingLabels), 15.0 * array(datingLabels))
+    # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], array(datingLabels))
     plt.show()
 
 if __name__ == "__main__":

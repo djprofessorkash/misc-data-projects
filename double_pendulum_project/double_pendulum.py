@@ -81,6 +81,7 @@ class Double_Pendulum(object):
         # Create dummy constants to hold hard-to-read summative terms
         # NOTE: These constants were derived by hand and verified online (Link: ???)
         # TODO: Upload differential equation derivation notes to directory and repository
+        
         # U1 = self.M2 * self.g * np.sin(theta2) * const_cos
         U1 = -self.g * ((2 * self.M1) * self.M2) * np.sin(theta1)
         # U2 = -self.M2 * const_sin
