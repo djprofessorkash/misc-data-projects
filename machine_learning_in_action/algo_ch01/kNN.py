@@ -16,7 +16,7 @@ from os import listdir as ld
 
 # Function that creates data set from given arrays and labels
 def createDataSet():
-    group = array("u", [[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
+    group = np.array([1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1])
     labels = ["A", "A", "B", "B"]
     return group, labels
 
