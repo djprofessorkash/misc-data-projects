@@ -10,13 +10,13 @@ Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 import numpy as np
 import operator as op
 from os import listdir as ld
-# from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt
 # from array import array
 
 
 # Function that creates data set from given arrays and labels
 def createDataSet():
-    group = np.array([1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1])
+    group = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ["A", "A", "B", "B"]
     return group, labels
 
@@ -40,7 +40,7 @@ def classify0(inX, dataSet, labels, k):
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
 
     # Sort dictionary
-    sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)
+    sortedClassCount = sorted(classCount.items(), key = op.itemgetter(1), reverse = True)
     return sortedClassCount[0][0]
 
 
@@ -87,8 +87,8 @@ def main():
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
-    # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], 15.0 * array(datingLabels), 15.0 * array(datingLabels))
+    # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
+    ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], 15.0 * np.array(datingLabels), 15.0 * np.array(datingLabels))
     plt.show()
 
 if __name__ == "__main__":
