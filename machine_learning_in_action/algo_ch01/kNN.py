@@ -8,9 +8,11 @@ Credit: MACHINE LEARNING IN ACTION (PETER HARRINGTON)
 
 
 import numpy as np
-from matplotlib import pyplot as plt
-from array import array
-import operator
+import operator as op
+from os import listdir as ld
+# from matplotlib import pyplot as plt
+# from array import array
+
 
 # Function that creates data set from given arrays and labels
 def createDataSet():
