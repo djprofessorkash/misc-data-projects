@@ -25,8 +25,8 @@ def createDataSet():
 def classify0(inX, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
 
-    # Distance calculation
-    diffMat = tile(inX, (dataSetSize, 1)) - dataSet
+    # Distance(s) calculation
+    diffMat = np.tile(inX, (dataSetSize, 1)) - dataSet
     sqDiffMat = diffMat ** 2
     sqDistances = sqDiffMat.sum(axis = 1)
     distances = sqDistances ** 0.5
@@ -35,8 +35,8 @@ def classify0(inX, dataSet, labels, k):
     classCount = {}
 
     # Voting with lowest k distances
-    for i in range(k):
-        voteIlabel = labels[sortedDistIndices[i]]
+    for iterator in range(k):
+        voteIlabel = labels[sortedDistIndices[iterator]]
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
 
     # Sort dictionary
