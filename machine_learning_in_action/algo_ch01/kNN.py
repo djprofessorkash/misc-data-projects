@@ -46,24 +46,28 @@ def classify0(inX, dataSet, labels, k):
 
 # Function that converts data from text file into dataset and relative labels 
 def file2matrix(filename):
-    fr = open(filename)
+    love_dictionary = {"largeDoses": 3, "smallDoses": 2, "didntLike": 1}
+    f = open(filename)
 
-    # Get number of lines in file
-    numberOfLines = len(fr.readlines())
+    arrayOfLines = f.readlines()                # Get array of lines in file
+    numberOfLines = len(arrayOfLines)           # Get number of lines in file
 
-    # Create NumPy matrix to return
-    returnMat = zeros((numberOfLines, 3))
+    # Create NumPy matrix and labels to return
+    returnMat = np.zeros((numberOfLines, 3))
     classLabelVector = []
-    fr = open(filename)
 
     # Parse line to a list
     index = 0
-    for line in fr.readlines():
+    for line in arrayOfLines:
         line = line.strip()
         listFromLine = line.split("\t")
         returnMat[index, :] = listFromLine[0:3]
 
-        classLabelVector.append(str(listFromLine[-1]))
+        # If previous list from line is a number, append it to the class label vector
+        if(listFromLine[-1].isdigit()):
+            classLabelVector.append(int(listFromLine[-1]))
+        else:
+            classLabelVector.append(love_dictionary.get(listFromLine[-1]))
         index += 1
 
     return returnMat, classLabelVector
