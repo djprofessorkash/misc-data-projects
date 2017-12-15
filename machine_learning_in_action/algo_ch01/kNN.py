@@ -130,7 +130,8 @@ class k_Nearest_Neighbors_Algorithm(object):
                 error_count += 1.0
             
         # Assigns error rate indicative of failures in classifier accuracy
-        print("The total error rate is: {}.".format(error_count / float(num_test_vectors)))
+        print("\nThe total error rate is: {}.".format(error_count / float(num_test_vectors)))
+        self.calculate_runtime(t0)
         return
 
     # =========== METHOD THAT CLASSIFIES NEW USER ENTRY AGAINST DATING DATA ==========
@@ -150,7 +151,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         attr_arr = np.array([attribute_ff_miles, attribute_percent_gaming, attribute_ice_cream])
         result_from_classifier = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
 
-        print("\nYou will probably like this person... {}.\n".format(result_list[result_from_classifier - 1]))
+        print("\nYou will probably like this person... {}.".format(result_list[result_from_classifier - 1]))
         self.calculate_runtime(t0, t_user_start, t_user_end)
         return
 
@@ -160,7 +161,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         delta = t1 - (t_user_end - t_user_start) - t0
 
         # Print final statement on program runtime
-        print("Total program runtime is {0:.4g} seconds.\n".format(delta))
+        print("\nReal program runtime is {0:.4g} seconds.\n".format(delta))
         return
 
 
