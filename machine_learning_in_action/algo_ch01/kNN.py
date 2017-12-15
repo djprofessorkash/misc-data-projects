@@ -106,6 +106,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         # print("\nDATING DATA MATRIX: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_data_mat, dating_labels[:20]))
 
         ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
+        self.calculate_runtime(t0)
         plt.show()
         return
 
@@ -178,9 +179,9 @@ def main():
     # NOTE: Run one kNN classifier method at a time for runtime accuracy
     kNN = k_Nearest_Neighbors_Algorithm()
 
-    # kNN.create_scatterplot(t0)
+    kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
-    kNN.classify_person(t0)
+    # kNN.classify_person(t0)
     return
 
 if __name__ == "__main__":
