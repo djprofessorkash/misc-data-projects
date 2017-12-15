@@ -9,21 +9,31 @@ CREDIT: Machine Learning In Action (Peter Harrington)
 """
 
 
-import numpy as np
-import operator as op
-from os import listdir as ld
-from matplotlib import pyplot as plt
-# from array import array
+# ====================================================================================
+# ================================ IMPORT STATEMENTS =================================
+# ====================================================================================
+
+
+import numpy as np                          # Library for simple linear mathematical operations
+import operator as op                       # Library for intrinsic Pythonic mathematical operations
+from os import listdir as ld                # Module for returning list of directory filenames
+import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
+from time import time as t                  # Module for tracking modular and program runtime
+
+
+# ====================================================================================
+# ================================= CLASS DEFINITION =================================
+# ====================================================================================
 
 
 class k_Nearest_Neighbors_Algorithm(object):
 
-    # Initializer method for the class instance
+    # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
-        self.f = open("dating_test_set.txt")
+        self.f = open("dating_test_set.txt")        # Open dating test set as active file
         self.sampling_ratio = 0.10                  # Ratio to hold some testing data
 
-    # Method that classifies inputted array based on control dataset
+    # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
     def classify0(self, inX, dataset, labels, k):
         dataset_size = dataset.shape[0]
 
@@ -45,8 +55,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         sorted_class_count = sorted(class_count.items(), key = op.itemgetter(1), reverse = True)
         return sorted_class_count[0][0]
 
-
-    # Method that converts data from text file into dataset and relative labels 
+    # =========== METHOD THAT CONVERTS FILE TO DATASET AND VECTOR OF LABELS ==========
     def file_to_matrix(self):
         classifier_dictionary = {"largeDoses": 3, "smallDoses": 2, "didntLike": 1}
 
@@ -70,28 +79,16 @@ class k_Nearest_Neighbors_Algorithm(object):
             else:
                 class_label_vector.append(classifier_dictionary.get(list_from_line[-1]))
             index += 1
-
         return return_mat, class_label_vector
 
-    # Method that creates and displays scatterplot for dating data
-    def create_scatterplot(self):
-        fig = plt.figure()
-        ax = fig.add_subplot()
-
-        dating_data_mat, dating_labels = self.file_to_matrix()
-        # print("\nDATING DATA MATRIX: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_data_mat, dating_labels[:20]))
-
-        ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
-        plt.show()
-
-    # Method that automatically normalizes datasets using linear algebra
+    # =================== METHOD THAT LINEARLY NORMALIZES DATASETS ===================
     def auto_norm(self, dataset):
         # Calculate minimum values, maximum values, and ranges across dating data set
         min_vals = dataset.min(0)
         max_vals = dataset.max(0)
         ranges = max_vals - min_vals
 
-        # Normalize data set using linear transformations
+        # Normalize data set using linear algebraic transformations
         sample_data_mat = dataset.shape[0]
         norm_mat = np.zeros(np.shape(dataset))
         norm_mat = dataset - np.tile(min_vals, (sample_data_mat, 1))
@@ -100,8 +97,20 @@ class k_Nearest_Neighbors_Algorithm(object):
         # print("\nDATING DATA MATRIX: \n{}\n\nNORMALIZED MATRIX: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(dataset, norm_mat, ranges, min_vals, max_vals))
         return norm_mat, ranges, min_vals, max_vals
 
-    # Method that tests our classifier against the dating data set
-    def dating_class_set(self):
+    # ================== METHOD THAT CREATES DATING DATA SCATTERPLOT =================
+    def create_scatterplot(self, t0):
+        fig = plt.figure()
+        ax = fig.add_subplot(111)               # Creates visual subplot using MatPlotLib
+
+        dating_data_mat, dating_labels = self.file_to_matrix()
+        # print("\nDATING DATA MATRIX: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_data_mat, dating_labels[:20]))
+
+        ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
+        plt.show()
+        return
+
+    # ================ METHOD THAT USES CLASSIFIER AGAINST DATING DATA ===============
+    def dating_class_set(self, t0):
         dating_data_mat, dating_labels = self.file_to_matrix()
         norm_mat, ranges, min_vals, max_vals = self.auto_norm(dating_data_mat)
         sample_data_mat = norm_mat.shape[0]
@@ -124,8 +133,8 @@ class k_Nearest_Neighbors_Algorithm(object):
         print("The total error rate is: {}.".format(error_count / float(num_test_vectors)))
         return
 
-    # Method that classifies new data entries against supervised data
-    def classify_person(self):
+    # =========== METHOD THAT CLASSIFIES NEW USER ENTRY AGAINST DATING DATA ==========
+    def classify_person(self, t0):
         # Define resultant labels and dating attributes for data set
         result_list = ["not at all", "in small doses", "in large doses"]
         attribute_percent_gaming = float(input("\nPercentage of time spent playing video games? "))
@@ -142,20 +151,23 @@ class k_Nearest_Neighbors_Algorithm(object):
         print("\nYou will probably like this person... {}.\n".format(result_list[result_from_classifier - 1]))
         return
 
-"""
-# Function that creates data set from given arrays and labels
-def example_dataset():
-    group = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
-    labels = ["A", "A", "B", "B"]
-    return group, labels
-"""
+
+# ====================================================================================
+# ================================= MAIN RUN FUNCTION ================================
+# ====================================================================================
+
 
 def main():
+    # Track starting time of running program
+    t_init = t()
+
     # Initialize class instance of the kNN algorithm and test kNN classifier methods
     kNN = k_Nearest_Neighbors_Algorithm()
 
-    # kNN.dating_class_set()
-    kNN.classify_person()
+    # kNN.create_scatterplot(t_init)
+    # kNN.dating_class_set(t_init)
+    kNN.classify_person(t_init)
+    return
 
 if __name__ == "__main__":
     main()
