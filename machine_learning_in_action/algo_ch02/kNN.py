@@ -1,5 +1,5 @@
 """
-NAME: kNN.py (data_projects/machine_learning_in_action/algo_ch01/)
+NAME: kNN.py (data_projects/machine_learning_in_action/algo_ch02/)
 
 DESCRIPTION:        Python class application of the k-Nearest Neighbor ML algorithm. 
 
@@ -35,9 +35,9 @@ CREDIT: Machine Learning In Action (Peter Harrington)
 
 import numpy as np                          # Library for simple linear mathematical operations
 import operator as op                       # Library for intrinsic Pythonic mathematical operations
-from os import listdir as ld                # Module for returning list of directory filenames
 import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
-from time import time as t                  # Module for tracking modular and program runtime
+from os import listdir as ld                # Package for returning list of directory filenames
+from time import time as t                  # Package for tracking modular and program runtime
 
 
 # ====================================================================================
