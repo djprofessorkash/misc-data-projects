@@ -157,7 +157,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         return
 
     # ============ METHOD THAT CALCULATES METHOD-DEPENDENT PROGRAM RUNTIME ===========
-    def calculate_runtime(self, t0, t_user_start = 0, t_user_end = 0):
+    def calculate_runtime(self, t0, t_user_start=0, t_user_end=0):
         t1 = t()
         delta = t1 - (t_user_end - t_user_start) - t0
 
