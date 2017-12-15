@@ -2,8 +2,12 @@
 
 #### CHAPTER 2: Classifying with k-Nearest Neighbors
 - STARTED: November 27, 2017
-- COMPLETED: ???
+- COMPLETED: December 14, 2017
 
 #### CHAPTER 3: Splitting Data Sets One Feature at a Time: Decision Trees
+- STARTED: December 14, 2017
+- COMPLETED: ???
+
+#### CHAPTER 4: Classifying with Probability Theory: Naïve Bayes
 - STARTED: ???
 - COMPLETED: ???
