@@ -103,7 +103,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         return return_mat, class_label_vector
 
     # ===================== METHOD THAT CONVERTS IMAGE TO VECTOR =====================
-    def image_to_vector(self, file, t0):
+    def image_to_vector(self, file):
         return_vector = np.zeros((1, 1024))
         img = open(file)
 
@@ -199,24 +199,26 @@ class k_Nearest_Neighbors_Algorithm(object):
         dir_length_training = len(training_file_list)
         training_mat = np.zeros((dir_length_training, 1024))
 
+        # Create dataset and label vectors from training image data
         for iterator in range(dir_length_training):
             file_name_str = training_file_list[iterator]
             file_str = file_name_str.split(".")[0]
             class_num_str = int(file_str.split("_")[0])
 
             handwriting_labels.append(class_num_str)
-            training_mat[iterator, :] = self.image_to_vector("{}/{}".format(self.training_digits, file_name_str), t0)
-
+            training_mat[iterator, :] = self.image_to_vector("{}/{}".format(self.training_digits, file_name_str))
+        
         error_count = 0.0
         test_file_list = ld(self.test_digits)
         dir_length_test = len(test_file_list)
 
+        # Create dataset and label vectors from test image data, then use with classifier against training data
         for iterator in range(dir_length_test):
             file_name_str = test_file_list[iterator]
             file_str = file_name_str.split(".")[0]
             class_num_str = int(file_str.split("_")[0])
 
-            vector_under_test = self.image_to_vector("{}/{}".format(self.test_digits, file_name_str), t0)
+            vector_under_test = self.image_to_vector("{}/{}".format(self.test_digits, file_name_str))
             classifier_result = self.classify0(vector_under_test, training_mat, handwriting_labels, 3)
 
             print("The classifier came back with: {}.\nThe real answer is: {}.\n".format(classifier_result, class_num_str))
@@ -254,7 +256,6 @@ def main():
     # kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
     # kNN.classify_person(t0)
-    # kNN.image_to_vector(t0)
     kNN.handwriting_class_test(t0)
     return
 
