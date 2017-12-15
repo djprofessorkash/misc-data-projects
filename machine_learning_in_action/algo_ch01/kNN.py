@@ -1,10 +1,14 @@
 """
 NAME: kNN.py (data_projects/machine_learning_in_action/algo_ch01/)
-DESCRIPTION:    Tutorial program to apply the k-Nearest Neighbor ML Algorithm.
+DESCRIPTION:    Python class application of the k-Nearest Neighbor ML algorithm. 
+
+                The kNN algorithm is a basic machine learning algorithm that compares new 
+                data based on comparative similarities to available training data and looks
+                for up to k nearest neighbors to the new data to assign contextual labels. 
 
                 All source code is available at www.manning.com/MachineLearningInAction. 
 
-WARNING: Original source code is written in Python 2. 
+WARNING: Original source code is written in Python 2, but my code is written in Python 3. 
 CREDIT: Machine Learning In Action (Peter Harrington)
 """
 
@@ -179,9 +183,9 @@ def main():
     # NOTE: Run one kNN classifier method at a time for runtime accuracy
     kNN = k_Nearest_Neighbors_Algorithm()
 
-    kNN.create_scatterplot(t0)
+    # kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
-    # kNN.classify_person(t0)
+    kNN.classify_person(t0)
     return
 
 if __name__ == "__main__":
