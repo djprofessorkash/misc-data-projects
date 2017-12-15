@@ -21,7 +21,7 @@ DISADVANTAGE(S):    Computationally expensive
 NOTE:               The handwriting application of kNN requires a subdirectory of images called 
                     'digits' that is too large to upload to GitHub. Instead, download and unpack
                     the file titled 'digits.zip'.
-                    
+
                     Original source code is Python 2, but my code is Python 3.
 
 CREDIT: Machine Learning In Action (Peter Harrington)
@@ -49,9 +49,9 @@ class k_Nearest_Neighbors_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
-        self.f = open("dating_test_set.txt")        # Open dating test set as active file
-        self.f = open("")
-        self.sampling_ratio = 0.10                  # Ratio to hold some testing data
+        # self.f = open("dating_test_set.txt")                # Open dating test set as active file
+        self.f = open("./digits/test_digits/0_13.txt")      # Open handwritten numbers test set as active file
+        self.sampling_ratio = 0.10                          # Ratio to hold some testing data
 
     # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
     def classify0(self, inX, dataset, labels, k):
@@ -189,6 +189,11 @@ class k_Nearest_Neighbors_Algorithm(object):
         self.calculate_runtime(t0, t_user_start, t_user_end)
         return
 
+    def handwriting_class_test(self, t0):
+        # handwriting_labels = []
+        # training_file_list = ld("training_digits")
+        pass
+
     # ============ METHOD THAT CALCULATES METHOD-DEPENDENT PROGRAM RUNTIME ===========
     def calculate_runtime(self, t0, t_user_start=0, t_user_end=0):
         t1 = t()
@@ -214,7 +219,8 @@ def main():
 
     # kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
-    kNN.classify_person(t0)
+    # kNN.classify_person(t0)
+    kNN.image_to_vector()
     return
 
 if __name__ == "__main__":
