@@ -9,7 +9,7 @@ DESCRIPTION:        Python class application of the k-Nearest Neighbor ML algori
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
 
-USE CASE(S):        Numeric and Nominal Values
+USE CASE(S):        Numeric and nominal values
 
 ADVANTAGE(S):       High accuracy
                     Outlier insensitivity
@@ -19,7 +19,7 @@ DISADVANTAGE(S):    Computationally expensive
                     Requires considerable memory 
 
 WARNING: Original source code is written in Python 2, but my code is written in Python 3.
- 
+
 CREDIT: Machine Learning In Action (Peter Harrington)
 """
 
@@ -46,6 +46,7 @@ class k_Nearest_Neighbors_Algorithm(object):
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
         self.f = open("dating_test_set.txt")        # Open dating test set as active file
+        self.f = open("")
         self.sampling_ratio = 0.10                  # Ratio to hold some testing data
 
     # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
@@ -95,6 +96,19 @@ class k_Nearest_Neighbors_Algorithm(object):
                 class_label_vector.append(classifier_dictionary.get(list_from_line[-1]))
             index += 1
         return return_mat, class_label_vector
+
+    # ===================== METHOD THAT CONVERTS IMAGE TO VECTOR =====================
+    def image_to_vector(self):
+        return_vector = np.zeros((1, 1024))
+
+        # Converts 32x32 image to 1x1024 vector
+        for iterator_outer in range(32):
+            line_str = self.f.readline()
+
+            for iterator_inner in range(32):
+                return_vector[0, 32 * iterator_outer + iterator_inner] = int(line_str[iterator_inner])
+
+        return return_vector
 
     # =================== METHOD THAT LINEARLY NORMALIZES DATASETS ===================
     def auto_norm(self, dataset):
