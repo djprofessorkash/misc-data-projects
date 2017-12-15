@@ -1,5 +1,5 @@
 """
-NAME: kNN.py (data_projects/machine_learning_in_action/algo_ch02/)
+NAME:               kNN.py (data_projects/machine_learning_in_action/algo_ch02/)
 
 DESCRIPTION:        Python class application of the k-Nearest Neighbor ML algorithm. 
 
@@ -24,7 +24,7 @@ NOTE:               The handwriting application of kNN requires a subdirectory o
 
                     Original source code is Python 2, but my code is Python 3.
 
-CREDIT: Machine Learning In Action (Peter Harrington)
+CREDIT:             Machine Learning In Action (Peter Harrington)
 """
 
 

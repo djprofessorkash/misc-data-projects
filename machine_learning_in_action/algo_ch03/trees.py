@@ -1,5 +1,5 @@
 """
-NAME: trees.py (data_projects/machine_learning_in_action/algo_ch03/)
+NAME:               trees.py (data_projects/machine_learning_in_action/algo_ch03/)
 
 DESCRIPTION:        Python class application of decision tree ML algorithms. 
 
@@ -18,7 +18,7 @@ DISADVANTAGE(S):    Sensitive and prone to overfitting
 
 NOTE:               Original source code is Python 2, but my code is Python 3.
 
-CREDIT: Machine Learning In Action (Peter Harrington)
+CREDIT:             Machine Learning In Action (Peter Harrington)
 """
 
 
