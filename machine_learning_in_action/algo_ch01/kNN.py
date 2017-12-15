@@ -50,8 +50,8 @@ def file_to_matrix(file):
     love_dictionary = {"largeDoses": 3, "smallDoses": 2, "didntLike": 1}
     f = open(file)
 
-    array_of_lines = f.readlines()                # Get array of lines in file
-    num_of_lines = len(array_of_lines)           # Get number of lines in file
+    array_of_lines = f.readlines()                  # Get array of lines in file
+    num_of_lines = len(array_of_lines)              # Get number of lines in file
 
     # Create NumPy matrix and labels to return
     return_mat = np.zeros((num_of_lines, 3))
@@ -87,6 +87,10 @@ def auto_norm(data_set):
 
     return normal_data_set, ranges, min_vals, max_vals
 
+def dating_class_set():
+    hold_back_ratio = 0.10
+
+    dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
 
 def main():
     group, labels = create_data_set()
@@ -96,7 +100,7 @@ def main():
     classifier = classify0([0, 0], group, labels, 3)
     # print("CLASSIFIER: \n{}".format(classifier))
 
-    dating_data_mat, dating_labels = file_to_matrix("datingTestSet.txt")
+    dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
     # print("DATING DATA MATRIX: \n{}".format(dating_data_mat))
     # print("FIRST TEN DATING DATA LABELS: \n{}".format(dating_labels[:10]))
 
