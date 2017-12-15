@@ -151,7 +151,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         result_from_classifier = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
 
         print("\nYou will probably like this person... {}.\n".format(result_list[result_from_classifier - 1]))
-        self.calculate_runtime(t0)
+        self.calculate_runtime(t0, t_user_start, t_user_end)
         return
 
     # ============ METHOD THAT CALCULATES METHOD-DEPENDENT PROGRAM RUNTIME ===========
