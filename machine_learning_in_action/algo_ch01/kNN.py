@@ -73,6 +73,7 @@ def file_to_matrix(file):
 
     return return_mat, class_label_vector
 
+# Function that automatically normalizes datasets using linear algebra
 def auto_norm(data_set):
     # Calculate minimum values, maximum values, and ranges across dating data set
     min_vals = data_set.min(0)
@@ -81,16 +82,39 @@ def auto_norm(data_set):
 
     # Normalize data set using linear transformations
     normal_data_set = np.zeros(np.shape(data_set))
-    transform_mat = data_set.shape[0]
-    normal_data_set = data_set - np.tile(min_vals, (transform_mat, 1))
-    normal_data_set = normal_data_set / np.tile(ranges, (transform_mat, 1))
+    sample_data_mat = data_set.shape[0]
+    normal_data_set = data_set - np.tile(min_vals, (sample_data_mat, 1))
+    normal_data_set = normal_data_set / np.tile(ranges, (sample_data_mat, 1))
 
     return normal_data_set, ranges, min_vals, max_vals
 
+# Function that tests our classifier against the dating data set
 def dating_class_set():
-    hold_back_ratio = 0.10
+    hold_back_ratio = 0.10          # Ratio to hold some testing data
 
     dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
+    norm_mat, ranges, min_vals, max_vals = auto_norm(dating_data_mat)
+    sample_data_mat = norm_mat.shape[0]
+
+    # Creates error count and test vectors from 10% of dating data set
+    error_count = 0.0
+    num_test_vectors = int(sample_data_mat * hold_back_ratio)
+
+    # Tests sample data in classifier function and assigns labels relatively
+    for iterator in range(num_test_vectors):
+        result_from_classifier = classify0(norm_mat[iterator, :], norm_mat[num_test_vectors: sample_data_mat, :], dating_labels[num_test_vectors: sample_data_mat], 3)
+        print("The classifier came back with: {}. \nThe real answer is: {}.".format(result_from_classifier, dating_labels[iterator]))
+
+        if (result_from_classifier != dating_labels[iterator]):
+            error_count += 1.0
+        
+    # Assigns error rate indicative of failures in classifier accuracy
+    print("The total error rate is: {}.".format(error_count / float(num_test_vectors)))
+
+    # Function that tests our classifier against the dating data set
+    def classify_person():
+        result_list = ["Not at all", "In small doses", "In large doses"]
+        percent_tats
 
 def main():
     group, labels = create_data_set()
@@ -115,6 +139,8 @@ def main():
     print("VALUE RANGES: \n{}".format(ranges))
     print("MINIMUM VALUES: \n{}".format(min_vals))
     print("MAXIMUM VALUES: \n{}".format(max_vals))
+
+    dating_class_set()
 
 if __name__ == "__main__":
     main()
