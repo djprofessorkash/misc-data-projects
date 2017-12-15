@@ -137,9 +137,11 @@ class k_Nearest_Neighbors_Algorithm(object):
     def classify_person(self, t0):
         # Define resultant labels and dating attributes for data set
         result_list = ["not at all", "in small doses", "in large doses"]
-        attribute_percent_gaming = float(input("\nPercentage of time spent playing video games? "))
-        attribute_ff_miles = float(input("Frequent flier miles earned per year? "))
-        attribute_ice_cream = float(input("Liters of ice cream consumed per year? "))
+        t_user_start = t()
+        attribute_percent_gaming = float(input("\nPercentage of time spent playing video games?  > "))
+        attribute_ff_miles = float(input("Frequent flier miles earned per year?  > "))
+        attribute_ice_cream = float(input("Liters of ice cream consumed per year?  > "))
+        t_user_end()
         
         dating_data_mat, dating_labels = self.file_to_matrix()
         norm_mat, ranges, min_vals, max_vals = self.auto_norm(dating_data_mat)
@@ -149,6 +151,16 @@ class k_Nearest_Neighbors_Algorithm(object):
         result_from_classifier = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
 
         print("\nYou will probably like this person... {}.\n".format(result_list[result_from_classifier - 1]))
+        self.calculate_runtime(t0)
+        return
+
+    # ============ METHOD THAT CALCULATES METHOD-DEPENDENT PROGRAM RUNTIME ===========
+    def calculate_runtime(self, t0, t_user_start = 0, t_user_end = 0):
+        t1 = t()
+        delta = t1 - (t_user_end - t_user_start) - t0
+
+        # Print final statement on program runtime
+        print("Total program runtime is {0:.4g} seconds.\n".format(delta))
         return
 
 
@@ -159,14 +171,15 @@ class k_Nearest_Neighbors_Algorithm(object):
 
 def main():
     # Track starting time of running program
-    t_init = t()
+    t0 = t()
 
     # Initialize class instance of the kNN algorithm and test kNN classifier methods
+    # NOTE: Run one kNN classifier method at a time for runtime accuracy
     kNN = k_Nearest_Neighbors_Algorithm()
 
-    # kNN.create_scatterplot(t_init)
-    # kNN.dating_class_set(t_init)
-    kNN.classify_person(t_init)
+    # kNN.create_scatterplot(t0)
+    # kNN.dating_class_set(t0)
+    kNN.classify_person(t0)
     return
 
 if __name__ == "__main__":
