@@ -18,7 +18,11 @@ ADVANTAGE(S):       High accuracy
 DISADVANTAGE(S):    Computationally expensive
                     Requires considerable memory 
 
-WARNING: Original source code is written in Python 2, but my code is written in Python 3.
+NOTE:               The handwriting application of kNN requires a subdirectory of images called 
+                    'digits' that is too large to upload to GitHub. Instead, download and unpack
+                    the file titled 'digits.zip'.
+                    
+                    Original source code is Python 2, but my code is Python 3.
 
 CREDIT: Machine Learning In Action (Peter Harrington)
 """
