@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 # from array import array
 
 # Function that creates data set from given arrays and labels
-def create_data_set():
+def example_data_set():
     group = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ["A", "A", "B", "B"]
     return group, labels
@@ -111,36 +111,50 @@ def dating_class_set():
     # Assigns error rate indicative of failures in classifier accuracy
     print("The total error rate is: {}.".format(error_count / float(num_test_vectors)))
 
-    # Function that tests our classifier against the dating data set
-    def classify_person():
-        result_list = ["Not at all", "In small doses", "In large doses"]
-        percent_tats
+# Function that classifies new data entries against supervised data
+def classify_person():
+    # Define resultant labels and dating attributes for data set
+    result_list = ["not at all", "in small doses", "in large doses"]
+    attribute_percent_gaming = float(input("\nPercentage of time spent playing video games? "))
+    attribute_ff_miles = float(input("Frequent flier miles earned per year? "))
+    attribute_ice_cream = float(input("Liters of ice cream consumed per year? "))
+    
+    dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
+    norm_mat, ranges, min_vals, max_vals = auto_norm(dating_data_mat)
+
+    # Create array with user-entered attributes and use classifier to test attributes against training data
+    attr_arr = np.array([attribute_ff_miles, attribute_percent_gaming, attribute_ice_cream])
+    result_from_classifier = classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
+
+    print("\nYou will probably like this person... {}.".format(result_list[result_from_classifier - 1]))
 
 def main():
-    group, labels = create_data_set()
+    # group, labels = example_data_set()
     # print("DATA GROUP \n{}".format(group))
     # print("DATA LABELS: \n{}".format(labels))
 
-    classifier = classify0([0, 0], group, labels, 3)
+    # classifier = classify0([0, 0], group, labels, 3)
     # print("CLASSIFIER: \n{}".format(classifier))
 
-    dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
+    # dating_data_mat, dating_labels = file_to_matrix("dating_test_set.txt")
     # print("DATING DATA MATRIX: \n{}".format(dating_data_mat))
     # print("FIRST TEN DATING DATA LABELS: \n{}".format(dating_labels[:10]))
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
     # plt.show()
 
-    norm_mat, ranges, min_vals, max_vals = auto_norm(dating_data_mat)
-    print("DATING DATA MATRIX: \n{}".format(dating_data_mat))
-    print("NORMALIZED MATRIX: \n{}".format(norm_mat))
-    print("VALUE RANGES: \n{}".format(ranges))
-    print("MINIMUM VALUES: \n{}".format(min_vals))
-    print("MAXIMUM VALUES: \n{}".format(max_vals))
+    # norm_mat, ranges, min_vals, max_vals = auto_norm(dating_data_mat)
+    # print("DATING DATA MATRIX: \n{}".format(dating_data_mat))
+    # print("NORMALIZED MATRIX: \n{}".format(norm_mat))
+    # print("VALUE RANGES: \n{}".format(ranges))
+    # print("MINIMUM VALUES: \n{}".format(min_vals))
+    # print("MAXIMUM VALUES: \n{}".format(max_vals))
 
-    dating_class_set()
+    # dating_class_set()
+
+    classify_person()
 
 if __name__ == "__main__":
     main()
