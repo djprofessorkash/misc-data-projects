@@ -49,8 +49,9 @@ class k_Nearest_Neighbors_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
-        # self.f = open("dating_test_set.txt")                # Open dating test set as active file
-        self.f = open("./digits/test_digits/0_13.txt")      # Open handwritten numbers test set as active file
+        self.f = open("dating_test_set.txt")                # Open dating test set as active file
+        self.training_digits = "./digits/training_digits"   # Directory reference to handwritten training digits
+        self.test_digits = "./digits/test_digits"           # Directory reference to handwritten test digits
         self.sampling_ratio = 0.10                          # Ratio to hold some testing data
 
     # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
@@ -102,16 +103,18 @@ class k_Nearest_Neighbors_Algorithm(object):
         return return_mat, class_label_vector
 
     # ===================== METHOD THAT CONVERTS IMAGE TO VECTOR =====================
-    def image_to_vector(self):
+    def image_to_vector(self, file, t0):
         return_vector = np.zeros((1, 1024))
+        img = open(file)
 
         # Converts 32x32 image to 1x1024 vector
         for iterator_outer in range(32):
-            line_str = self.f.readline()
+            line_str = img.readline()
 
             for iterator_inner in range(32):
                 return_vector[0, 32 * iterator_outer + iterator_inner] = int(line_str[iterator_inner])
 
+        # print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(return_vector[0, 0:31], return_vector[0, 32:63]))
         return return_vector
 
     # =================== METHOD THAT LINEARLY NORMALIZES DATASETS ===================
@@ -157,10 +160,10 @@ class k_Nearest_Neighbors_Algorithm(object):
 
         # Tests sample data in classifier function and assigns labels relatively
         for iterator in range(num_test_vectors):
-            result_from_classifier = self.classify0(norm_mat[iterator, :], norm_mat[num_test_vectors: sample_data_mat, :], dating_labels[num_test_vectors: sample_data_mat], 3)
-            print("The classifier came back with: {}. \nThe real answer is: {}.".format(result_from_classifier, dating_labels[iterator]))
+            classifier_result = self.classify0(norm_mat[iterator, :], norm_mat[num_test_vectors: sample_data_mat, :], dating_labels[num_test_vectors: sample_data_mat], 3)
+            print("The classifier came back with: {}. \nThe real answer is: {}.".format(classifier_result, dating_labels[iterator]))
 
-            if (result_from_classifier != dating_labels[iterator]):
+            if (classifier_result != dating_labels[iterator]):
                 error_count += 1.0
             
         # Assigns error rate indicative of failures in classifier accuracy
@@ -183,16 +186,47 @@ class k_Nearest_Neighbors_Algorithm(object):
 
         # Create array with user-entered attributes and use classifier to test attributes against training data
         attr_arr = np.array([attribute_ff_miles, attribute_percent_gaming, attribute_ice_cream])
-        result_from_classifier = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
+        classifier_result = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
 
-        print("\nYou will probably like this person... {}.".format(result_list[result_from_classifier - 1]))
+        print("\nYou will probably like this person... {}.".format(result_list[classifier_result - 1]))
         self.calculate_runtime(t0, t_user_start, t_user_end)
         return
 
+    # ========= METHOD THAT APPLIES CLASSIFIER AGAINST HANDWRITTEN IMAGE DATA ========
     def handwriting_class_test(self, t0):
-        # handwriting_labels = []
-        # training_file_list = ld("training_digits")
-        pass
+        handwriting_labels = []
+        training_file_list = ld(self.training_digits)
+        dir_length_training = len(training_file_list)
+        training_mat = np.zeros((dir_length_training, 1024))
+
+        for iterator in range(dir_length_training):
+            file_name_str = training_file_list[iterator]
+            file_str = file_name_str.split(".")[0]
+            class_num_str = int(file_str.split("_")[0])
+
+            handwriting_labels.append(class_num_str)
+            training_mat[iterator, :] = self.image_to_vector("{}/{}".format(self.training_digits, file_name_str), t0)
+
+        error_count = 0.0
+        test_file_list = ld(self.test_digits)
+        dir_length_test = len(test_file_list)
+
+        for iterator in range(dir_length_test):
+            file_name_str = test_file_list[iterator]
+            file_str = file_name_str.split(".")[0]
+            class_num_str = int(file_str.split("_")[0])
+
+            vector_under_test = self.image_to_vector("{}/{}".format(self.test_digits, file_name_str), t0)
+            classifier_result = self.classify0(vector_under_test, training_mat, handwriting_labels, 3)
+
+            print("The classifier came back with: {}.\nThe real answer is: {}.\n".format(classifier_result, class_num_str))
+
+            if (classifier_result != class_num_str):
+                error_count += 1.0
+
+        print("\nThe total number of errors is: {}.\nThe total error rate is: {}.\n".format(error_count, error_count / float(dir_length_test)))
+        self.calculate_runtime(t0)
+        return
 
     # ============ METHOD THAT CALCULATES METHOD-DEPENDENT PROGRAM RUNTIME ===========
     def calculate_runtime(self, t0, t_user_start=0, t_user_end=0):
@@ -220,7 +254,8 @@ def main():
     # kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
     # kNN.classify_person(t0)
-    kNN.image_to_vector()
+    # kNN.image_to_vector(t0)
+    kNN.handwriting_class_test(t0)
     return
 
 if __name__ == "__main__":
