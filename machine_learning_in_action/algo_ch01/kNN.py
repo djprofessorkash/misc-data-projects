@@ -141,7 +141,7 @@ class k_Nearest_Neighbors_Algorithm(object):
         attribute_percent_gaming = float(input("\nPercentage of time spent playing video games?  > "))
         attribute_ff_miles = float(input("Frequent flier miles earned per year?  > "))
         attribute_ice_cream = float(input("Liters of ice cream consumed per year?  > "))
-        t_user_end() = t()
+        t_user_end = t()
         
         dating_data_mat, dating_labels = self.file_to_matrix()
         norm_mat, ranges, min_vals, max_vals = self.auto_norm(dating_data_mat)
