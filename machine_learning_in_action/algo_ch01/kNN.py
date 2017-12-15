@@ -1,14 +1,25 @@
 """
 NAME: kNN.py (data_projects/machine_learning_in_action/algo_ch01/)
-DESCRIPTION:    Python class application of the k-Nearest Neighbor ML algorithm. 
 
-                The kNN algorithm is a basic machine learning algorithm that compares new 
-                data based on comparative similarities to available training data and looks
-                for up to k nearest neighbors to the new data to assign contextual labels. 
+DESCRIPTION:        Python class application of the k-Nearest Neighbor ML algorithm. 
 
-                All source code is available at www.manning.com/MachineLearningInAction. 
+                    The kNN algorithm is a basic machine learning algorithm that compares new 
+                    data based on comparative similarities to available training data and looks
+                    for up to k nearest neighbors to the new data to assign contextual labels.
 
-WARNING: Original source code is written in Python 2, but my code is written in Python 3. 
+                    All source code is available at www.manning.com/MachineLearningInAction. 
+
+USE CASE(S):        Numeric and Nominal Values
+
+ADVANTAGE(S):       High accuracy
+                    Outlier insensitivity
+                    No assumptions about data 
+
+DISADVANTAGE(S):    Computationally expensive
+                    Requires considerable memory 
+
+WARNING: Original source code is written in Python 2, but my code is written in Python 3.
+ 
 CREDIT: Machine Learning In Action (Peter Harrington)
 """
 
