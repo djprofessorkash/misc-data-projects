@@ -187,15 +187,22 @@ class Decision_Tree_Algorithm(object):
 
 
 def main():
-    # Track starting time of running program
+    # Track starting time of program
     t0 = t()
 
     # Initialize class instance of the decision tree algorithm
     dt = Decision_Tree_Algorithm()
 
+    # Run testing methods on decision tree algorithm
     dataset, labels = dt.create_dataset()
     decision_tree = dt.create_tree(dataset, labels)
     print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
+
+    # Track ending time of program and determine overall program runtime
+    t1 = t()
+    delta = (t1 - t0) * 1000
+    
+    print("Real program runtime is {0:.4g} milliseconds.\n".format(delta))
     return
 
 if __name__ == "__main__":
