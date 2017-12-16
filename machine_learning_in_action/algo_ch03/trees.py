@@ -45,7 +45,12 @@ class Decision_Tree_Algorithm(object):
     
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
-        pass
+        self.dataset = [[1, 1, "yes"],
+                        [1, 1, "yes"],
+                        [1, 0, "no"],
+                        [0, 1, "no"],
+                        [0, 1, "no"]]
+        self.labels = ["no surfacing", "flippers"]
 
     # ================== METHOD TO CREATE SMALL DATASET FOR TESTING ==================
     def create_dataset(self):
