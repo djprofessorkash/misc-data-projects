@@ -44,6 +44,7 @@ from time import time as t                  # Package for tracking modular and p
 class Decision_Tree_Algorithm(object):
     
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
+    # TODO: Initialize dataset and labels here, then reference throughout methods
     def __init__(self):
         self.dataset = [[1, 1, "yes"],
                         [1, 1, "yes"],
