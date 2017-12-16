@@ -121,9 +121,53 @@ def choose_best_feature_to_split_on(dataset):
             best_information_gain = information_gain
             best_feature = feature
     
-    print("BEST FEATURE TO SPLIT ON: {}\nRESPECTIVE BEST INFORMATION GAIN: {}\n".format(best_feature, best_information_gain))
+    # print("BEST FEATURE TO SPLIT ON: {}\nRESPECTIVE BEST INFORMATION GAIN: {}\n".format(best_feature, best_information_gain))
     return best_feature
- 
+
+def majority_histogram(class_list):
+    histogram = dict()
+
+    # Creates histogram distribution of class_list element occurrences
+    for vote in class_list:
+        if vote not in histogram.keys(): 
+            histogram[vote] = 0
+        histogram[vote] += 1
+
+    # Sorts histogram by keys
+    sorted_histogram = sorted(histogram.items(), key=op.itemgetter(1), reverse=True)
+    
+    print("SORTED HISTOGRAM IS: {}\n".format(sorted_histogram))
+    return sorted_histogram[0][0]
+
+def create_tree(dataset, labels):
+    class_list = [sample[-1] for sample in dataset]
+
+    # Stops iteration through decision tree when all classes are equal
+    if class_list.count(class_list[0]) == len(class_list):
+        return class_list[0]
+
+    # Returns majority histogram when there are no more features left to iterate through
+    if len(dataset[0]) == 1:
+        return majority_histogram(class_list)
+
+    # Define best feature, best feature, and create decision tree object
+    best_feature = choose_best_feature_to_split_on(dataset)
+    best_feature_label = labels[best_feature]
+    decision_tree = {best_feature_label: {}}
+
+    # Get set of unique values from features of dataset
+    del(labels[best_feature])
+    feature_values = [sample[best_feature] for sample in dataset]
+    unique_values = set(feature_values)
+
+    # Recursively iterate through decision trees to sort data by sublabels of dataset
+    for value in unique_values:
+        sublabels = labels[:]
+        decision_tree[best_feature_label][value] = create_tree(split_dataset(dataset, best_feature, value), sublabels)
+
+    # print("DECISION TREE: {}\n".format(decision_tree))
+    return decision_tree
+
  
 # ====================================================================================
 # ================================ MAIN RUN FUNCTION =================================
@@ -146,13 +190,18 @@ def main():
     # print(dataset)
     # calculate_Shannon_entropy(dataset)
 
-    """ Testing split_dataset() function on sample data """
+    """ Testing split_dataset() function against sample data """
     # dataset, labels = create_dataset()
     # split_dataset(dataset, 0, 1)
 
     """ Testing choose_best_feature_to_split_on() against sample data """
+    # dataset, labels = create_dataset()
+    # choose_best_feature_to_split_on(dataset)
+
+    """ Testing create_tree() against sample data """
     dataset, labels = create_dataset()
-    choose_best_feature_to_split_on(dataset)
+    decision_tree = create_tree(dataset, labels)
+    print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
     return
 
 if __name__ == "__main__":
