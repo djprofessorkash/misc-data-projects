@@ -43,130 +43,136 @@ from time import time as t                  # Package for tracking modular and p
 
 class Decision_Tree_Algorithm(object):
     
+    # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
         pass
 
+    # ================== METHOD TO CREATE SMALL DATASET FOR TESTING ==================
+    def create_dataset(self):
+        dataset =  [[1, 1, "yes"],
+                    [1, 1, "yes"],
+                    [1, 0, "no"],
+                    [0, 1, "no"],
+                    [0, 1, "no"]]
+        labels = ["no surfacing", "flippers"]
 
-def create_dataset():
-    dataset =  [[1, 1, "yes"],
-                [1, 1, "yes"],
-                [1, 0, "no"],
-                [0, 1, "no"],
-                [0, 1, "no"]]
-    labels = ["no surfacing", "flippers"]
+        print("\nSAMPLE DATA ARE: {}\nSAMPLE LABELS ARE: {}\n".format(dataset, labels))
+        return dataset, labels
 
-    print("\nSAMPLE DATA ARE: {}\nSAMPLE LABELS ARE: {}\n".format(dataset, labels))
-    return dataset, labels
+    # ================ METHOD TO CALCULATE SHANNON ENTROPY OF DATASET ================
+    def calculate_Shannon_entropy(self, dataset):
+        num_of_entries = len(dataset)
+        label_counts = dict()
 
-def calculate_Shannon_entropy(dataset):
-    num_of_entries = len(dataset)
-    label_counts = dict()
+        # Creates dictionary of all possible class types
+        for feature_vector in dataset:
+            current_label = feature_vector[-1]
 
-    # Creates dictionary of all possible class types
-    for feature_vector in dataset:
-        current_label = feature_vector[-1]
-
-        if current_label not in label_counts.keys():
-            label_counts[current_label] = 0
+            # Creates histogram of label counts based on unique class types
+            if current_label not in label_counts.keys():
+                label_counts[current_label] = 0
+            label_counts[current_label] += 1
         
-        label_counts[current_label] += 1
-    
-    # Initialize Shannon entropy, the measure of information in a dataset
-    Shannon_entropy = 0.0
+        # Initialize Shannon entropy, the measure of information in a dataset
+        Shannon_entropy = 0.0
 
-    # Calculates Shannon entropy based on product of information types and probabilities
-    for key in label_counts:
-        info_probability = float(label_counts[key] / num_of_entries)
-        Shannon_entropy -= info_probability * log(info_probability, 2)
+        # Calculates Shannon entropy based on product of information types and probabilities
+        for key in label_counts:
+            info_probability = float(label_counts[key] / num_of_entries)
+            Shannon_entropy -= info_probability * log(info_probability, 2)
 
-    # print("SHANNON ENTROPY OF SAMPLE DATASET IS: {}\n".format(Shannon_entropy))
-    return Shannon_entropy
+        # print("SHANNON ENTROPY OF SAMPLE DATASET IS: {}\n".format(Shannon_entropy))
+        return Shannon_entropy
 
-def split_dataset(dataset, axis, value):
-    split_data = []
+    # ================ METHOD TO SPLIT DATASET BASED ON UNIQUE FEATURE ===============
+    def split_dataset(self, dataset, axis, value):
+        split_data = []
 
-    # Iterate through dataset and split into subsets based on unique features
-    for feature_vector in dataset:
-        if feature_vector[axis] == value:
-            reduced_feature_vector = feature_vector[:axis]
-            reduced_feature_vector.extend(feature_vector[axis + 1:])
-            split_data.append(reduced_feature_vector)
+        # Iterate through dataset and split into subsets based on unique features
+        for feature_vector in dataset:
+            if feature_vector[axis] == value:
+                reduced_feature_vector = feature_vector[:axis]
+                reduced_feature_vector.extend(feature_vector[axis + 1:])
+                split_data.append(reduced_feature_vector)
 
-    # print("SPLITTED DATA SUBSETS ARE: {}\n".format(split_data))
-    return split_data
+        # print("SPLITTED DATA SUBSETS ARE: {}\n".format(split_data))
+        return split_data
 
-def choose_best_feature_to_split_on(dataset):
-    num_of_features = len(dataset[0]) - 1
-    base_entropy = calculate_Shannon_entropy(dataset)
-    best_information_gain = 0.0
-    best_feature = 1
+    # ============ METHOD TO CHOOSE BEST FEATURE ON WHICH TO SPLIT DATASET ===========
+    def choose_best_feature_to_split_on(self, dataset):
+        num_of_features = len(dataset[0]) - 1
+        base_entropy = self.calculate_Shannon_entropy(dataset)
+        best_information_gain = 0.0
+        best_feature = 1
 
-    # Create unique set of data labels to identify best feature to split on
-    for feature in range(num_of_features):
-        feature_list = [sample[feature] for sample in dataset]
-        unique_values = set(feature_list)
-        new_entropy = 0.0
+        # Create unique set of data labels to identify best feature to split on
+        for feature in range(num_of_features):
+            feature_list = [sample[feature] for sample in dataset]
+            unique_values = set(feature_list)
+            new_entropy = 0.0
 
-        # Calculate entropy for each feature in dataset
+            # Calculate entropy for each feature in dataset
+            for value in unique_values:
+                subset = self.split_dataset(dataset, feature, value)
+                info_probability = len(subset) / float(len(dataset))
+                new_entropy += info_probability * self.calculate_Shannon_entropy(subset)
+            
+            # Calculate relative information gain for particular feature
+            information_gain = base_entropy - new_entropy
+
+            # Find best information gain and best feature across all features
+            if (information_gain > best_information_gain):
+                best_information_gain = information_gain
+                best_feature = feature
+        
+        # print("BEST FEATURE TO SPLIT ON: {}\nRESPECTIVE BEST INFORMATION GAIN: {}\n".format(best_feature, best_information_gain))
+        return best_feature
+
+    # ================ METHOD TO CREATE HISTOGRAM OF SORTED DECISIONS ================
+    def majority_histogram(self, class_list):
+        histogram = dict()
+
+        # Creates histogram distribution of class_list element occurrences
+        for vote in class_list:
+            if vote not in histogram.keys(): 
+                histogram[vote] = 0
+            histogram[vote] += 1
+
+        # Sorts histogram by keys
+        sorted_histogram = sorted(histogram.items(), key = op.itemgetter(1), reverse = True)
+        
+        print("SORTED HISTOGRAM IS: {}\n".format(sorted_histogram))
+        return sorted_histogram[0][0]
+
+    # ================== METHOD TO CREATE DECISION TREE FROM DATASET =================
+    def create_tree(self, dataset, labels):
+        class_list = [sample[-1] for sample in dataset]
+
+        # Stops iteration through decision tree when all classes are equal
+        if class_list.count(class_list[0]) == len(class_list):
+            return class_list[0]
+
+        # Returns majority histogram when there are no more features left to iterate through
+        if len(dataset[0]) == 1:
+            return self.majority_histogram(class_list)
+
+        # Define best feature, best feature, and create decision tree object
+        best_feature = self.choose_best_feature_to_split_on(dataset)
+        best_feature_label = labels[best_feature]
+        decision_tree = {best_feature_label: {}}
+
+        # Get set of unique values from features of dataset
+        del(labels[best_feature])
+        feature_values = [sample[best_feature] for sample in dataset]
+        unique_values = set(feature_values)
+
+        # Recursively iterate through decision trees to sort data by sublabels of dataset
         for value in unique_values:
-            subset = split_dataset(dataset, feature, value)
-            info_probability = len(subset) / float(len(dataset))
-            new_entropy += info_probability * calculate_Shannon_entropy(subset)
-        
-        # Calculate relative information gain for particular feature
-        information_gain = base_entropy - new_entropy
+            sublabels = labels[:]
+            decision_tree[best_feature_label][value] = self.create_tree(self.split_dataset(dataset, best_feature, value), sublabels)
 
-        # Find best information gain and best feature across all features
-        if (information_gain > best_information_gain):
-            best_information_gain = information_gain
-            best_feature = feature
-    
-    # print("BEST FEATURE TO SPLIT ON: {}\nRESPECTIVE BEST INFORMATION GAIN: {}\n".format(best_feature, best_information_gain))
-    return best_feature
-
-def majority_histogram(class_list):
-    histogram = dict()
-
-    # Creates histogram distribution of class_list element occurrences
-    for vote in class_list:
-        if vote not in histogram.keys(): 
-            histogram[vote] = 0
-        histogram[vote] += 1
-
-    # Sorts histogram by keys
-    sorted_histogram = sorted(histogram.items(), key=op.itemgetter(1), reverse=True)
-    
-    print("SORTED HISTOGRAM IS: {}\n".format(sorted_histogram))
-    return sorted_histogram[0][0]
-
-def create_tree(dataset, labels):
-    class_list = [sample[-1] for sample in dataset]
-
-    # Stops iteration through decision tree when all classes are equal
-    if class_list.count(class_list[0]) == len(class_list):
-        return class_list[0]
-
-    # Returns majority histogram when there are no more features left to iterate through
-    if len(dataset[0]) == 1:
-        return majority_histogram(class_list)
-
-    # Define best feature, best feature, and create decision tree object
-    best_feature = choose_best_feature_to_split_on(dataset)
-    best_feature_label = labels[best_feature]
-    decision_tree = {best_feature_label: {}}
-
-    # Get set of unique values from features of dataset
-    del(labels[best_feature])
-    feature_values = [sample[best_feature] for sample in dataset]
-    unique_values = set(feature_values)
-
-    # Recursively iterate through decision trees to sort data by sublabels of dataset
-    for value in unique_values:
-        sublabels = labels[:]
-        decision_tree[best_feature_label][value] = create_tree(split_dataset(dataset, best_feature, value), sublabels)
-
-    # print("DECISION TREE: {}\n".format(decision_tree))
-    return decision_tree
+        # print("DECISION TREE: {}\n".format(decision_tree))
+        return decision_tree
 
  
 # ====================================================================================
@@ -181,26 +187,8 @@ def main():
     # Initialize class instance of the decision tree algorithm
     dt = Decision_Tree_Algorithm()
 
-    """ Testing Shannon entropy function """
-    # dataset, labels = create_dataset()
-    # calculate_Shannon_entropy(dataset)
-    
-    """ Testing manipulating Shannon entropy levels """
-    # dataset[0][-1] = "maybe"
-    # print(dataset)
-    # calculate_Shannon_entropy(dataset)
-
-    """ Testing split_dataset() function against sample data """
-    # dataset, labels = create_dataset()
-    # split_dataset(dataset, 0, 1)
-
-    """ Testing choose_best_feature_to_split_on() against sample data """
-    # dataset, labels = create_dataset()
-    # choose_best_feature_to_split_on(dataset)
-
-    """ Testing create_tree() against sample data """
-    dataset, labels = create_dataset()
-    decision_tree = create_tree(dataset, labels)
+    dataset, labels = dt.create_dataset()
+    decision_tree = dt.create_tree(dataset, labels)
     print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
     return
 
