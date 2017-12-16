@@ -96,6 +96,10 @@ def main():
 
     dataset, labels = create_dataset()
     calculate_Shannon_entropy(dataset)
+    
+    # dataset[0][-1] = "maybe"
+    # print(dataset)
+    # calculate_Shannon_entropy(dataset)
     return
 
 if __name__ == "__main__":
