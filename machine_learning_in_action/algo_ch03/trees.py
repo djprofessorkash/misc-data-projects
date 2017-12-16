@@ -3,7 +3,8 @@ NAME:               trees.py (data_projects/machine_learning_in_action/algo_ch03
 
 DESCRIPTION:        Python class application of decision tree ML algorithms. 
 
-                    ???
+                    Decision trees are advanced classification algorithms that incrementally
+                    categorize by a log(n) search until all k elements are classified. 
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
 
