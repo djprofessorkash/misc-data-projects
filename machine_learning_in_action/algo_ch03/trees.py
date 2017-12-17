@@ -230,7 +230,7 @@ def main():
 
     # Playing with the Lenses dataset
     f = open("lenses.txt")
-    lenses = [instance.strip().split("\t") for instance in f.readlines()]
+    lenses = [line.strip().split("\t") for line in f.readlines()]
     lenses_labels = ["age", "prescript", "astigmatic", "tear_rate"]
     lenses_tree = dt.create_tree(lenses, lenses_labels)
     print("DECISION TREE FOR THE LENSES DATASET IS: {}\n".format(lenses_tree))
