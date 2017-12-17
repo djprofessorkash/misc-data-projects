@@ -40,6 +40,50 @@ def plot_node(node_txt, center_point, parent_point, node_type):
     # Draw annotated text information on single declarative node
     create_plot.ax1.annotate(node_txt, xy=parent_point, xycoords="axes fraction", xytext=center_point, textcoords="axes fraction", va="center", ha="center", bbox=node_type, arrowprops=arrow_args)
 
+# ================ FUNCTION TO CALCULATE NUMBER OF LEAF NODES IN DATA ================
+def get_number_of_leafs(decision_tree):
+    number_of_leafs = 0
+    tree_string = list(decision_tree)[0]
+    tree_dictionary = decision_tree[tree_string]
+
+    # Iterate through all decision tree keys and find all leaf nodes (branching ends)
+    for key in tree_dictionary.keys():
+        if type(tree_dictionary[key]).__name__ == "dict":
+            number_of_leafs += get_number_of_leafs(tree_dictionary[key])
+        else:
+            number_of_leafs += 1
+    
+    # print("NUMBER OF LEAFS IS: {}\n".format(number_of_leafs))
+    return number_of_leafs
+
+# =============== FUNCTION TO CALCULATE DEPTH OF DECISION NODES IN DATA ==============
+def get_tree_depth(decision_tree):
+    max_depth = 0
+    tree_string = list(decision_tree)[0]
+    tree_dictionary = decision_tree[tree_string]
+
+    # Iterate through decision tree's keys for tracking decision nodes and depth count
+    for key in tree_dictionary.keys():
+        if type(tree_dictionary[key]).__name__ == "dict":
+            current_depth = get_tree_depth(tree_dictionary[key]) + 1
+        else:
+            current_depth = 1
+        
+        # If the current depth is greater than the max, set the max to the current depth
+        if current_depth > max_depth:
+            max_depth = current_depth
+
+    # print("MAXIMUM DECISION TREE DEPTH IS: {}\n".format(max_depth))
+    return max_depth
+
+# ===================== FUNCTION TO RETRIEVE SINGLE DECISION TREE ====================
+def retrieve_tree(iterator):
+    list_of_trees =    [{"no surfacing": {0: "no", 1: {"flippers": {0: "no", 1: "yes"}}}},
+                        {"no surfacing": {0: "no", 1: {"flippers": {0: {"head": {0: "no", 1: "yes"}}, 1: "no"}}}}]
+    
+    print("\nDECISION TREE AT INPUT {} IS: {}\n".format(iterator, list_of_trees[iterator]))
+    return list_of_trees[iterator]
+
 # ========================== FUNCTION TO CREATE VISUAL PLOT ==========================
 def create_plot(t0):
     fig = plt.figure(1, facecolor="white")
@@ -68,7 +112,17 @@ def main():
     # Track starting time of program
     t0 = t()
 
-    create_plot(t0)
+    # create_plot(t0)
+    # retrieve_tree(1)
+
+    dt = retrieve_tree(1)
+
+    number_of_leafs = get_number_of_leafs(dt)
+    print("NUMBER OF LEAFS IS: {}\n".format(number_of_leafs))
+
+    max_depth = get_tree_depth(dt)
+    print("MAXIMUM DECISION TREE DEPTH IS: {}\n".format(max_depth))
+
     return
 
 if __name__ == "__main__":
