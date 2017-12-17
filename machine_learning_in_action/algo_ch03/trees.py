@@ -31,6 +31,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 # ====================================================================================
 
 
+import tree_plotter as dt_plt               # Modular program for visualizing decision trees as plots
 import operator as op                       # Library for intrinsic Pythonic mathematical operations
 from math import log                        # Package for performing logarithmic operations
 from time import time as t                  # Package for tracking modular and program runtime
@@ -46,12 +47,15 @@ class Decision_Tree_Algorithm(object):
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     # TODO: Initialize dataset and labels here, then reference throughout methods
     def __init__(self):
+        """
         self.dataset = [[1, 1, "yes"],
                         [1, 1, "yes"],
                         [1, 0, "no"],
                         [0, 1, "no"],
                         [0, 1, "no"]]
         self.labels = ["no surfacing", "flippers"]
+        """
+        pass
 
     # ================== METHOD TO CREATE SMALL DATASET FOR TESTING ==================
     def create_dataset(self):
@@ -64,6 +68,23 @@ class Decision_Tree_Algorithm(object):
 
         print("\nSAMPLE DATA ARE: {}\nSAMPLE LABELS ARE: {}\n".format(dataset, labels))
         return dataset, labels
+
+    # =============== METHOD TO CLASSIFY DATA WITH CLASS LABEL VECTOR ================
+    def classify(self, decision_tree, feature_labels, test_vector):
+        tree_string = list(decision_tree)[0]
+        tree_dictionary = decision_tree[tree_string]
+        feature_index = feature_labels.index(tree_string)
+
+        # Recursively loop through tree keys to create class label at leaf node of best fit
+        for key in tree_dictionary.keys():
+            if test_vector[feature_index] == key:
+                if type(tree_dictionary[key]).__name__ == "dict":
+                    class_label = self.classify(tree_dictionary[key], feature_labels, test_vector)
+                else:
+                    class_label = tree_dictionary[key]
+        
+        # print("CLASS LABEL IS: {}\n".format(class_label))
+        return class_label
 
     # ================ METHOD TO CALCULATE SHANNON ENTROPY OF DATASET ================
     def calculate_Shannon_entropy(self, dataset):
@@ -195,13 +216,19 @@ def main():
 
     # Run testing methods on decision tree algorithm
     dataset, labels = dt.create_dataset()
-    decision_tree = dt.create_tree(dataset, labels)
-    print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
+    tree = dt_plt.retrieve_tree(0)
+
+    # Classify new test vector against decision tree
+    class_label = dt.classify(tree, labels, [1, 1])
+    print("CLASS LABEL IS: {}\n".format(class_label))
+
+    # decision_tree = dt.create_tree(dataset, labels)
+    # print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
     delta = (t1 - t0) * 1000
-    
+
     print("Real program runtime is {0:.4g} milliseconds.\n".format(delta))
     return
 
