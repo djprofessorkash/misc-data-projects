@@ -202,13 +202,16 @@ class Decision_Tree_Algorithm(object):
         # print("DECISION TREE: {}\n".format(decision_tree))
         return decision_tree
 
+    # ===================== METHOD TO STORE DECISION TREE IN FILE ====================
     def store_tree(self, decision_tree, file):
-        f = open(file, "w")
+        f = open(file, "wb")
         rick.dump(decision_tree, f)
         f.close()
+        return
 
+    # ===================== METHOD TO GRAB DECISION TREE IN FILE =====================
     def grab_tree(self, file):
-        f = open(file)
+        f = open(file, "rb")
         return rick.load(f)
 
  
@@ -227,10 +230,13 @@ def main():
     # Run testing methods on decision tree algorithm
     dataset, labels = dt.create_dataset()
     tree = dt_plt.retrieve_tree(0)
+    dt.store_tree(tree, "classifier_storage.txt")
+    grabbed_tree = dt.grab_tree("classifier_storage.txt")
+    print("GRABBED DECISION TREE IS: {}\n".format(grabbed_tree))
 
     # Classify new test vector against decision tree
-    class_label = dt.classify(tree, labels, [1, 1])
-    print("CLASS LABEL IS: {}\n".format(class_label))
+    # class_label = dt.classify(tree, labels, [1, 1])
+    # print("CLASS LABEL IS: {}\n".format(class_label))
 
     # decision_tree = dt.create_tree(dataset, labels)
     # print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
