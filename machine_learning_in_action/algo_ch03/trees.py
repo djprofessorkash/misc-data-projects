@@ -238,6 +238,7 @@ def main():
     # class_label = dt.classify(tree, labels, [1, 1])
     # print("CLASS LABEL IS: {}\n".format(class_label))
 
+    # Create decision tree from dataset and labels
     # decision_tree = dt.create_tree(dataset, labels)
     # print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
 
