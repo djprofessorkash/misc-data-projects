@@ -36,9 +36,45 @@ arrow_args = dict(arrowstyle="<-")                          # Initialize arrow a
 
 
 # =========================== FUNCTION TO PLOT SINGLE NODE ===========================
-def plot_node(node_txt, center_point, parent_point, node_type):
+def plot_node(node_text, center_point, parent_point, node_type):
     # Draw annotated text information on single declarative node
-    create_plot.ax1.annotate(node_txt, xy=parent_point, xycoords="axes fraction", xytext=center_point, textcoords="axes fraction", va="center", ha="center", bbox=node_type, arrowprops=arrow_args)
+    create_plot.ax1.annotate(node_text, xy=parent_point, xycoords="axes fraction", xytext=center_point, textcoords="axes fraction", va="center", ha="center", bbox=node_type, arrowprops=arrow_args)
+
+# ============== FUNCTION TO PLOT TEXT BETWEEN PARENT AND CHILD ELEMENTS =============
+def plot_mid_text(center_point, parent_point, text_string):
+    x_mid = ((parent_point[0] - center_point[0]) / 2.0) + center_point[0]
+    y_mid = ((parent_point[1] - center_point[1]) / 2.0) + center_point[1]
+    create_plot.ax1.text(x_mid, y_mid, text_string)
+
+# ================= FUNCTION TO PLOT DECISION TREE BASED ON ALL NODES ================
+def plot_tree(decision_tree, parent_point, node_text):
+    # Get width and height of decision tree
+    number_of_leafs = get_number_of_leafs(decision_tree)
+    get_tree_depth(decision_tree)
+
+    # Initialize tree string list for nodal iteration
+    tree_string = list(decision_tree)[0]
+    center_point = (plot_tree.xOff + (1.0 + float(number_of_leafs)) / 2.0 / plot_tree.totalW, plot_tree.yOff)
+    
+    # Plot values of nodal children on tree
+    plot_mid_text(center_point, parent_point, node_text)
+    plot_node(tree_string, center_point, parent_point, decision_node)
+    tree_dictionary = decision_tree[tree_string]
+    
+    # Decrement y-axis offset on tree
+    plot_tree.yOff = plot_tree.yOff - (1.0 / plot_tree.totalD)
+
+    # Nodal iteration for generating branching visualization
+    for key in tree_dictionary.keys():
+        if type(tree_dictionary[key]).__name__ == "dict":
+            plot_tree(tree_dictionary[key], center_point, str(key))
+        else:
+            plot_tree.xOff = plot_tree.xOff + (1.0 / plot_tree.totalW)
+            plot_node(tree_dictionary[key], (plot_tree.xOff, plot_tree.yOff), center_point, leaf_node)
+            plot_mid_text((plot_tree.xOff, plot_tree.yOff), center_point, str(key))
+    
+    plot_tree.yOff = plot_tree.yOff + (1.0 / plot_tree.totalD)
+    return
 
 # ================ FUNCTION TO CALCULATE NUMBER OF LEAF NODES IN DATA ================
 def get_number_of_leafs(decision_tree):
