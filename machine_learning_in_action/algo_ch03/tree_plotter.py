@@ -121,15 +121,22 @@ def retrieve_tree(iterator):
     return list_of_trees[iterator]
 
 # ========================== FUNCTION TO CREATE VISUAL PLOT ==========================
-def create_plot(t0):
+def create_plot(t0, in_tree):
     fig = plt.figure(1, facecolor="white")
     fig.clf()
+
     # Draw subplot on plot
-    create_plot.ax1 = plt.subplot(111, frameon=False)
+    axprops = dict(xticks=[], yticks=[])
+    create_plot.ax1 = plt.subplot(111, frameon=False, **axprops)
     
-    # Plot decision and leaf nodes, then show visualization
-    plot_node("a decision node", (0.5, 0.1), (0.1, 0.5), decision_node)
-    plot_node("a leaf node", (0.8, 0.1), (0.3, 0.8), leaf_node)
+    # Generate width and depth of tree with helper functions
+    plot_tree.totalW = float(get_number_of_leafs(in_tree))
+    plot_tree.totalD = float(get_tree_depth(in_tree))
+    plot_tree.xOff = -0.5 / plot_tree.totalW
+    plot_tree.yOff = 1.0
+    
+    # Style and plot tree nodes
+    plot_tree(in_tree, (0.5, 1.0), "")
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
@@ -152,12 +159,13 @@ def main():
     # retrieve_tree(1)
 
     dt = retrieve_tree(1)
+    create_plot(t0, dt)
 
-    number_of_leafs = get_number_of_leafs(dt)
-    print("NUMBER OF LEAFS IS: {}\n".format(number_of_leafs))
+    # number_of_leafs = get_number_of_leafs(dt)
+    # print("NUMBER OF LEAFS IS: {}\n".format(number_of_leafs))
 
-    max_depth = get_tree_depth(dt)
-    print("MAXIMUM DECISION TREE DEPTH IS: {}\n".format(max_depth))
+    # max_depth = get_tree_depth(dt)
+    # print("MAXIMUM DECISION TREE DEPTH IS: {}\n".format(max_depth))
 
     return
 
