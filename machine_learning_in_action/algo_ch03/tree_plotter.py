@@ -25,9 +25,9 @@ from time import time as t                  # Package for tracking modular and p
 # ====================================================================================
 
 
-decision_node = dict(boxstyle="sawtooth", fc="0.8")         # Initialize decision nodes (branching nodes)
-leaf_node = dict(boxstyle="round4", fc="0.8")               # Initialize leaf nodes (ending nodes)
-arrow_args = dict(arrowstyle="<-")                          # Initialize arrow arguments with text
+decision_node = dict(boxstyle = "sawtooth", fc = "0.8")     # Initialize decision nodes (branching nodes)
+leaf_node = dict(boxstyle = "round4", fc = "0.8")           # Initialize leaf nodes (ending nodes)
+arrow_args = dict(arrowstyle = "<-")                        # Initialize arrow arguments with text
 
 
 # ====================================================================================
@@ -38,7 +38,7 @@ arrow_args = dict(arrowstyle="<-")                          # Initialize arrow a
 # =========================== FUNCTION TO PLOT SINGLE NODE ===========================
 def plot_node(node_text, center_point, parent_point, node_type):
     # Draw annotated text information on single declarative node
-    create_plot.ax1.annotate(node_text, xy=parent_point, xycoords="axes fraction", xytext=center_point, textcoords="axes fraction", va="center", ha="center", bbox=node_type, arrowprops=arrow_args)
+    create_plot.ax1.annotate(node_text, xy = parent_point, xycoords = "axes fraction", xytext = center_point, textcoords = "axes fraction", va = "center", ha = "center", bbox = node_type, arrowprops = arrow_args)
 
 # ============== FUNCTION TO PLOT TEXT BETWEEN PARENT AND CHILD ELEMENTS =============
 def plot_mid_text(center_point, parent_point, text_string):
@@ -122,12 +122,12 @@ def retrieve_tree(iterator):
 
 # ========================== FUNCTION TO CREATE VISUAL PLOT ==========================
 def create_plot(t0, in_tree):
-    fig = plt.figure(1, facecolor="white")
+    fig = plt.figure(1, facecolor = "white")
     fig.clf()
 
     # Draw subplot on plot
-    axprops = dict(xticks=[], yticks=[])
-    create_plot.ax1 = plt.subplot(111, frameon=False, **axprops)
+    axprops = dict(xticks = [], yticks = [])
+    create_plot.ax1 = plt.subplot(111, frameon = False, **axprops)
     
     # Generate width and depth of tree with helper functions
     plot_tree.totalW = float(get_number_of_leafs(in_tree))
