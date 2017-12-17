@@ -17,6 +17,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 
 
 import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
+from time import time as t                  # Package for tracking modular and program runtime
 
 
 # ====================================================================================
@@ -40,7 +41,7 @@ def plot_node(node_txt, center_point, parent_point, node_type):
     create_plot.ax1.annotate(node_txt, xy=parent_point, xycoords="axes fraction", xytext=center_point, textcoords="axes fraction", va="center", ha="center", bbox=node_type, arrowprops=arrow_args)
 
 # ========================== FUNCTION TO CREATE VISUAL PLOT ==========================
-def create_plot():
+def create_plot(t0):
     fig = plt.figure(1, facecolor="white")
     fig.clf()
     # Draw subplot on plot
@@ -49,6 +50,12 @@ def create_plot():
     # Plot decision and leaf nodes, then show visualization
     plot_node("a decision node", (0.5, 0.1), (0.1, 0.5), decision_node)
     plot_node("a leaf node", (0.8, 0.1), (0.3, 0.8), leaf_node)
+
+    # Track ending time of program and determine overall program runtime
+    t1 = t()
+    delta = (t1 - t0) * 1000
+    
+    print("Real program runtime is {0:.4g} milliseconds.\n".format(delta))
     plt.show()
 
 
@@ -58,7 +65,10 @@ def create_plot():
 
 
 def main():
-    create_plot()
+    # Track starting time of program
+    t0 = t()
+
+    create_plot(t0)
     return
 
 if __name__ == "__main__":
