@@ -1,13 +1,14 @@
 """
 NAME:               trees.py (data_projects/machine_learning_in_action/algo_ch03/)
 
-DESCRIPTION:        Python class application of decision tree ML algorithms. 
+DESCRIPTION:        Python class application of the ID3 decision tree ML algorithms. 
 
                     Decision trees are advanced classification algorithms that incrementally
                     categorize by a log(n) search until all k elements are classified. Decision
                     trees work by splitting data into data subsets based on all possible
                     attribute types and dynamically splitting and testing subsets against all
-                    attribute values until all data has been classified. 
+                    attribute values until all data has been classified. The specific algorithm
+                    used in this code is the Iterative Dichotomiser 3 Decision Tree Algorithm.
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
 
@@ -43,7 +44,7 @@ from time import time as t                  # Package for tracking modular and p
 # ====================================================================================
 
 
-class Decision_Tree_Algorithm(object):
+class ID3_Decision_Tree_Algorithm(object):
     
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     # TODO: Initialize dataset and labels here, then reference throughout methods
@@ -225,14 +226,22 @@ def main():
     t0 = t()
 
     # Initialize class instance of the decision tree algorithm
-    dt = Decision_Tree_Algorithm()
+    dt = ID3_Decision_Tree_Algorithm()
+
+    # Playing with the Lenses dataset
+    f = open("lenses.txt")
+    lenses = [instance.strip().split("\t") for instance in f.readlines()]
+    lenses_labels = ["age", "prescript", "astigmatic", "tear_rate"]
+    lenses_tree = dt.create_tree(lenses, lenses_labels)
+    print("DECISION TREE FOR THE LENSES DATASET IS: {}\n".format(lenses_tree))
+    dt_plt.create_plot(t0, lenses_tree)
 
     # Run testing methods on decision tree algorithm
-    dataset, labels = dt.create_dataset()
-    tree = dt_plt.retrieve_tree(0)
-    dt.store_tree(tree, "classifier_storage.txt")
-    grabbed_tree = dt.grab_tree("classifier_storage.txt")
-    print("GRABBED DECISION TREE IS: {}\n".format(grabbed_tree))
+    # dataset, labels = dt.create_dataset()
+    # tree = dt_plt.retrieve_tree(0)
+    # dt.store_tree(tree, "classifier_storage.txt")
+    # grabbed_tree = dt.grab_tree("classifier_storage.txt")
+    # print("GRABBED DECISION TREE IS: {}\n".format(grabbed_tree))
 
     # Classify new test vector against decision tree
     # class_label = dt.classify(tree, labels, [1, 1])
