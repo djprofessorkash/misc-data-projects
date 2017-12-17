@@ -32,6 +32,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 
 
 import tree_plotter as dt_plt               # Modular program for visualizing decision trees as plots
+import pickle as rick                       # Library for serializing Python objects (http://tiny.cc/picklerick)
 import operator as op                       # Library for intrinsic Pythonic mathematical operations
 from math import log                        # Package for performing logarithmic operations
 from time import time as t                  # Package for tracking modular and program runtime
@@ -200,6 +201,15 @@ class Decision_Tree_Algorithm(object):
 
         # print("DECISION TREE: {}\n".format(decision_tree))
         return decision_tree
+
+    def store_tree(self, decision_tree, file):
+        f = open(file, "w")
+        rick.dump(decision_tree, f)
+        f.close()
+
+    def grab_tree(self, file):
+        f = open(file)
+        return rick.load(f)
 
  
 # ====================================================================================
