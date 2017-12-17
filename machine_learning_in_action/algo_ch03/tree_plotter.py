@@ -155,18 +155,10 @@ def main():
     # Track starting time of program
     t0 = t()
 
-    # create_plot(t0)
-    # retrieve_tree(1)
-
-    dt = retrieve_tree(1)
+    dt = retrieve_tree(0)
+    dt["no surfacing"][2] = "maybe"
+    print(dt)
     create_plot(t0, dt)
-
-    # number_of_leafs = get_number_of_leafs(dt)
-    # print("NUMBER OF LEAFS IS: {}\n".format(number_of_leafs))
-
-    # max_depth = get_tree_depth(dt)
-    # print("MAXIMUM DECISION TREE DEPTH IS: {}\n".format(max_depth))
-
     return
 
 if __name__ == "__main__":
