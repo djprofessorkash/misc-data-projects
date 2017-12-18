@@ -48,7 +48,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
                         ["stop", "posting", "stupid", "worthless", "garbage"],
                         ["mr", "licks", "ate", "my", "steak", "how", "to", "stop", "him"],
                         ["quit", "buying", "worthless", "dog", "food", "stupid"]]
-        class_vector = [0, 1, 0, 1, 0, 1]
+        class_vector = [0, 1, 0, 1, 0, 1]       # 0: not abusive, 1: abusive
 
         print("\nPOSTING LIST IS: {}\nCLASS VECTOR IS: {}\n".format(posting_list, class_vector))
         return posting_list, class_vector
@@ -60,10 +60,10 @@ class Naïve_Bayes_Classifier_Algorithm(object):
 
         # Initialize relative conditional and partial probabilities
         p_abusive = sum(training_category) / float(number_of_training_documents)
-        p0_numerator = np.zeros(number_of_words)
-        p1_numerator = np.zeros(number_of_words)
-        p0_denominator = 0.0
-        p1_denominator = 0.0
+        p0_numerator = np.ones(number_of_words)
+        p1_numerator = np.ones(number_of_words)
+        p0_denominator = 2.0
+        p1_denominator = 2.0
 
         # Iterate through training word documents and add vectors together for conditional probability equation
         for iterator in range(number_of_training_documents):
@@ -80,6 +80,35 @@ class Naïve_Bayes_Classifier_Algorithm(object):
 
         print("PROBABILITY VECTOR FOR NORMAL WORDS IS: \n\n{}\n\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: \n\n{}\n\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
         return p0_vector, p1_vector, p_abusive
+
+    def classify_naïve_bayes(self, vector_to_classify, p0_vector, p1_vector, p_test_class):
+        # Multiply element vectors together for summative accuracy
+        p0 = sum(vector_to_classify * p0_vector) + np.log(1 - p_test_class)
+        p1 = sum(vector_to_classify * p1_vector) + np.log(p_test_class)
+
+        if p1 > p0:
+            return 1
+        else:
+            return 0
+
+    def test_naïve_bayes(self):
+        list_of_posts, list_of_classes = self.load_data_set()
+        list_of_vocab_words = self.create_vocab_list(list_of_posts)
+        training_matrix = []
+
+        for post_in_document in list_of_posts:
+            training_matrix.append(self.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+        
+        p0_vector, p1_vector, p_abusive = self.naïve_bayes_trainer(np.array(training_matrix), np.array(list_of_classes))
+        
+        test_entry = ["love", "my", "dalmation"]
+        current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
+        print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
+
+        test_entry = ["stupid", "garbage"]
+        current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
+        print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
+        return
 
     # ==================== METHOD TO CREATE WORD SET FROM DATASET ====================
     def create_vocab_list(self, dataset):
@@ -117,15 +146,17 @@ def main():
     # Initialize class instance of the naïve Bayes classifier algorithm
     bayes = Naïve_Bayes_Classifier_Algorithm()
 
-    list_of_posts, list_of_classes = bayes.load_data_set()
-    list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
+    bayes.test_naïve_bayes()
 
-    # bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
-    training_matrix = []
-    for post_in_document in list_of_posts:
-        training_matrix.append(bayes.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+    # list_of_posts, list_of_classes = bayes.load_data_set()
+    # list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
 
-    p0_vector, p1_vector, p_abusive = bayes.naïve_bayes_trainer(training_matrix, list_of_classes)
+    # # bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+    # training_matrix = []
+    # for post_in_document in list_of_posts:
+    #     training_matrix.append(bayes.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+
+    # p0_vector, p1_vector, p_abusive = bayes.naïve_bayes_trainer(training_matrix, list_of_classes)
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
