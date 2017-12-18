@@ -85,7 +85,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
     # ==================== METHOD TO CLASSIFY DATA IN BAYES MODEL ====================
     def classify_naïve_bayes(self, vector_to_classify, p0_vector, p1_vector, p_test_class):
         # Multiply element vectors together for summative accuracy
-        p0 = sum(vector_to_classify * p0_vector) + np.log(1 - p_test_class)
+        p0 = sum(vector_to_classify * p0_vector) + np.log(1.0 - p_test_class)
         p1 = sum(vector_to_classify * p1_vector) + np.log(p_test_class)
 
         # Returns classifier if entry fits in summative vector
@@ -183,15 +183,23 @@ class Naïve_Bayes_Classifier_Algorithm(object):
             training_classes.append(class_list[document_index])
 
         p0_vector, p1_vector, p_spam = self.naïve_bayes_trainer(np.array(training_matrix), np.array(training_classes))
+        # print("P0 VECTOR IS: {}\n".format(p0_vector))
+        # print("P1 VECTOR IS: {}\n".format(p1_vector))
+        # print("P SPAM IS: {}\n".format(p_spam))
         error_count = 0.0
 
         for document_index in test_set:
             word_vector = self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index])
+            # print("WORD VECTOR IS: {}\n".format(word_vector))
+            # print(self.classify_naïve_bayes(np.array(word_vector), p0_vector, p1_vector, p_spam))
+            # print(class_list[document_index])
 
             if self.classify_naïve_bayes(np.array(word_vector), p0_vector, p1_vector, p_spam) != class_list[document_index]:
                 error_count += 1.0
                 print("\nCLASSIFICATION ERROR: {}\n".format(document_list[document_index]))
 
+        # print("ERROR COUNT IS: {}\n".format(error_count))
+        # print("TEST SET IS: {}\n".format(test_set))
         print("\nTHE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
         return
 
