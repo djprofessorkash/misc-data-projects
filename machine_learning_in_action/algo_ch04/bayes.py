@@ -158,16 +158,6 @@ def main():
     # Testing Bayes classifier against training data
     bayes.test_naïve_bayes()
 
-    # list_of_posts, list_of_classes = bayes.load_data_set()
-    # list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
-
-    # # bayes.convert_bag_of_words_to_vector(list_of_vocab_words, list_of_posts[3])
-    # training_matrix = []
-    # for post_in_document in list_of_posts:
-    #     training_matrix.append(bayes.convert_bag_of_words_to_vector(list_of_vocab_words, post_in_document))
-
-    # p0_vector, p1_vector, p_abusive = bayes.naïve_bayes_trainer(training_matrix, list_of_classes)
-
     # Track ending time of program and determine overall program runtime
     t1 = t()
     delta = (t1 - t0) * 1000
