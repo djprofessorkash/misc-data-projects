@@ -101,19 +101,19 @@ class Naïve_Bayes_Classifier_Algorithm(object):
 
         # Creates training matrix with word set vectors with which to produce conditional probabilities
         for post_in_document in list_of_posts:
-            training_matrix.append(self.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+            training_matrix.append(self.convert_bag_of_words_to_vector(list_of_vocab_words, post_in_document))
         
         # Produces conditional and relative probabilities from training data
         p0_vector, p1_vector, p_abusive = self.naïve_bayes_trainer(np.array(training_matrix), np.array(list_of_classes))
         
         # First test entry: expected resultant value is 0 indicating non-abusive terminology
         test_entry = ["love", "my", "dalmation"]
-        current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
+        current_document = np.array(self.convert_bag_of_words_to_vector(list_of_vocab_words, test_entry))
         print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
 
         # Second test entry: expected resultant value is 1 indicating abusive terminology
         test_entry = ["stupid", "garbage"]
-        current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
+        current_document = np.array(self.convert_bag_of_words_to_vector(list_of_vocab_words, test_entry))
         print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
         return
 
@@ -129,7 +129,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         return list(vocab_set)
 
     # =================== METHOD TO CONVERT WORD SET TO WORD VECTOR ==================
-    def convert_word_set_to_vector(self, vocab_list, input_set):
+    def convert_bag_of_words_to_vector(self, vocab_list, input_set):
         return_vector = [0] * len(vocab_list)
 
         # Creates vector of unique words from list of vocabulary data
@@ -161,10 +161,10 @@ def main():
     # list_of_posts, list_of_classes = bayes.load_data_set()
     # list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
 
-    # # bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+    # # bayes.convert_bag_of_words_to_vector(list_of_vocab_words, list_of_posts[3])
     # training_matrix = []
     # for post_in_document in list_of_posts:
-    #     training_matrix.append(bayes.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+    #     training_matrix.append(bayes.convert_bag_of_words_to_vector(list_of_vocab_words, post_in_document))
 
     # p0_vector, p1_vector, p_abusive = bayes.naïve_bayes_trainer(training_matrix, list_of_classes)
 
