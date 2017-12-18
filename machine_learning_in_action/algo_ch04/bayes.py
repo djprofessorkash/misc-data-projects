@@ -25,6 +25,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 # ====================================================================================
 
 
+import re                                   # Library for regular expression support
 import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
@@ -157,6 +158,13 @@ def main():
 
     # Testing Bayes classifier against training data
     bayes.test_naïve_bayes()
+
+    # sentence = "This book is the best book on Python or M.L. that I have ever laid my eyes upon."
+    # split_sentence = sentence.split()
+    # regex = re.compile("\\W*")
+    # list_of_tokens = regex.split(sentence)
+    # non_empty_tokens = [token.lower() for token in list_of_tokens if len(token) > 0]
+    # print(non_empty_tokens)
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
