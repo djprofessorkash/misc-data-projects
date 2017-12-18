@@ -79,7 +79,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         p0_vector = np.log(p0_numerator / p0_denominator)
         p1_vector = np.log(p1_numerator / p1_denominator)
 
-        print("PROBABILITY VECTOR FOR NORMAL WORDS IS: \n\n{}\n\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: \n\n{}\n\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
+        # print("PROBABILITY VECTOR FOR NORMAL WORDS IS: \n\n{}\n\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: \n\n{}\n\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
         return p0_vector, p1_vector, p_abusive
 
     # ==================== METHOD TO CLASSIFY DATA IN BAYES MODEL ====================
@@ -126,7 +126,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         for document in dataset:
             vocab_set = vocab_set | set(document)
 
-        print("LIST OF VOCABULARY WORDS IS: {}\n".format(list(vocab_set)))
+        # print("LIST OF VOCABULARY WORDS IS: {}\n".format(list(vocab_set)))
         return list(vocab_set)
 
     # =================== METHOD TO CONVERT WORD SET TO WORD VECTOR ==================
@@ -136,12 +136,64 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         # Creates vector of unique words from list of vocabulary data
         for word in input_set:
             if word in vocab_list:
-                return_vector[vocab_list.index(word)] = 1
+                return_vector[vocab_list.index(word)] += 1
             else:
                 print("The word '{}' is not in my vocabulary. ".format(word))
         
         # print("RETURN VECTOR IS: {}\n".format(return_vector))
         return return_vector
+
+    # ================ METHOD TO PARSE TEXT FROM STRING USING REGEXES ================
+    def text_parser(self, long_string):
+        list_of_tokens = re.split(r"\W+", long_string)
+        return [token.lower() for token in list_of_tokens if len(token) > 2]
+
+    # ===================== METHOD TO CHECK FOR SPAM-MATCHING DATA ===================
+    # TODO: FIX THIS; IT'S BROKEN!!!!!!
+    def check_for_spam(self):
+        document_list = []
+        class_list = []
+        full_text = []
+
+        for iterator in range(1, 26):
+            word_list = self.text_parser(open("email/spam/{}.txt".format(iterator), encoding="ISO-8859-1").read())
+            document_list.append(word_list)
+            full_text.extend(word_list)
+            class_list.append(1)
+            
+            word_list = self.text_parser(open("email/ham/{}.txt".format(iterator), encoding="ISO-8859-1").read())
+            document_list.append(word_list)
+            full_text.extend(word_list)
+            class_list.append(0)
+        
+        vocab_list = self.create_vocab_list(document_list)
+        training_set = range(50)
+        test_set = []
+
+        for iterator in range(10):
+            random_index = int(np.random.uniform(0, len(training_set)))
+            test_set.append(training_set[random_index])
+            del(list(training_set)[random_index])
+        
+        training_matrix = []
+        training_classes = []
+
+        for document_index in training_set:
+            training_matrix.append(self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index]))
+            training_classes.append(class_list[document_index])
+
+        p0_vector, p1_vector, p_spam = self.naïve_bayes_trainer(np.array(training_matrix), np.array(training_classes))
+        error_count = 0.0
+
+        for document_index in test_set:
+            word_vector = self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index])
+
+            if self.classify_naïve_bayes(np.array(word_vector), p0_vector, p1_vector, p_spam) != class_list[document_index]:
+                error_count += 1.0
+                print("\nCLASSIFICATION ERROR: {}\n".format(document_list[document_index]))
+
+        print("\nTHE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
+        return
 
 
 # ====================================================================================
@@ -157,7 +209,10 @@ def main():
     bayes = Naïve_Bayes_Classifier_Algorithm()
 
     # Testing Bayes classifier against training data
-    bayes.test_naïve_bayes()
+    # bayes.test_naïve_bayes()
+
+    # Testing spam test method
+    bayes.check_for_spam()
 
     # sentence = "This book is the best book on Python or M.L. that I have ever laid my eyes upon."
     # split_sentence = sentence.split()
