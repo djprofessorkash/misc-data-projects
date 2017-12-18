@@ -33,44 +33,61 @@ from time import time as t                  # Package for tracking modular and p
 # ====================================================================================
 
 
-def load_data_set():
-    posting_list = [["my", "dog", "has", "flea", "problems", "help", "please"],
-                    ["maybe", "not", "take", "him", "to", "dog", "park", "stupid"],
-                    ["my", "dalmation", "is", "so", "cute", "I", "love", "him"],
-                    ["stop", "posting", "stupid", "worthless", "garbage"],
-                    ["mr", "licks", "ate", "my", "steak", "how", "to", "stop", "him"],
-                    ["quit", "buying", "worthless", "dog", "food", "stupid"]]
-    class_vector = [0, 1, 0, 1, 0, 1]
+class Naïve_Bayes_Classifier_Algorithm(object):
 
-    print("POSTING LIST IS: {}\nCLASS VECTOR IS: {}\n".format(posting_list, class_vector))
-    return posting_list, class_vector
+    def __init__(self):
+        pass
 
-def create_vocab_list(dataset):
-    vocab_set = set([])
+    def load_data_set(self):
+        posting_list = [["my", "dog", "has", "flea", "problems", "help", "please"],
+                        ["maybe", "not", "take", "him", "to", "dog", "park", "stupid"],
+                        ["my", "dalmation", "is", "so", "cute", "I", "love", "him"],
+                        ["stop", "posting", "stupid", "worthless", "garbage"],
+                        ["mr", "licks", "ate", "my", "steak", "how", "to", "stop", "him"],
+                        ["quit", "buying", "worthless", "dog", "food", "stupid"]]
+        class_vector = [0, 1, 0, 1, 0, 1]
 
-    for document in dataset:
-        vocab_set = vocab_set | set(document)
+        print("\nPOSTING LIST IS: {}\nCLASS VECTOR IS: {}\n".format(posting_list, class_vector))
+        return posting_list, class_vector
 
-    print("LIST OF VOCABULARY WORDS IS: {}\n".format(list(vocab_set)))
-    return list(vocab_set)
+    def create_vocab_list(self, dataset):
+        vocab_set = set([])
 
-def convert_word_set_to_vector(vocab_list, input_set):
-    return_vector = [0] * len(vocab_list)
+        for document in dataset:
+            vocab_set = vocab_set | set(document)
 
-    for word in input_set:
-        if word in vocab_list:
-            return_vector[vocab_list.index(word)] = 1
-        else:
-            print("The word '{}' is not in my vocabulary. ".format(word))
-    
-    print("RETURN VECTOR IS: {}\n".format(return_vector))
-    return return_vector
+        print("LIST OF VOCABULARY WORDS IS: {}\n".format(list(vocab_set)))
+        return list(vocab_set)
+
+    def convert_word_set_to_vector(self, vocab_list, input_set):
+        return_vector = [0] * len(vocab_list)
+
+        for word in input_set:
+            if word in vocab_list:
+                return_vector[vocab_list.index(word)] = 1
+            else:
+                print("The word '{}' is not in my vocabulary. ".format(word))
+        
+        print("RETURN VECTOR IS: {}\n".format(return_vector))
+        return return_vector
 
 def main():
-    list_of_posts, list_of_classes = load_data_set()
-    list_of_vocab_words = create_vocab_list(list_of_posts)
+    # Track starting time of program
+    t0 = t()
 
-    convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+    # Initialize class instance of the naïve Bayes classifier algorithm
+    bayes = Naïve_Bayes_Classifier_Algorithm()
+
+    list_of_posts, list_of_classes = bayes.load_data_set()
+    list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
+
+    bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+
+    # Track ending time of program and determine overall program runtime
+    t1 = t()
+    delta = (t1 - t0) * 1000
+
+    print("Real program runtime is {0:.4g} milliseconds.\n".format(delta))
     return
 
 if __name__ == "__main__":
