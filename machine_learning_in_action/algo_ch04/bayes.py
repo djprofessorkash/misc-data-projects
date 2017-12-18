@@ -58,12 +58,14 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         number_of_training_documents = len(training_matrix)
         number_of_words = len(training_matrix[0])
 
+        # Initialize relative conditional and partial probabilities
         p_abusive = sum(training_category) / float(number_of_training_documents)
         p0_numerator = zeros(number_of_words)
         p1_numerator = zeros(number_of_words)
         p0_denominator = 0.0
         p1_denominator = 0.0
 
+        # Iterate through training word documents and add vectors together for conditional probability equation
         for iterator in range(number_of_training_documents):
             if training_category[iterator] == 1:
                 p1_numerator += training_matrix[iterator]
@@ -72,6 +74,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
                 p0_numerator += training_matrix[iterator]
                 p0_denominator += sum(training_matrix[iterator])
         
+        # Calculate naïve conditional probability vectors
         p0_vector = p0_numerator / p0_denominator
         p1_vector = p1_numerator / p1_denominator
 
