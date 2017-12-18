@@ -81,30 +81,37 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("PROBABILITY VECTOR FOR NORMAL WORDS IS: \n\n{}\n\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: \n\n{}\n\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
         return p0_vector, p1_vector, p_abusive
 
+    # ==================== METHOD TO CLASSIFY DATA IN BAYES MODEL ====================
     def classify_naïve_bayes(self, vector_to_classify, p0_vector, p1_vector, p_test_class):
         # Multiply element vectors together for summative accuracy
         p0 = sum(vector_to_classify * p0_vector) + np.log(1 - p_test_class)
         p1 = sum(vector_to_classify * p1_vector) + np.log(p_test_class)
 
+        # Returns classifier if entry fits in summative vector
         if p1 > p0:
             return 1
         else:
             return 0
 
+    # ================== METHOD TO TEST BAYES MODEL AGAINST NEW DATA =================
     def test_naïve_bayes(self):
         list_of_posts, list_of_classes = self.load_data_set()
         list_of_vocab_words = self.create_vocab_list(list_of_posts)
         training_matrix = []
 
+        # Creates training matrix with word set vectors with which to produce conditional probabilities
         for post_in_document in list_of_posts:
             training_matrix.append(self.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
         
+        # Produces conditional and relative probabilities from training data
         p0_vector, p1_vector, p_abusive = self.naïve_bayes_trainer(np.array(training_matrix), np.array(list_of_classes))
         
+        # First test entry: expected resultant value is 0 indicating non-abusive terminology
         test_entry = ["love", "my", "dalmation"]
         current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
         print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
 
+        # Second test entry: expected resultant value is 1 indicating abusive terminology
         test_entry = ["stupid", "garbage"]
         current_document = np.array(self.convert_word_set_to_vector(list_of_vocab_words, test_entry))
         print("{} CLASSIFIED AS {}".format(test_entry, self.classify_naïve_bayes(current_document, p0_vector, p1_vector, p_abusive)))
@@ -114,6 +121,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
     def create_vocab_list(self, dataset):
         vocab_set = set([])
 
+        # Creates set union from dataset
         for document in dataset:
             vocab_set = vocab_set | set(document)
 
@@ -124,6 +132,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
     def convert_word_set_to_vector(self, vocab_list, input_set):
         return_vector = [0] * len(vocab_list)
 
+        # Creates vector of unique words from list of vocabulary data
         for word in input_set:
             if word in vocab_list:
                 return_vector[vocab_list.index(word)] = 1
@@ -146,6 +155,7 @@ def main():
     # Initialize class instance of the naïve Bayes classifier algorithm
     bayes = Naïve_Bayes_Classifier_Algorithm()
 
+    # Testing Bayes classifier against training data
     bayes.test_naïve_bayes()
 
     # list_of_posts, list_of_classes = bayes.load_data_set()
