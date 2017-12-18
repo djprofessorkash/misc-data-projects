@@ -70,7 +70,7 @@ def main():
     list_of_posts, list_of_classes = load_data_set()
     list_of_vocab_words = create_vocab_list(list_of_posts)
 
-    convert_word_set_to_vector(list_of_vocab_words, list_of_posts[0])
+    convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
     return
 
 if __name__ == "__main__":
