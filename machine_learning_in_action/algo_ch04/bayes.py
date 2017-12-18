@@ -25,6 +25,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 # ====================================================================================
 
 
+from numpy import *                         # Library functions for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
 
@@ -35,9 +36,11 @@ from time import time as t                  # Package for tracking modular and p
 
 class Naïve_Bayes_Classifier_Algorithm(object):
 
+    # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
         pass
 
+    # ========================= METHOD TO LOAD SAMPLE DATASET ========================
     def load_data_set(self):
         posting_list = [["my", "dog", "has", "flea", "problems", "help", "please"],
                         ["maybe", "not", "take", "him", "to", "dog", "park", "stupid"],
@@ -50,6 +53,32 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("\nPOSTING LIST IS: {}\nCLASS VECTOR IS: {}\n".format(posting_list, class_vector))
         return posting_list, class_vector
 
+    # ========================== METHOD TO TRAIN BAYES MODEL =========================
+    def naïve_bayes_trainer(training_matrix, training_category):
+        number_of_training_documents = len(training_matrix)
+        number_of_words = len(training_matrix[0])
+
+        p_abusive = sum(training_category) / float(number_of_training_documents)
+        p0_numerator = zeros(number_of_words)
+        p1_numerator = zeros(number_of_words)
+        p0_denominator = 0.0
+        p1_denominator = 0.0
+
+        for iterator in range(number_of_training_documents):
+            if training_category[iterator] == 1:
+                p1_numerator += training_matrix[iterator]
+                p1_denominator += sum(training_matrix[iterator])
+            else:
+                p0_numerator += training_matrix[iterator]
+                p0_denominator += sum(training_matrix[iterator])
+        
+        p0_vector = p0_numerator / p0_denominator
+        p1_vector = p1_numerator / p1_denominator
+
+        print("PROBABILITY VECTOR FOR NORMAL WORDS IS: {}\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: {}\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
+        return p0_vector, p1_vector, p_abusive
+
+    # ==================== METHOD TO CREATE WORD SET FROM DATASET ====================
     def create_vocab_list(self, dataset):
         vocab_set = set([])
 
@@ -59,6 +88,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("LIST OF VOCABULARY WORDS IS: {}\n".format(list(vocab_set)))
         return list(vocab_set)
 
+    # =================== METHOD TO CONVERT WORD SET TO WORD VECTOR ==================
     def convert_word_set_to_vector(self, vocab_list, input_set):
         return_vector = [0] * len(vocab_list)
 
@@ -70,6 +100,12 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         
         print("RETURN VECTOR IS: {}\n".format(return_vector))
         return return_vector
+
+
+# ====================================================================================
+# ================================= MAIN RUN FUNCTION ================================
+# ====================================================================================
+
 
 def main():
     # Track starting time of program
