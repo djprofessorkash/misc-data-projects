@@ -25,7 +25,7 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 # ====================================================================================
 
 
-from numpy import *                         # Library functions for simple linear mathematical operations
+import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
 
@@ -54,14 +54,14 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         return posting_list, class_vector
 
     # ========================== METHOD TO TRAIN BAYES MODEL =========================
-    def naïve_bayes_trainer(training_matrix, training_category):
+    def naïve_bayes_trainer(self, training_matrix, training_category):
         number_of_training_documents = len(training_matrix)
         number_of_words = len(training_matrix[0])
 
         # Initialize relative conditional and partial probabilities
         p_abusive = sum(training_category) / float(number_of_training_documents)
-        p0_numerator = zeros(number_of_words)
-        p1_numerator = zeros(number_of_words)
+        p0_numerator = np.zeros(number_of_words)
+        p1_numerator = np.zeros(number_of_words)
         p0_denominator = 0.0
         p1_denominator = 0.0
 
@@ -75,10 +75,10 @@ class Naïve_Bayes_Classifier_Algorithm(object):
                 p0_denominator += sum(training_matrix[iterator])
         
         # Calculate naïve conditional probability vectors
-        p0_vector = p0_numerator / p0_denominator
-        p1_vector = p1_numerator / p1_denominator
+        p0_vector = np.log(p0_numerator / p0_denominator)
+        p1_vector = np.log(p1_numerator / p1_denominator)
 
-        print("PROBABILITY VECTOR FOR NORMAL WORDS IS: {}\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: {}\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
+        print("PROBABILITY VECTOR FOR NORMAL WORDS IS: \n\n{}\n\nPROBABILITY VECTOR FOR ABUSIVE WORDS IS: \n\n{}\n\nPROBABILITY OF ANY DOCUMENT BEING ABUSIVE IS: {}\n".format(p0_vector, p1_vector, p_abusive))
         return p0_vector, p1_vector, p_abusive
 
     # ==================== METHOD TO CREATE WORD SET FROM DATASET ====================
@@ -101,7 +101,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
             else:
                 print("The word '{}' is not in my vocabulary. ".format(word))
         
-        print("RETURN VECTOR IS: {}\n".format(return_vector))
+        # print("RETURN VECTOR IS: {}\n".format(return_vector))
         return return_vector
 
 
@@ -120,7 +120,12 @@ def main():
     list_of_posts, list_of_classes = bayes.load_data_set()
     list_of_vocab_words = bayes.create_vocab_list(list_of_posts)
 
-    bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+    # bayes.convert_word_set_to_vector(list_of_vocab_words, list_of_posts[3])
+    training_matrix = []
+    for post_in_document in list_of_posts:
+        training_matrix.append(bayes.convert_word_set_to_vector(list_of_vocab_words, post_in_document))
+
+    p0_vector, p1_vector, p_abusive = bayes.naïve_bayes_trainer(training_matrix, list_of_classes)
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
