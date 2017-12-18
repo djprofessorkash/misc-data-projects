@@ -1,4 +1,5 @@
-mlia_source_code/
-__pycache__
 .vscode
-digits/
+__pycache__
+mlia_source_code/
+algo_ch02/digits/
+algo_ch04/email/
