@@ -150,6 +150,8 @@ class Naïve_Bayes_Classifier_Algorithm(object):
 
     # ===================== METHOD TO CHECK FOR SPAM-MATCHING DATA ===================
     # TODO: FIX THIS; IT'S BROKEN!!!!!!
+    # EXPECTED: Error is minimal, but non-zero
+    # ACTUAL: Error is zero for every test
     def check_for_spam(self):
         document_list = []
         class_list = []
