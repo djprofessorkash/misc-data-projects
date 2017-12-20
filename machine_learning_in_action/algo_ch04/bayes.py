@@ -27,6 +27,8 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 
 import re                                   # Library for regular expression support
 import numpy as np                          # Library for simple linear mathematical operations
+import operator as op                       # Library for intrinsic Pythonic mathematical operations
+import feedparser as fp                     # Library for universal parsing of web information feeds
 from time import time as t                  # Package for tracking modular and program runtime
 
 
@@ -205,6 +207,68 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("\nTHE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
         return
 
+    def calculate_probability_distribution(self, vocab_list, full_text):
+        histogram = {}
+
+        for token in vocab_list:
+            histogram[token] = full_text.count(token)
+
+        sorted_histogram = sorted(histogram.items(), key = op.itemgetter(1), reverse = True)
+        
+        print("SORTED PROBABILITY HISTOGRAM DISTRIBUTION: {}\n".format(sorted_histogram[:30]))
+        return sorted_histogram[:30]
+
+    def local_words(self, feed1, feed0):
+        document_list = []
+        class_list = []
+        full_text = []
+        minimum_length = min(len(feed1["entries"]), len(feed0["entries"]))
+
+        for iterator in range(minimum_length):
+            word_list = self.text_parser(feed1["entries"][iterator]["summary"])
+            document_list.append(word_list)
+            full_text.extend(word_list)
+            class_list.append(1)
+
+            word_list = self.text_parser(feed0["entries"][iterator]["summary"])
+            document_list.append(word_list)
+            full_text.extend(word_list)
+            class_list.append(0)
+        
+        vocab_list = self.create_vocab_list(document_list)
+        top_thirty_words = self.calculate_probability_distribution(vocab_list, full_text)
+
+        for word_pair in top_thirty_words:
+            if word_pair[0] in vocab_list:
+                vocab_list.remove(word_pair[0])
+        
+        training_set = range(2 * minimum_length)
+        test_set = []
+
+        for iterator in range(20):
+            random_index = int(np.random.uniform(0, len(training_set)))
+            test_set.append(training_set[random_index])
+            del(training_set[random_index])
+
+        training_matrix = []
+        training_classes = []
+
+        for document_index in training_set:
+            training_matrix.append(self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index]))
+            training_classes.append(class_list[document_index])
+
+        p0_vector, p1_vector, p_spam = self.naïve_bayes_trainer(np.array(training_matrix), np.array(training_classes))
+        error_count = 0.0
+
+        for document_index in test_set:
+            word_vector = self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index])
+
+            if self.classify_naïve_bayes(np.array(word_vector), p0_vector, p1_vector, p_spam) != class_list[document_index]:
+                error_count += 1.0
+
+        print("THE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
+        return vocab_list, p0_vector, p1_vector
+
 
 # ====================================================================================
 # ================================= MAIN RUN FUNCTION ================================
@@ -222,7 +286,13 @@ def main():
     # bayes.test_naïve_bayes()
 
     # Testing spam test method
-    bayes.check_for_spam()
+    # TODO: Is currently broken; error is consistently zero. Must fix! 
+    # bayes.check_for_spam()
+
+    # Testing RSS parsing Bayesian classifier
+    ny = fp.parse("https://newyork.craigslist.org/stp/index.rss")
+    sf = fp.parse("https://sfbay.craigslist.org/stp/index.rss")
+    vocab_list, p_sf, p_ny = bayes.local_words(ny, sf)
 
     # sentence = "This book is the best book on Python or M.L. that I have ever laid my eyes upon."
     # split_sentence = sentence.split()
