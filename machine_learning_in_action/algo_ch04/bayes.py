@@ -229,6 +229,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("\nTHE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
         return
 
+    # =============== METHOD TO CREATE SORTED DICTOGRAM FROM VOCAB DATA ==============
     def calculate_probability_distribution(self, vocab_list, full_text):
         histogram = {}
 
@@ -240,13 +241,15 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("SORTED PROBABILITY HISTOGRAM DISTRIBUTION: {}\n".format(sorted_histogram[:30]))
         return sorted_histogram[:30]
 
+    # ========================= WHAT ON EARTH DID I WRITE?!?! ========================
     def local_words(self, feed1, feed0):
         document_list = []
         class_list = []
         full_text = []
-        minimum_length = min(len(feed1["entries"]), len(feed0["entries"]))
+        minimum_feed_length = min(len(feed1["entries"]), len(feed0["entries"]))
 
-        for iterator in range(minimum_length):
+        # 
+        for iterator in range(minimum_feed_length):
             word_list = self.text_parser(feed1["entries"][iterator]["summary"])
             document_list.append(word_list)
             full_text.extend(word_list)
@@ -264,7 +267,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
             if word_pair[0] in vocab_list:
                 vocab_list.remove(word_pair[0])
         
-        training_set = range(2 * minimum_length)
+        training_set = range(2 * minimum_feed_length)
         test_set = []
 
         for _ in range(20):
