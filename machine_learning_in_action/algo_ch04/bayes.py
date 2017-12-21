@@ -248,7 +248,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         full_text = []
         minimum_feed_length = min(len(feed1["entries"]), len(feed0["entries"]))
 
-        # 
+        # Creates word lists from two RSS feeds and adds word data to each list (document, full-text, class)
         for iterator in range(minimum_feed_length):
             word_list = self.text_parser(feed1["entries"][iterator]["summary"])
             document_list.append(word_list)
@@ -260,13 +260,16 @@ class Naïve_Bayes_Classifier_Algorithm(object):
             full_text.extend(word_list)
             class_list.append(0)
         
+        # Creates top 30 words and vocab list data from document list
         vocab_list = self.create_vocab_list(document_list)
         top_thirty_words = self.calculate_probability_distribution(vocab_list, full_text)
 
+        # Checks existence of top thirty words in vocab list and if so, decrements from vocab list
         for word_pair in top_thirty_words:
             if word_pair[0] in vocab_list:
                 vocab_list.remove(word_pair[0])
         
+        # Creates training set ???
         training_set = range(2 * minimum_feed_length)
         test_set = []
 
