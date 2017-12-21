@@ -16,6 +16,20 @@ DISADVANTAGE(S):    Sensitive to how input data is prepared
 
 NOTE:               Original source code is Python 2, but my code is Python 3.
 
+                    In order for dependencies to work, user must install the 'FEEDPARSER'
+                    module using their preferred Python package manager.
+
+                    For Python 2.x and below, use PIP to install:
+                        usr$  pip install feedparser
+
+                    For Python 3.x, use PIP3 to install:
+                        usr$  pip3 install feedparser
+
+                    For Anaconda 3.x, use Anaconda's built-in package manger Conda to install:
+                        usr$  conda install -c anaconda feedparser
+                    
+                    For other package managers, please read your package manager documentation. 
+
 CREDIT:             Machine Learning In Action (Peter Harrington)
 """
 
@@ -159,22 +173,27 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         class_list = []
         full_text = []
 
+        # Iterates through each email bank and add each parsed email text to all lists (document, full-text, class)
         for iterator in range(1, 26):
+            # Adds parsed email text from spam emails
             word_list = self.text_parser(open("email/spam/{}.txt".format(iterator), encoding="ISO-8859-1").read())
             document_list.append(word_list)
             full_text.extend(word_list)
             class_list.append(1)
             
+            # Adds parsed email text from ham emails
             word_list = self.text_parser(open("email/ham/{}.txt".format(iterator), encoding="ISO-8859-1").read())
             document_list.append(word_list)
             full_text.extend(word_list)
             class_list.append(0)
         
+        # Creates local vocabulary list from email tokens
         vocab_list = self.create_vocab_list(document_list)
         training_set = range(50)
         test_set = []
 
-        for iterator in range(10):
+        # Creates test set of ten random emails from uniform distribution
+        for _ in range(10):
             random_index = int(np.random.uniform(0, len(training_set)))
             test_set.append(training_set[random_index])
             del(list(training_set)[random_index])
@@ -182,16 +201,19 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         training_matrix = []
         training_classes = []
 
+        # Creates training dataset and class labels from document list
         for document_index in training_set:
             training_matrix.append(self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index]))
             training_classes.append(class_list[document_index])
 
+        # Creates vectors for initial conditional probabilities and spam probability from training data
         p0_vector, p1_vector, p_spam = self.naïve_bayes_trainer(np.array(training_matrix), np.array(training_classes))
         # print("P0 VECTOR IS: {}\n".format(p0_vector))
         # print("P1 VECTOR IS: {}\n".format(p1_vector))
         # print("P SPAM IS: {}\n".format(p_spam))
         error_count = 0.0
 
+        # Produces vector from test word data, then tests word vector against Bayes classifier and tracks error
         for document_index in test_set:
             word_vector = self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index])
             # print("WORD VECTOR IS: {}\n".format(word_vector))
@@ -245,7 +267,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         training_set = range(2 * minimum_length)
         test_set = []
 
-        for iterator in range(20):
+        for _ in range(20):
             random_index = int(np.random.uniform(0, len(training_set)))
             test_set.append(training_set[random_index])
             del(training_set[random_index])
