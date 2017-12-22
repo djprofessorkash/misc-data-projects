@@ -165,9 +165,9 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         return [token.lower() for token in list_of_tokens if len(token) > 2]
 
     # ===================== METHOD TO CHECK FOR SPAM-MATCHING DATA ===================
-    # TODO: FIX THIS; IT'S BROKEN!!!!!!
-    # EXPECTED: Error is minimal, but non-zero
-    # ACTUAL: Error is zero for every test
+    # TODO: Method is dysfunctional; must repair!
+    # EXPECTED: Error is minimal but inconsistently non-zero.
+    # ACTUAL: Error is consistently zero, despite probability distribution.
     def check_for_spam(self):
         document_list = []
         class_list = []
@@ -231,17 +231,20 @@ class Naïve_Bayes_Classifier_Algorithm(object):
 
     # =============== METHOD TO CREATE SORTED DICTOGRAM FROM VOCAB DATA ==============
     def calculate_probability_distribution(self, vocab_list, full_text):
-        histogram = {}
+        dictogram = {}
 
         for token in vocab_list:
-            histogram[token] = full_text.count(token)
+            dictogram[token] = full_text.count(token)
 
-        sorted_histogram = sorted(histogram.items(), key = op.itemgetter(1), reverse = True)
+        sorted_dictogram = sorted(dictogram.items(), key = op.itemgetter(1), reverse = True)
         
-        print("SORTED PROBABILITY HISTOGRAM DISTRIBUTION: {}\n".format(sorted_histogram[:30]))
-        return sorted_histogram[:30]
+        print("SORTED PROBABILITY HISTOGRAM-DICTIONARY: {}\n".format(sorted_dictogram[:30]))
+        return sorted_dictogram[:30]
 
     # ========= METHOD TO TEST LOCAL WORD FREQUENCIES FROM RANDOMIZED EMAILS =========
+    # TODO: Method is dysfunctional; must repair!
+    # EXPECTED: Error is minimal but inconsistently non-zero.
+    # ACTUAL: Error is consistently zero, despite probability distribution.
     def test_local_words(self, feed1, feed0):
         document_list = []
         class_list = []
@@ -322,12 +325,13 @@ def main():
     """
 
     # Testing spam test method
-    # TODO: Is currently broken; error is consistently zero. Must fix!
+    # TODO: Is currently dysfunctional; error consistently returns zero despite probability distribution. Must fix!
     """ 
     bayes.check_for_spam()
     """
 
     # Testing RSS parsing Bayesian classifier
+    # TODO: Is currently dysfunctional; error consistently returns zero despite probability distribution. Must fix! 
     ny = fp.parse("https://newyork.craigslist.org/stp/index.rss")
     sf = fp.parse("https://sfbay.craigslist.org/stp/index.rss")
     vocab_list, p_sf, p_ny = bayes.test_local_words(ny, sf)
