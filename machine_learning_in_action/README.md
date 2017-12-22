@@ -20,10 +20,10 @@
 
 #### CHAPTER 4: Classifying with Probability Theory: Naïve Bayes
 - STARTED: Saturday, December 16, 2017
-- COMPLETED: ???
+- COMPLETED: Thursday, December 21, 2017
 
 #### CHAPTER 5: Logistic Regression
-- STARTED: ???
+- STARTED: Thursday, December 21, 2017
 - COMPLETED: ???
 
 #### CHAPTER 6: Support Vector Machines
