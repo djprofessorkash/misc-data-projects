@@ -153,8 +153,8 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         for word in input_set:
             if word in vocab_list:
                 return_vector[vocab_list.index(word)] += 1
-            else:
-                print("The word '{}' is not in my vocabulary. ".format(word))
+            # else:
+            #     print("The word '{}' is not in my vocabulary. ".format(word))
         
         # print("RETURN VECTOR IS: {}\n".format(return_vector))
         return return_vector
@@ -245,20 +245,20 @@ class Naïve_Bayes_Classifier_Algorithm(object):
     # TODO: Method is dysfunctional; must repair!
     # EXPECTED: Error is minimal but inconsistently non-zero.
     # ACTUAL: Error is consistently zero, despite probability distribution.
-    def test_local_words(self, feed1, feed0):
+    def test_local_words(self, feed_attr1, feed_attr0):
         document_list = []
         class_list = []
         full_text = []
-        minimum_feed_length = min(len(feed1["entries"]), len(feed0["entries"]))
+        minimum_feed_length = min(len(feed_attr1["entries"]), len(feed_attr0["entries"]))
 
         # Creates word lists from two RSS feeds and adds word data to each list (document, full-text, class)
         for iterator in range(minimum_feed_length):
-            word_list = self.text_parser(feed1["entries"][iterator]["summary"])
+            word_list = self.text_parser(feed_attr1["entries"][iterator]["summary"])
             document_list.append(word_list)
             full_text.extend(word_list)
             class_list.append(1)
 
-            word_list = self.text_parser(feed0["entries"][iterator]["summary"])
+            word_list = self.text_parser(feed_attr0["entries"][iterator]["summary"])
             document_list.append(word_list)
             full_text.extend(word_list)
             class_list.append(0)
@@ -306,6 +306,33 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         # print("LOCAL VOCABULARY LIST IS: {}\nPROBABILITY VECTOR FOR NORMAL WORDS IS: {}\nPROBABILITY VECTOR FOR TARGET WORDS IS: {}\n".format(vocab_list, p0_vector, p1_vector))
         return vocab_list, p0_vector, p1_vector
 
+    # ========= METHOD TO GET TOP WORDS BY OCCURRENCE FROM RANDOMIZED EMAILS =========
+    # TODO: Method is dysfunctional; must repair!
+    # EXPECTED: Minimal error results in some (not all) tokens printed from emails as top words.
+    # ACTUAL: All tokens printed from emails as top words due to consistently zero error. 
+    def get_top_words(self, feed_attr1, feed_attr0):
+        vocab_list, p0_vector, p1_vector = self.test_local_words(feed_attr1, feed_attr0)
+        top_words_NY = []
+        top_words_SF = []
+
+        for iterator in range(len(p0_vector)):
+            if p0_vector[iterator] > -6.0:
+                top_words_SF.append((vocab_list[iterator], p0_vector[iterator]))
+            if p1_vector[iterator] > -6.0:
+                top_words_NY.append((vocab_list[iterator], p1_vector[iterator]))
+
+        sorted_words_NY = sorted(top_words_NY, key = lambda word_pair: word_pair[1], reverse = True)
+        print("NY**NY**NY**NY**NY**NY**NY**NY**NY**NY**NY**NY**NY**NY **")
+        for pair in sorted_words_NY:
+            print(pair[0])
+
+        sorted_words_SF = sorted(top_words_SF, key = lambda word_pair: word_pair[1], reverse = True)
+        print("SF**SF**SF**SF**SF**SF**SF**SF**SF**SF**SF**SF**SF**SF **")
+        for pair in sorted_words_SF:
+            print(pair[0])
+
+        return
+
 
 # ====================================================================================
 # ================================= MAIN RUN FUNCTION ================================
@@ -332,9 +359,17 @@ def main():
 
     # Testing RSS parsing Bayesian classifier
     # TODO: Is currently dysfunctional; error consistently returns zero despite probability distribution. Must fix! 
+    """
     ny = fp.parse("https://newyork.craigslist.org/stp/index.rss")
     sf = fp.parse("https://sfbay.craigslist.org/stp/index.rss")
     vocab_list, p_sf, p_ny = bayes.test_local_words(ny, sf)
+    """
+
+    # Testing top words getter via the Bayesian classifier
+    # TODO: Is currently dysfunctional; prints out all words as top words since error tracker does not track non-unique words. Must fix! 
+    ny = fp.parse("https://newyork.craigslist.org/stp/index.rss")
+    sf = fp.parse("https://sfbay.craigslist.org/stp/index.rss")
+    bayes.get_top_words(ny, sf)
 
     # Side example for testing regex flexibility for returning token count
     """
