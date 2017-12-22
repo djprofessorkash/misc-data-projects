@@ -273,6 +273,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         training_set = range(2 * minimum_feed_length)
         test_set = []
 
+        # Creates test set of ten random emails from uniform distribution
         for _ in range(20):
             random_index = int(np.random.uniform(0, len(training_set)))
             test_set.append(training_set[random_index])
@@ -281,20 +282,25 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         training_matrix = []
         training_classes = []
 
+        # Creates training matrix from document word data and class vectors
         for document_index in training_set:
             training_matrix.append(self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index]))
             training_classes.append(class_list[document_index])
 
+        # Creates vectors for initial conditional probabilities and spam probability from training data
         p0_vector, p1_vector, p_spam = self.naïve_bayes_trainer(np.array(training_matrix), np.array(training_classes))
         error_count = 0.0
 
+        # Produces vector from test word data, then tests word vector against Bayes classifier and tracks error
         for document_index in test_set:
             word_vector = self.convert_bag_of_words_to_vector(vocab_list, document_list[document_index])
 
             if self.classify_naïve_bayes(np.array(word_vector), p0_vector, p1_vector, p_spam) != class_list[document_index]:
                 error_count += 1.0
 
+        # Returns local vocabulary list, local error rate, and initial conditional vector probabilities
         print("THE ERROR RATE IS: {}\n".format(float(error_count) / len(test_set)))
+        # print("LOCAL VOCABULARY LIST IS: {}\nPROBABILITY VECTOR FOR NORMAL WORDS IS: {}\nPROBABILITY VECTOR FOR TARGET WORDS IS: {}\n".format(vocab_list, p0_vector, p1_vector))
         return vocab_list, p0_vector, p1_vector
 
 
