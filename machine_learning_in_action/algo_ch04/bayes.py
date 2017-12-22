@@ -19,7 +19,7 @@ NOTE:               Original source code is Python 2, but my code is Python 3.
                     In order for dependencies to work, user must install the 'FEEDPARSER'
                     module using their preferred Python package manager.
 
-                    For Python 2.x and below, use PIP to install:
+                    For Python 2.x or older Python versions, use PIP to install:
                         usr$  pip install feedparser
 
                     For Python 3.x, use PIP3 to install:
