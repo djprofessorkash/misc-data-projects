@@ -117,7 +117,7 @@ def retrieve_tree(iterator):
     list_of_trees =    [{"no surfacing": {0: "no", 1: {"flippers": {0: "no", 1: "yes"}}}},
                         {"no surfacing": {0: "no", 1: {"flippers": {0: {"head": {0: "no", 1: "yes"}}, 1: "no"}}}}]
     
-    print("\nDECISION TREE AT INPUT {} IS: {}\n".format(iterator, list_of_trees[iterator]))
+    print("DECISION TREE AT INPUT {} IS: {}\n".format(iterator, list_of_trees[iterator]))
     return list_of_trees[iterator]
 
 # ========================== FUNCTION TO CREATE VISUAL PLOT ==========================

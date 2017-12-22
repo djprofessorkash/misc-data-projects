@@ -233,23 +233,33 @@ def main():
     lenses = [line.strip().split("\t") for line in f.readlines()]
     lenses_labels = ["age", "prescript", "astigmatic", "tear_rate"]
     lenses_tree = dt.create_tree(lenses, lenses_labels)
-    print("DECISION TREE FOR THE LENSES DATASET IS: {}\n".format(lenses_tree))
+    print("\nDECISION TREE FOR THE LENSES DATASET IS: {}\n".format(lenses_tree))
     dt_plt.create_plot(t0, lenses_tree)
 
     # Run testing methods on decision tree algorithm
-    # dataset, labels = dt.create_dataset()
-    # tree = dt_plt.retrieve_tree(0)
-    # dt.store_tree(tree, "classifier_storage.txt")
-    # grabbed_tree = dt.grab_tree("classifier_storage.txt")
-    # print("GRABBED DECISION TREE IS: {}\n".format(grabbed_tree))
+    """
+    dataset, labels = dt.create_dataset()
+    tree = dt_plt.retrieve_tree(0)
+    dt.store_tree(tree, "classifier_storage.txt")
+    grabbed_tree = dt.grab_tree("classifier_storage.txt")
+    print("GRABBED DECISION TREE IS: {}\n".format(grabbed_tree))
+    """
 
     # Classify new test vector against decision tree
-    # class_label = dt.classify(tree, labels, [1, 1])
-    # print("CLASS LABEL IS: {}\n".format(class_label))
+    """
+    dataset, labels = dt.create_dataset()
+    tree = dt_plt.retrieve_tree(0)
+    class_label = dt.classify(tree, labels, [1, 1]).upper()
+    print("CLASS LABEL RESULT IS: {}\n".format(class_label))
+    """
+    
 
     # Create decision tree from dataset and labels
-    # decision_tree = dt.create_tree(dataset, labels)
-    # print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
+    """
+    dataset, labels = dt.create_dataset()
+    decision_tree = dt.create_tree(dataset, labels)
+    print("COMPLETE DECISION TREE: {}\n".format(decision_tree))
+    """
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
