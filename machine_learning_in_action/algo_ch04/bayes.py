@@ -241,8 +241,8 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         print("SORTED PROBABILITY HISTOGRAM DISTRIBUTION: {}\n".format(sorted_histogram[:30]))
         return sorted_histogram[:30]
 
-    # ========================= WHAT ON EARTH DID I WRITE?!?! ========================
-    def local_words(self, feed1, feed0):
+    # ========= METHOD TO TEST LOCAL WORD FREQUENCIES FROM RANDOMIZED EMAILS =========
+    def test_local_words(self, feed1, feed0):
         document_list = []
         class_list = []
         full_text = []
@@ -317,23 +317,30 @@ def main():
     bayes = Naïve_Bayes_Classifier_Algorithm()
 
     # Testing Bayes classifier against training data
-    # bayes.test_naïve_bayes()
+    """
+    bayes.test_naïve_bayes()
+    """
 
     # Testing spam test method
-    # TODO: Is currently broken; error is consistently zero. Must fix! 
-    # bayes.check_for_spam()
+    # TODO: Is currently broken; error is consistently zero. Must fix!
+    """ 
+    bayes.check_for_spam()
+    """
 
     # Testing RSS parsing Bayesian classifier
     ny = fp.parse("https://newyork.craigslist.org/stp/index.rss")
     sf = fp.parse("https://sfbay.craigslist.org/stp/index.rss")
-    vocab_list, p_sf, p_ny = bayes.local_words(ny, sf)
+    vocab_list, p_sf, p_ny = bayes.test_local_words(ny, sf)
 
-    # sentence = "This book is the best book on Python or M.L. that I have ever laid my eyes upon."
-    # split_sentence = sentence.split()
-    # regex = re.compile("\\W*")
-    # list_of_tokens = regex.split(sentence)
-    # non_empty_tokens = [token.lower() for token in list_of_tokens if len(token) > 0]
-    # print(non_empty_tokens)
+    # Side example for testing regex flexibility for returning token count
+    """
+    sentence = "This book is the best book on Python or M.L. that I have ever laid my eyes upon."
+    split_sentence = sentence.split()
+    regex = re.compile("\\W*")
+    list_of_tokens = regex.split(sentence)
+    non_empty_tokens = [token.lower() for token in list_of_tokens if len(token) > 0]
+    print(non_empty_tokens)
+    """
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
