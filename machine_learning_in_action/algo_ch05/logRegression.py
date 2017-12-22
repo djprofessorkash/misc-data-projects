@@ -54,6 +54,21 @@ def load_dataset():
 def sigmoid(x):
     return 1.0 / (1 + np.exp(-x))
 
+def optimize_gradient_ascent(input_dataset, class_labels):
+    dataset = np.mat(input_dataset)
+    labels = np.mat(class_labels).transpose()
+    m, n = np.shape(dataset)
+    alpha = 0.001
+    maximum_repetitions = 500
+    weights = np.ones((n, 1))
+
+    for _ in range(maximum_repetitions):
+        sig = sigmoid(dataset * weights)
+        error = (labels - sig)
+        weights += alpha * dataset.transpose() * error
+
+    return weights
+
 
 # ====================================================================================
 # ================================ MAIN RUN FUNCTION =================================
