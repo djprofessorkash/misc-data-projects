@@ -277,7 +277,7 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         for _ in range(20):
             random_index = int(np.random.uniform(0, len(training_set)))
             test_set.append(training_set[random_index])
-            del(training_set[random_index])
+            del(list(training_set)[random_index])
 
         training_matrix = []
         training_classes = []
