@@ -54,15 +54,15 @@ class logistic_Regression_Optimization_Algorithm(object):
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(int(array_of_lines[2]))
 
-        # print("GIVEN DATASET IS: {}\n".format(dataset))
-        # print("GIVEN CLASS LABELS ARE: {}\n".format(labels))
+        # print("GIVEN DATASET IS: \n{}\n".format(dataset))
+        # print("GIVEN CLASS LABELS ARE: \n{}\n".format(labels))
         return dataset, labels
 
     # ================ METHOD TO CALCULATE SIGMOID VALUE FROM X-INPUT ================
     def sigmoid(self, x):
         sig = 1.0 / (1 + np.exp(-x))
 
-        # print("SIGMOID VALUE IS: {}\n".format(sig))
+        # print("SIGMOID VALUE IS: \n{}\n".format(sig))
         return sig
 
     # ========== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT =========
@@ -79,7 +79,7 @@ class logistic_Regression_Optimization_Algorithm(object):
             error = (labels - sig)
             weights += alpha * dataset.transpose() * error
 
-        # print("RELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION IS: {}\n".format(weights))
+        print("RELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION IS: \n{}\n".format(weights))
         return weights
 
 
@@ -94,6 +94,10 @@ def main():
 
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
+
+    # Test optimize_gradient_ascent() with sigmoid calculation and loading test data
+    dataset, labels = logRegres.load_dataset()
+    logRegres.optimize_gradient_ascent(dataset, labels)
 
     # Track ending time of program and determine overall program runtime
     t1 = t()
