@@ -39,6 +39,19 @@ import matplotlib.pyplot as plt             # Module for MATLAB-like data visual
 class logistic_Regression_Optimization_Algorithm(object):
     pass
 
+def load_dataset():
+    dataset = []
+    labels = []
+    f = open("test_set.txt")
+
+    for line in f.readlines():
+        array_of_lines = line.strip().split()
+        dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
+        labels.append(int(array_of_lines[2]))
+
+    return dataset, labels
+
+
 
 # ====================================================================================
 # ================================ MAIN RUN FUNCTION =================================
@@ -46,7 +59,8 @@ class logistic_Regression_Optimization_Algorithm(object):
 
 
 def main():
-    pass
+    logRegres = logistic_Regression_Optimization_Algorithm()
+
 
 if __name__ == "__main__":
     main()
