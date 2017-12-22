@@ -268,8 +268,8 @@ class Naïve_Bayes_Classifier_Algorithm(object):
         for word_pair in top_thirty_words:
             if word_pair[0] in vocab_list:
                 vocab_list.remove(word_pair[0])
-        
-        # Creates training set ???
+    
+        # Creates training set from input feeds
         training_set = range(2 * minimum_feed_length)
         test_set = []
 
