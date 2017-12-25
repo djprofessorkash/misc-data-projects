@@ -197,28 +197,28 @@ def main():
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
 
-    # Test batch_processing_gradient_ascent_optimization() with sigmoid calculation and loading test data
+    # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation
     """
     dataset, labels = logRegres.load_dataset()
     logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
     logRegres.track_runtime(TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with batch processing optimization and loading test data
+    # Test plot_line_of_best_fit() with batch processing gradient ascent optimization
     """
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with simple stochastic optimization and loading test data
+    # Test plot_line_of_best_fit() with simple stochastic gradient ascent optimization
     """
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.simple_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with advanced stochastic optimization and loading test data
+    # Test plot_line_of_best_fit() with advanced stochastic gradient ascent optimization
     
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
