@@ -44,7 +44,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         pass
 
     # ======================== METHOD TO LOAD DATASET FROM FILE ======================
-    def load_dataset(self, TIME_I):
+    def load_dataset(self):
         dataset = []
         labels = []
         FILE = open("test_set.txt")
@@ -54,11 +54,6 @@ class logistic_Regression_Optimization_Algorithm(object):
             array_of_lines = line.strip().split()
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(int(array_of_lines[2]))
-
-        """
-        # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
-        """
 
         """
         print("GIVEN DATASET IS: \n{}\n".format(dataset))
@@ -199,10 +194,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         plt.xlabel("X1")
         plt.ylabel("Y1")
 
-        """
+        
         # Runs runtime tracker for particular method
         self.track_runtime(TIME_I)
-        """
+        
 
         # Displays line of best fit over scatterplot of dataset
         print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE...\n")
@@ -266,6 +261,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
         """
 
+        # Garbage styling simply for eye candy purposes
+        if current_test_iteration == 0:
+            print("\n\n")
+
         print("THE ERROR RATE OF THE HORSE COLIC DATA CLASSIFIER FOR TEST #{} IS: {}".format(current_test_iteration + 1, error_rate))
         return error_rate
 
@@ -292,9 +291,9 @@ class logistic_Regression_Optimization_Algorithm(object):
         delta = TIME_F - TIME_I
 
         if delta < 1.5:
-            print("Real program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
+            print("\nReal program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
         else:
-            print("Real program runtime is {0:.4g} seconds.\n".format(delta))
+            print("\nReal program runtime is {0:.4g} seconds.\n".format(delta))
         return
 
 
@@ -338,9 +337,9 @@ def main():
     """
 
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
-    logRegres.k_series_of_test_classifications(5, TIME_I)
+    logRegres.k_series_of_test_classifications(3, TIME_I)
 
-    return
+    return print("\nLogistic regression class algorithm has finished running.\n")
 
 if __name__ == "__main__":
     main()
