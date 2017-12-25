@@ -68,27 +68,41 @@ class logistic_Regression_Optimization_Algorithm(object):
         return sig
 
     # ========== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT =========
-    def optimize_gradient_ascent(self, input_dataset, class_labels):
+    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         num_rows, num_cols = np.shape(dataset)
         ALPHA = 0.001
         MAX_REPETITIONS = 500
-        reg_weights = np.ones((num_cols, 1))            # Creates array of regression weights with same size as dataset columns
+        regr_weights = np.ones((num_cols, 1))            # Creates array of regression weights with same size as dataset columns
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for _ in range(MAX_REPETITIONS):
-            sig = self.sigmoid_distribution(dataset * reg_weights)      # Recursively calls sigmoid function to maximize weights
+            sig = self.sigmoid_distribution(dataset * regr_weights)      # Recursively calls sigmoid function to maximize weights
             error = labels - sig
-            reg_weights += ALPHA * dataset.transpose() * error
+            regr_weights += ALPHA * dataset.transpose() * error
 
         # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
-        print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(reg_weights))
-        return reg_weights
+        print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        return regr_weights
+
+    def stochastic_gradient_ascent_optimization(self, input_dataset, class_labels):
+        num_rows, num_cols = np.shape(input_dataset)
+        ALPHA = 0.01
+        regr_weights = np.ones(num_cols)                # Creates array of regression weights with same size as dataset columns
+
+        # Iterates over sigmoid distribution to optimize training data regression weights
+        for iterator in range(num_rows):
+            sig = self.sigmoid_distribution(sum(input_dataset[iterator] * regr_weights))
+            error = class_labels[iterator] - sig
+            regr_weights += ALPHA * error * input_dataset[iterator]
+
+        print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        return regr_weights
 
     # ====== METHOD TO PLOT LOGISTIC REGRESSION LINE OF BEST FIT ACROSS DATASET ======
     def plot_line_of_best_fit(self, dataset, labels, weights, TIME_I):
-        reg_weights = np.array(weights)
+        regr_weights = np.array(weights)
         data_arr = np.array(dataset)
         num_rows = np.shape(data_arr)[0]
 
@@ -115,7 +129,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         # Creates domains for X and Y
         x = np.arange(-3.0, 3.0, 0.1)
-        y = (-reg_weights[0] - reg_weights[1] * x) / reg_weights[2]
+        y = (-regr_weights[0] - regr_weights[1] * x) / regr_weights[2]
 
         # Plots X and Y domains with labels on axes to finalize scatterplot
         ax.plot(x, y)
@@ -152,16 +166,16 @@ def main():
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
 
-    # Test optimize_gradient_ascent() with sigmoid calculation and loading test data
+    # Test batch_processing_gradient_ascent_optimization() with sigmoid calculation and loading test data
     """
     dataset, labels = logRegres.load_dataset()
-    logRegres.optimize_gradient_ascent(dataset, labels)
+    logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
     logRegres.track_runtime(TIME_I)
     """
 
     # Test plot_line_of_best_fit() with loading test data
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.optimize_gradient_ascent(dataset, labels)
+    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
 
     return
