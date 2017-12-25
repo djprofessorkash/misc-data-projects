@@ -87,8 +87,56 @@ class logistic_Regression_Optimization_Algorithm(object):
         return reg_weights
 
     # ====== METHOD TO PLOT LOGISTIC REGRESSION LINE OF BEST FIT ACROSS DATASET ======
-    def plot_line_of_best_fit(self, weights):
-        reg_weights = 0
+    def plot_line_of_best_fit(self, dataset, labels, weights, TIME_I):
+        reg_weights = np.array(weights)
+        data_arr = np.array(dataset)
+        num_rows = np.shape(data_arr)[0]
+
+        # Predefines scatter X- and Y-coordinates
+        x_coord1 = []
+        y_coord1 = []
+        x_coord2 = []
+        y_coord2 = []
+
+        # Creates X- and Y-coordinates based on class label vector's array of ones
+        for iterator in range(num_rows):
+            if int(labels[iterator]) == 1:
+                x_coord1.append(data_arr[iterator, 1])
+                y_coord1.append(data_arr[iterator, 2])
+            else:
+                x_coord2.append(data_arr[iterator, 1])
+                y_coord2.append(data_arr[iterator, 2])
+
+        # Initializes scatterplot space with given X- and Y-coordinate values
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.scatter(x_coord1, y_coord1, s = 30, c = "red", marker = "s")
+        ax.scatter(x_coord2, y_coord2, s = 30, c = "green")
+
+        # Creates domains for X and Y
+        x = np.arange(-3.0, 3.0, 0.1)
+        y = (-reg_weights[0] - reg_weights[1] * x) / reg_weights[2]
+
+        # Plots X and Y domains with labels on axes to finalize scatterplot
+        ax.plot(x, y)
+        plt.xlabel("X1")
+        plt.ylabel("Y1")
+
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+
+        print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE AFTER 500 CYCLES OF GRADIENT ASCENT...\n")
+
+        plt.show()
+        return
+
+    def track_runtime(self, TIME_I):
+        # Track ending time of program and determine overall program runtime
+        TIME_F = t()
+        DELTA = (TIME_F - TIME_I) * 1000
+
+        print("Real program runtime is {0:.4g} milliseconds.\n".format(DELTA))
+        return
 
 
 # ====================================================================================
@@ -103,15 +151,18 @@ def main():
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
 
-    # Test optimize_gradient_ascent() with sigmoid_distribution calculation and loading test data
+    # Test optimize_gradient_ascent() with sigmoid calculation and loading test data
+    """
     dataset, labels = logRegres.load_dataset()
     logRegres.optimize_gradient_ascent(dataset, labels)
+    logRegres.track_runtime(TIME_I)
+    """
 
-    # Track ending time of program and determine overall program runtime
-    TIME_F = t()
-    DELTA = (TIME_F - TIME_I) * 1000
+    # Test plot_line_of_best_fit() with loading test data
+    dataset, labels = logRegres.load_dataset()
+    weights = logRegres.optimize_gradient_ascent(dataset, labels)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
 
-    print("Real program runtime is {0:.4g} milliseconds.\n".format(DELTA))
     return
 
 if __name__ == "__main__":
