@@ -43,8 +43,8 @@ from time import time as t                  # Package for tracking modular and p
 class logistic_Regression_Optimization_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
-    def __init__(self):
-        pass
+    def __init__(self, TIME_I):
+        self.TIME_I = TIME_I                # Initial time measure for runtime tracker
 
     # ======================== METHOD TO LOAD DATASET FROM FILE ======================
     def load_dataset(self):
@@ -74,7 +74,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ==================== METHOD TO MAXIMIZE REGRESSION WEIGHTS =====================
     # ============= USING GRADIENT ASCENT OPTIMIZATION (BATCH PROCESSING) ============
-    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 500):
+    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, NUM_ITER = 500):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         NUM_ROWS, NUM_COLS = np.shape(dataset)
@@ -92,7 +92,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         """
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
+        self.track_runtime()
         """
 
         """
@@ -103,7 +103,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ================= SIMPLE METHOD TO MAXIMIZE REGRESSION WEIGHTS =================
     # ================ USING GRADIENT ASCENT OPTIMIZATION (STOCHASTIC) ===============
-    def simple_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
+    def simple_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         ALPHA = 0.01
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
@@ -118,7 +118,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         """
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
+        self.track_runtime()
         """
 
         """
@@ -129,7 +129,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ================ ADVANCED METHOD TO MAXIMIZE REGRESSION WEIGHTS ================
     # ================ USING GRADIENT ASCENT OPTIMIZATION (STOCHASTIC) ===============
-    def advanced_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 150):
+    def advanced_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, NUM_ITER = 150):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
 
@@ -150,7 +150,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         """
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
+        self.track_runtime()
         """
 
         """
@@ -160,7 +160,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         return regr_weights
 
     # ====== METHOD TO PLOT LOGISTIC REGRESSION LINE OF BEST FIT ACROSS DATASET ======
-    def plot_line_of_best_fit(self, dataset, labels, weights, TIME_I):
+    def plot_line_of_best_fit(self, dataset, labels, weights):
         regr_weights = np.array(weights)
         data_arr = np.array(dataset)
         NUM_ROWS = np.shape(data_arr)[0]
@@ -197,10 +197,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         plt.xlabel("X1")
         plt.ylabel("Y1")
 
-        
+        """
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
-        
+        self.track_runtime()
+        """
 
         # Displays line of best fit over scatterplot of dataset
         print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE...\n")
@@ -218,7 +218,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ======= METHOD TO APPLY SIGMOID CLASSIFIER AND GRADIENT ASCENT OPTIMIZER =======
     # ================== AGAINST SAMPLE HORSE COLIC DISEASE DATASETS =================
-    def test_classifier_against_horse_data(self, current_test_iteration, TIME_I):
+    def test_classifier_against_horse_data(self, current_test_iteration):
         HORSE_TRAINING_DATA = open("./horse_colic_training.txt")
         HORSE_TEST_DATA = open("./horse_colic_test.txt")
         training_set = []
@@ -238,7 +238,7 @@ class logistic_Regression_Optimization_Algorithm(object):
             training_labels.append(float(current_line[21]))
 
         # Create training regression weights using the advanced stochastic gradient ascent optimizer against the training set and training labels for 500 iterations
-        training_weights = self.advanced_stochastic_gradient_ascent_optimization(np.array(training_set), training_labels, TIME_I, 500)
+        training_weights = self.advanced_stochastic_gradient_ascent_optimization(np.array(training_set), training_labels, 500)
         error_count = 0.0
         number_of_test_vectors = 0.0
 
@@ -261,7 +261,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         """
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
+        self.track_runtime()
         """
 
         # Garbage styling simply for eye candy purposes
@@ -272,26 +272,26 @@ class logistic_Regression_Optimization_Algorithm(object):
         return error_rate
 
     # ========== METHOD TO RUN k ITERATIONS OF THE HORSE DATASET CLASSIFIER ==========
-    def k_series_of_test_classifications(self, k_num_series, TIME_I):
+    def k_series_of_test_classifications(self, k_num_series):
         error_sum = 0.0
 
         # Iterates k times, each time running a new instance of the test classifier and incrementing the error sum
         for k in range(k_num_series):
-            error_sum += self.test_classifier_against_horse_data(k, TIME_I)
+            error_sum += self.test_classifier_against_horse_data(k)
 
         # Calculates and prints average error rate of classifier across all test instances
         average_error_rate = error_sum / float(k_num_series)
         print("\n\nAFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}\n".format(k_num_series, average_error_rate))
         
         # Runs runtime tracker for particular method
-        self.track_runtime(TIME_I)
+        self.track_runtime()
         return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
-    def track_runtime(self, TIME_I):
+    def track_runtime(self):
         # Track ending time of program and determine overall program runtime
         TIME_F = t()
-        delta = TIME_F - TIME_I
+        delta = TIME_F - self.TIME_I
 
         if delta < 1.5:
             print("\nReal program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
@@ -310,37 +310,37 @@ def main():
     TIME_I = t()
 
     # Initialize class instance of the logistic regression optimization algorithm
-    logRegres = logistic_Regression_Optimization_Algorithm()
+    logRegres = logistic_Regression_Optimization_Algorithm(TIME_I)
 
     # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation on sample data
     """
     dataset, labels = logRegres.load_dataset()
-    logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I)
+    logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
     """
 
     # Test plot_line_of_best_fit() with batch processing gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I, 1000)
-    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, 1000)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights)
     """
 
     # Test plot_line_of_best_fit() with simple stochastic gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.simple_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
-    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    weights = logRegres.simple_stochastic_gradient_ascent_optimization(np.array(dataset), labels)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights)
     """
 
     # Test plot_line_of_best_fit() with advanced stochastic gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I, 1000)
-    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, 1000)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights)
     """
 
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
-    logRegres.k_series_of_test_classifications(3, TIME_I)
+    logRegres.k_series_of_test_classifications(3)
 
     return print("Logistic regression class algorithm has finished running.\n")
 
