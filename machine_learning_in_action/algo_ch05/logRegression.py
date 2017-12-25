@@ -47,10 +47,10 @@ class logistic_Regression_Optimization_Algorithm(object):
     def load_dataset(self):
         dataset = []
         labels = []
-        f = open("test_set.txt")
+        FILE = open("test_set.txt")
 
         # Produces dataset and class label vector from formatted dataset
-        for line in f.readlines():
+        for line in FILE.readlines():
             array_of_lines = line.strip().split()
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(int(array_of_lines[2]))
@@ -72,19 +72,23 @@ class logistic_Regression_Optimization_Algorithm(object):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         num_rows, num_cols = np.shape(dataset)
-        alpha = 0.001
-        maximum_repetitions = 500
+        ALPHA = 0.001
+        MAX_REPETITIONS = 500
         reg_weights = np.ones((num_cols, 1))            # Creates array of regression weights with same size as dataset columns
 
         # Iterates over sigmoid distribution to optimize training data regression weights
-        for _ in range(maximum_repetitions):
+        for _ in range(MAX_REPETITIONS):
             sig = self.sigmoid_distribution(dataset * reg_weights)      # Recursively calls sigmoid function to maximize weights
             error = labels - sig
-            reg_weights += alpha * dataset.transpose() * error
+            reg_weights += ALPHA * dataset.transpose() * error
 
         # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(reg_weights))
         return reg_weights
+
+    # ====== METHOD TO PLOT LOGISTIC REGRESSION LINE OF BEST FIT ACROSS DATASET ======
+    def plot_line_of_best_fit(self, weights):
+        reg_weights = 0
 
 
 # ====================================================================================
@@ -94,7 +98,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
 def main():
     # Track starting time of program
-    t0 = t()
+    TIME_I = t()
 
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
@@ -104,10 +108,10 @@ def main():
     logRegres.optimize_gradient_ascent(dataset, labels)
 
     # Track ending time of program and determine overall program runtime
-    t1 = t()
-    delta = (t1 - t0) * 1000
+    TIME_F = t()
+    DELTA = (TIME_F - TIME_I) * 1000
 
-    print("Real program runtime is {0:.4g} milliseconds.\n".format(delta))
+    print("Real program runtime is {0:.4g} milliseconds.\n".format(DELTA))
     return
 
 if __name__ == "__main__":
