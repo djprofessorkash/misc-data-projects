@@ -86,7 +86,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for _ in range(NUM_ITER):
-            sig = self.sigmoid_distribution(dataset * regr_weights)      # Recursively calls sigmoid function to maximize weights
+            sig = self.sigmoid_distribution(dataset * regr_weights)      # Recursively calls sigmoid method to maximize weights
             error = labels - sig
             regr_weights += ALPHA * dataset.transpose() * error
 
