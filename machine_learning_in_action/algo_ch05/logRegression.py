@@ -123,7 +123,7 @@ class logistic_Regression_Optimization_Algorithm(object):
                 sig = self.sigmoid_distribution(sum(input_dataset[random_index] * regr_weights))
                 error = class_labels[random_index] - sig
                 regr_weights += ALPHA * error * input_dataset[random_index]
-                del(input_dataset[random_index])
+                del(list(input_dataset)[random_index])
 
         # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
