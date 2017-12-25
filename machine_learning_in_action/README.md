@@ -24,10 +24,10 @@
 
 #### CHAPTER 5: Logistic Regression
 - STARTED: Thursday, December 21, 2017
-- COMPLETED: ???
+- COMPLETED: Monday, December 25, 2017 (Merry Christmas!)
 
 #### CHAPTER 6: Support Vector Machines
-- STARTED: ???
+- STARTED: Monday, December 25, 2017 (Happy Holidays!)
 - COMPLETED: ???
 
 #### CHAPTER 7: Improving Classification with the <i>AdaBoost</i> Meta-Algorithm
