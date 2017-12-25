@@ -196,13 +196,60 @@ class logistic_Regression_Optimization_Algorithm(object):
         plt.show()
         return
 
-    def classify_vector_against_sigmoid_distribution(self, inX, regr_weights):
-        sig_prob = self.sigmoid_distribution(sum(inX * regr_weights))
+    # ========= METHOD TO CLASSIFY SAMPLE VECTOR AGAINST SIGMOID DISTRIBUTION ========
+    def classify_vector_with_sigmoid(self, input_data_array, regr_weights):
+        sig_prob = self.sigmoid_distribution(sum(input_data_array * regr_weights))
 
         # Return class of 1 if sigmoid is greater than 0.5; otherwise, return class of 0
         if sig_prob > 0.5:
             return 1.0
         return 0.0
+
+    # ======= METHOD TO APPLY SIGMOID CLASSIFIER AND GRADIENT ASCENT OPTIMIZER =======
+    # ================== AGAINST SAMPLE HORSE COLIC DISEASE DATASETS =================
+    def apply_classifier_against_horse_data(self, TIME_I):
+        HORSE_TRAINING_DATA = open("./horse_colic_training.txt")
+        HORSE_TEST_DATA = open("./horse_colic_test.txt")
+        training_set = []
+        training_labels = []
+
+        # Iterate through horse training data and produce training set and training class label vector
+        for line in HORSE_TRAINING_DATA.readlines():
+            current_line = line.strip().split("\t")
+            array_of_lines = []
+
+            # Produces array of lines from iterating through current line of training data
+            for iterator in range(21):
+                array_of_lines.append(float(current_line[iterator]))
+            
+            # Produces training set from line array and training label vector from 21st data entry of each current line of training data
+            training_set.append(array_of_lines)
+            training_labels.append(float(current_line[21]))
+
+        # Create training regression weights using the advanced stochastic gradient ascent optimizer against the training set and training labels for 500 iterations
+        training_weights = self.advanced_stochastic_gradient_ascent_optimization(np.array(training_set), training_labels, TIME_I, 500)
+        error_count = 0.0
+        number_of_test_vectors = 0.0
+
+        # Iterate through horse test data and produce test set and relative multi-algorithmic error count
+        for line in HORSE_TEST_DATA.readlines():
+            number_of_test_vectors += 1.0
+            current_line = line.strip().split("\t")
+            array_of_lines = []
+
+            # Produces array of lines from iterating through current line of test data
+            for iterator in range(21):
+                array_of_lines.append(float(current_line[iterator]))
+
+            # Increment error count if expected test class label does not match actual test class label
+            if int(self.classify_vector_with_sigmoid(np.array(array_of_lines), training_weights)) != int(current_line[21]):
+                error_count += 1
+
+        # Calculate error rate across entire horse test data classification
+        error_rate = error_count / number_of_test_vectors
+        
+        print("THE ERROR RATE OF THE HORSE COLIC DATA CLASSIFICATION TEST IS: {}".format(error_rate))
+        return error_rate
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self, TIME_I):
