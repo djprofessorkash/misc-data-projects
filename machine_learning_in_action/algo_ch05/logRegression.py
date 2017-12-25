@@ -215,7 +215,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ======= METHOD TO APPLY SIGMOID CLASSIFIER AND GRADIENT ASCENT OPTIMIZER =======
     # ================== AGAINST SAMPLE HORSE COLIC DISEASE DATASETS =================
-    def test_classifier_against_horse_data(self, TIME_I):
+    def test_classifier_against_horse_data(self, current_test_iteration, TIME_I):
         HORSE_TRAINING_DATA = open("./horse_colic_training.txt")
         HORSE_TEST_DATA = open("./horse_colic_test.txt")
         training_set = []
@@ -261,35 +261,36 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
         """
 
-        print("THE ERROR RATE OF THE HORSE COLIC DATA CLASSIFICATION TEST IS: {}".format(error_rate))
+        print("THE ERROR RATE OF THE HORSE COLIC DATA CLASSIFIER FOR TEST #{} IS: {}".format(current_test_iteration + 1, error_rate))
         return error_rate
 
     # ========== METHOD TO RUN k ITERATIONS OF THE HORSE DATASET CLASSIFIER ==========
-    def k_series_of_test_classifications(self, TIME_I):
-        number_of_tests = 10
+    def k_series_of_test_classifications(self, k_num_series, TIME_I):
         error_sum = 0.0
 
         # Iterates k times, each time running a new instance of the test classifier and incrementing the error sum
-        for k in range(number_of_tests):
-            error_sum += self.test_classifier_against_horse_data(TIME_I)
+        for k in range(k_num_series):
+            error_sum += self.test_classifier_against_horse_data(k, TIME_I)
 
         # Calculates average error rate of classifier across all test instances
-        average_error_rate = error_sum / float(number_of_tests)
+        average_error_rate = error_sum / float(k_num_series)
 
-        print("\n\nAFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}\n".format(number_of_tests, average_error_rate))
+        print("\n\nAFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}\n".format(k_num_series, average_error_rate))
         
         # Runs runtime tracker for particular method
         self.track_runtime(TIME_I)
-
         return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self, TIME_I):
         # Track ending time of program and determine overall program runtime
         TIME_F = t()
-        DELTA = (TIME_F - TIME_I) * 1000
+        delta = TIME_F - TIME_I
 
-        print("Real program runtime is {0:.4g} milliseconds.\n".format(DELTA))
+        if delta < 1.5:
+            print("Real program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
+        else:
+            print("Real program runtime is {0:.4g} seconds.\n".format(delta))
         return
 
 
@@ -334,7 +335,7 @@ def main():
     """
 
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
-    logRegres.k_series_of_test_classifications(TIME_I)
+    logRegres.k_series_of_test_classifications(5, TIME_I)
 
     return
 
