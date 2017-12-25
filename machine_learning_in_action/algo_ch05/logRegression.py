@@ -3,7 +3,10 @@ NAME:               logRegression.py (data_projects/machine_learning_in_action/a
 
 DESCRIPTION:        Python class application of the logistic regression optimizer algorithm.
 
-                    ???
+                    The logistic regression algorithm is a probabilistic classifier that
+                    calculates best-fit parameters against a nonlinear sigmoid function in
+                    order to maximize the sample data's fitness and optimize the runtime and
+                    memory complexity of the algorithm while reducing relative error. 
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
 
@@ -339,7 +342,7 @@ def main():
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
     logRegres.k_series_of_test_classifications(3, TIME_I)
 
-    return print("\nLogistic regression class algorithm has finished running.\n")
+    return print("Logistic regression class algorithm has finished running.\n")
 
 if __name__ == "__main__":
     main()
