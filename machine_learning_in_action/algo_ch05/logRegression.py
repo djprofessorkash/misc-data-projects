@@ -160,8 +160,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         x = np.arange(-3.0, 3.0, 0.1)
         y = (-regr_weights[0] - regr_weights[1] * x) / regr_weights[2]
 
-        # Plots X and Y domains with labels on axes to finalize scatterplot
+        # Plots X- and Y-dimensions of the line of best fit
         ax.plot(x, y)
+
+        # Plots axial labels to finalize scatterplot
         plt.xlabel("X1")
         plt.ylabel("Y1")
 
