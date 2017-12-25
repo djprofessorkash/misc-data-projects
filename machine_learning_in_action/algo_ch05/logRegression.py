@@ -67,14 +67,14 @@ class logistic_Regression_Optimization_Algorithm(object):
         # print("SIGMOID DISTRIBUTION VALUE IS: \n{}\n".format(sig))
         return sig
 
-    # ========== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT =========
+    # ===== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (BATCH) ======
     def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
-        num_rows, num_cols = np.shape(dataset)
+        NUM_ROWS, NUM_COLS = np.shape(dataset)
         ALPHA = 0.001
         MAX_REPETITIONS = 500
-        regr_weights = np.ones((num_cols, 1))            # Creates array of regression weights with same size as dataset columns
+        regr_weights = np.ones((NUM_COLS, 1))            # Creates array of regression weights with same size as dataset columns
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for _ in range(MAX_REPETITIONS):
@@ -82,21 +82,29 @@ class logistic_Regression_Optimization_Algorithm(object):
             error = labels - sig
             regr_weights += ALPHA * dataset.transpose() * error
 
+        # # Runs runtime tracker for particular method
+        # self.track_runtime(TIME_I)
+
         # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
         return regr_weights
 
+    # === METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (STOCHASTIC) ===
     def stochastic_gradient_ascent_optimization(self, input_dataset, class_labels):
-        num_rows, num_cols = np.shape(input_dataset)
+        NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         ALPHA = 0.01
-        regr_weights = np.ones(num_cols)                # Creates array of regression weights with same size as dataset columns
+        regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
 
         # Iterates over sigmoid distribution to optimize training data regression weights
-        for iterator in range(num_rows):
+        for iterator in range(NUM_ROWS):
             sig = self.sigmoid_distribution(sum(input_dataset[iterator] * regr_weights))
             error = class_labels[iterator] - sig
             regr_weights += ALPHA * error * input_dataset[iterator]
 
+        # # Runs runtime tracker for particular method
+        # self.track_runtime(TIME_I)
+
+        # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
         return regr_weights
 
@@ -104,7 +112,7 @@ class logistic_Regression_Optimization_Algorithm(object):
     def plot_line_of_best_fit(self, dataset, labels, weights, TIME_I):
         regr_weights = np.array(weights)
         data_arr = np.array(dataset)
-        num_rows = np.shape(data_arr)[0]
+        NUM_ROWS = np.shape(data_arr)[0]
 
         # Predefines scatter X- and Y-coordinates
         x_coord1 = []
@@ -113,7 +121,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         y_coord2 = []
 
         # Creates X- and Y-coordinates based on class label vector's array of ones
-        for iterator in range(num_rows):
+        for iterator in range(NUM_ROWS):
             if int(labels[iterator]) == 1:
                 x_coord1.append(data_arr[iterator, 1])
                 y_coord1.append(data_arr[iterator, 2])
