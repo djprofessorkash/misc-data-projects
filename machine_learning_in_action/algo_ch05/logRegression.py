@@ -55,8 +55,10 @@ class logistic_Regression_Optimization_Algorithm(object):
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(int(array_of_lines[2]))
 
-        # print("GIVEN DATASET IS: \n{}\n".format(dataset))
-        # print("GIVEN CLASS LABELS ARE: \n{}\n".format(labels))
+        """
+        print("GIVEN DATASET IS: \n{}\n".format(dataset))
+        print("GIVEN CLASS LABELS ARE: \n{}\n".format(labels))
+        """
         return dataset, labels
 
     # ================ METHOD TO CALCULATE SIGMOID VALUE FROM X-INPUT ================
@@ -64,10 +66,11 @@ class logistic_Regression_Optimization_Algorithm(object):
         # Calculates Sigmoid Z-value (functional output) from inputted X-value
         sig = 1.0 / (1 + np.exp(-x))
 
-        # print("SIGMOID DISTRIBUTION VALUE IS: \n{}\n".format(sig))
+        """ print("SIGMOID DISTRIBUTION VALUE IS: \n{}\n".format(sig)) """
         return sig
 
-    # ===== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (BATCH) ======
+    # ==================== METHOD TO MAXIMIZE REGRESSION WEIGHTS =====================
+    # ============= USING GRADIENT ASCENT OPTIMIZATION (BATCH PROCESSING) ============
     def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
@@ -82,14 +85,17 @@ class logistic_Regression_Optimization_Algorithm(object):
             error = labels - sig
             regr_weights += ALPHA * dataset.transpose() * error
 
-        # # Runs runtime tracker for particular method
-        # self.track_runtime(TIME_I)
+        """
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+        """
 
-        # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
+        """ print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
         return regr_weights
 
-    # === METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (STOCHASTIC) ===
+    # ================= SIMPLE METHOD TO MAXIMIZE REGRESSION WEIGHTS =================
+    # ================ USING GRADIENT ASCENT OPTIMIZATION (STOCHASTIC) ===============
     def simple_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         ALPHA = 0.01
@@ -101,13 +107,17 @@ class logistic_Regression_Optimization_Algorithm(object):
             error = class_labels[iterator] - sig
             regr_weights += ALPHA * error * input_dataset[iterator]
 
-        # # Runs runtime tracker for particular method
-        # self.track_runtime(TIME_I)
+        """
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+        """
 
-        # print("\nTOTAL RELATIVE ERROR ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
+        """ print("\nTOTAL RELATIVE ERROR ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
         return regr_weights
 
+    # ================ ADVANCED METHOD TO MAXIMIZE REGRESSION WEIGHTS ================
+    # ================ USING GRADIENT ASCENT OPTIMIZATION (STOCHASTIC) ===============
     def advanced_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 150):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
@@ -125,7 +135,12 @@ class logistic_Regression_Optimization_Algorithm(object):
                 regr_weights += ALPHA * error * input_dataset[random_index]
                 del(list(input_dataset)[random_index])
 
-        # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
+        """
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+        """
+
+        """ print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
         return regr_weights
 
