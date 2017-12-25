@@ -68,7 +68,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         return sig
 
     # ===== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (BATCH) ======
-    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels):
+    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         NUM_ROWS, NUM_COLS = np.shape(dataset)
@@ -90,7 +90,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         return regr_weights
 
     # === METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT (STOCHASTIC) ===
-    def stochastic_gradient_ascent_optimization(self, input_dataset, class_labels):
+    def simple_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         ALPHA = 0.01
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
@@ -103,6 +103,27 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         # # Runs runtime tracker for particular method
         # self.track_runtime(TIME_I)
+
+        # print("\nTOTAL RELATIVE ERROR ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
+        print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        return regr_weights
+
+    def advanced_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 150):
+        NUM_ROWS, NUM_COLS = np.shape(input_dataset)
+        regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
+
+        # Iterates over inputted number of iterations to maximize stochastic gradient optimizer
+        for iterator_outer in range(NUM_ITER):
+            data_index = range(NUM_ROWS)
+
+            # Iterates over sigmoid distribution to optimize training data regression weights
+            for iterator_inner in range(NUM_ROWS):
+                ALPHA = 4 / (1.0 + iterator_outer + iterator_inner) + 0.01
+                random_index = int(np.random.uniform(0, len(data_index)))
+                sig = self.sigmoid_distribution(sum(input_dataset[random_index] * regr_weights))
+                error = class_labels[random_index] - sig
+                regr_weights += ALPHA * error * input_dataset[random_index]
+                del(input_dataset[random_index])
 
         # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
@@ -181,10 +202,26 @@ def main():
     logRegres.track_runtime(TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with loading test data
+    # Test plot_line_of_best_fit() with batch processing optimization and loading test data
+    """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
+    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    """
+
+    # Test plot_line_of_best_fit() with simple stochastic optimization and loading test data
+    """
+    dataset, labels = logRegres.load_dataset()
+    weights = logRegres.simple_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    """
+
+    # Test plot_line_of_best_fit() with advanced stochastic optimization and loading test data
+    
+    dataset, labels = logRegres.load_dataset()
+    weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
+    logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
+    
 
     return
 
