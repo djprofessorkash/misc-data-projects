@@ -49,6 +49,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         labels = []
         f = open("test_set.txt")
 
+        # Produces dataset and class label vector from formatted dataset
         for line in f.readlines():
             array_of_lines = line.strip().split()
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
@@ -59,28 +60,31 @@ class logistic_Regression_Optimization_Algorithm(object):
         return dataset, labels
 
     # ================ METHOD TO CALCULATE SIGMOID VALUE FROM X-INPUT ================
-    def sigmoid(self, x):
+    def sigmoid_distribution(self, x):
+        # Calculates Sigmoid Z-value (functional output) from inputted X-value
         sig = 1.0 / (1 + np.exp(-x))
 
-        # print("SIGMOID VALUE IS: \n{}\n".format(sig))
+        # print("SIGMOID DISTRIBUTION VALUE IS: \n{}\n".format(sig))
         return sig
 
     # ========== METHOD TO OPTIMIZE REGRESSION WEIGHTS USING GRADIENT ASCENT =========
     def optimize_gradient_ascent(self, input_dataset, class_labels):
-        dataset = np.mat(input_dataset)
-        labels = np.mat(class_labels).transpose()
-        m, n = np.shape(dataset)
+        dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
+        labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
+        num_rows, num_cols = np.shape(dataset)
         alpha = 0.001
         maximum_repetitions = 500
-        weights = np.ones((n, 1))
+        reg_weights = np.ones((num_cols, 1))            # Creates array of regression weights with same size as dataset columns
 
+        # Iterates over sigmoid distribution to optimize training data regression weights
         for _ in range(maximum_repetitions):
-            sig = self.sigmoid(dataset * weights)
-            error = (labels - sig)
-            weights += alpha * dataset.transpose() * error
+            sig = self.sigmoid_distribution(dataset * reg_weights)      # Recursively calls sigmoid function to maximize weights
+            error = labels - sig
+            reg_weights += alpha * dataset.transpose() * error
 
-        print("RELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION IS: \n{}\n".format(weights))
-        return weights
+        # print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
+        print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(reg_weights))
+        return reg_weights
 
 
 # ====================================================================================
@@ -95,7 +99,7 @@ def main():
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
 
-    # Test optimize_gradient_ascent() with sigmoid calculation and loading test data
+    # Test optimize_gradient_ascent() with sigmoid_distribution calculation and loading test data
     dataset, labels = logRegres.load_dataset()
     logRegres.optimize_gradient_ascent(dataset, labels)
 
