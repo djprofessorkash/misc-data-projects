@@ -188,8 +188,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         plt.xlabel("X1")
         plt.ylabel("Y1")
 
+        """
         # Runs runtime tracker for particular method
         self.track_runtime(TIME_I)
+        """
 
         # Displays line of best fit over scatterplot of dataset
         print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE...\n")
@@ -207,7 +209,7 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ======= METHOD TO APPLY SIGMOID CLASSIFIER AND GRADIENT ASCENT OPTIMIZER =======
     # ================== AGAINST SAMPLE HORSE COLIC DISEASE DATASETS =================
-    def apply_classifier_against_horse_data(self, TIME_I):
+    def test_classifier_against_horse_data(self, TIME_I):
         HORSE_TRAINING_DATA = open("./horse_colic_training.txt")
         HORSE_TEST_DATA = open("./horse_colic_test.txt")
         training_set = []
@@ -247,9 +249,29 @@ class logistic_Regression_Optimization_Algorithm(object):
 
         # Calculate error rate across entire horse test data classification
         error_rate = error_count / number_of_test_vectors
-        
+
+        """
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+        """
+
         print("THE ERROR RATE OF THE HORSE COLIC DATA CLASSIFICATION TEST IS: {}".format(error_rate))
         return error_rate
+
+    # ========== METHOD TO RUN k ITERATIONS OF THE HORSE DATASET CLASSIFIER ==========
+    def k_series_of_test_classifications(self):
+        number_of_tests = 10
+        error_sum = 0.0
+
+        # Iterates k times, each time running a new instance of the test classifier and incrementing the error sum
+        for k in range(number_of_tests):
+            error_sum += self.test_classifier_against_horse_data(TIME_I)
+
+        # Calculates average error rate of classifier across all test instances
+        average_error_rate = error_sum / float(number_of_tests)
+
+        print("AFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}".format(number_of_tests, average_error_rate))
+        return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self, TIME_I):
