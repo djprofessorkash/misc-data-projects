@@ -44,7 +44,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         pass
 
     # ======================== METHOD TO LOAD DATASET FROM FILE ======================
-    def load_dataset(self):
+    def load_dataset(self, TIME_I):
         dataset = []
         labels = []
         FILE = open("test_set.txt")
@@ -54,6 +54,11 @@ class logistic_Regression_Optimization_Algorithm(object):
             array_of_lines = line.strip().split()
             dataset.append([1.0, float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(int(array_of_lines[2]))
+
+        """
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+        """
 
         """
         print("GIVEN DATASET IS: \n{}\n".format(dataset))
@@ -272,9 +277,8 @@ class logistic_Regression_Optimization_Algorithm(object):
         for k in range(k_num_series):
             error_sum += self.test_classifier_against_horse_data(k, TIME_I)
 
-        # Calculates average error rate of classifier across all test instances
+        # Calculates and prints average error rate of classifier across all test instances
         average_error_rate = error_sum / float(k_num_series)
-
         print("\n\nAFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}\n".format(k_num_series, average_error_rate))
         
         # Runs runtime tracker for particular method
@@ -309,8 +313,7 @@ def main():
     # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation on sample data
     """
     dataset, labels = logRegres.load_dataset()
-    logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
-    logRegres.track_runtime(TIME_I)
+    logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I)
     """
 
     # Test plot_line_of_best_fit() with batch processing gradient ascent optimization on sample data
