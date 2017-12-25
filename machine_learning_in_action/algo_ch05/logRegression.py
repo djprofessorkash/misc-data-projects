@@ -196,6 +196,14 @@ class logistic_Regression_Optimization_Algorithm(object):
         plt.show()
         return
 
+    def classify_vector_against_sigmoid_distribution(self, inX, regr_weights):
+        sig_prob = self.sigmoid_distribution(sum(inX * regr_weights))
+
+        # Return class of 1 if sigmoid is greater than 0.5; otherwise, return class of 0
+        if sig_prob > 0.5:
+            return 1.0
+        return 0.0
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self, TIME_I):
         # Track ending time of program and determine overall program runtime
