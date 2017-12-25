@@ -342,7 +342,7 @@ def main():
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
     logRegres.k_series_of_test_classifications(10)
 
-    return print("Logistic regression class algorithm has finished running.\n")
+    return print("Logistic regression class algorithm is done.\n")
 
 if __name__ == "__main__":
     main()
