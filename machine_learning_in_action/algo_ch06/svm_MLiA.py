@@ -39,7 +39,19 @@ class support_Vector_Machine_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
-        self.TIME_I = TIME_I                # Initial time measure for runtime tracker
+        self.TIME_I = TIME_I                    # Initial time measure for runtime tracker
+        self.FILE = open("test_set.txt")        # Open filename as read-only for test dataset
+
+    def load_dataset(self):
+        dataset = []
+        labels = []
+
+        for line in self.FILE.readlines():
+            array_of_lines = line.strip().split("\t")
+            dataset.append(float(array_of_lines[0]), float(array_of_lines[1]))
+            labels.append(float(array_of_lines[2]))
+
+        return dataset, labels
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
