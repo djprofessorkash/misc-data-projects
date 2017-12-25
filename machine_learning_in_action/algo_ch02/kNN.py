@@ -49,13 +49,13 @@ class k_Nearest_Neighbors_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self):
-        self.f = open("dating_test_set.txt")                # Open dating test set as active file
-        self.training_digits = "./digits/training_digits"   # Directory reference to handwritten training digits
-        self.test_digits = "./digits/test_digits"           # Directory reference to handwritten test digits
-        self.sampling_ratio = 0.10                          # Ratio to hold some testing data
+        self.FILE = open("dating_test_set.txt")                 # Open dating test set as active file
+        self.TRAINING_DIGITS = "./digits/training_digits"       # Directory reference to handwritten training digits
+        self.TEST_DIGITS = "./digits/test_digits"               # Directory reference to handwritten test digits
+        self.SAMPLING_RATIO = 0.10                              # Ratio to hold some testing data
 
     # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
-    def classify0(self, inX, dataset, labels, k):
+    def basic_label_classifier(self, inX, dataset, labels, k):
         dataset_size = dataset.shape[0]
 
         # Distance(s) calculation
@@ -67,103 +67,108 @@ class k_Nearest_Neighbors_Algorithm(object):
         sorted_dist_indices = distances.argsort()
         class_count = {}
 
-        # Voting with lowest k distances
+        # Iterate through k neighbors and select voting labels with lowest k distances
         for iterator in range(k):
             voting_label = labels[sorted_dist_indices[iterator]]
             class_count[voting_label] = class_count.get(voting_label, 0) + 1
 
         # Sort dictionary
         sorted_class_count = sorted(class_count.items(), key = op.itemgetter(1), reverse = True)
+
+        """ print("FIRST ENTRY OF SORTED CLASS COUNT IS: \n{}\n".format(sorted_class_count[0][0])) """
         return sorted_class_count[0][0]
 
     # =========== METHOD THAT CONVERTS FILE TO DATASET AND VECTOR OF LABELS ==========
-    def file_to_matrix(self):
+    def convert_file_to_matrix(self):
         classifier_dictionary = {"largeDoses": 3, "smallDoses": 2, "didntLike": 1}
 
-        array_of_lines = self.f.readlines()             # Get array of lines in file
-        num_of_lines = len(array_of_lines)              # Get number of lines in file
+        array_of_lines = self.FILE.readlines()              # Get array of lines in file
+        num_of_lines = len(array_of_lines)                  # Get number of lines in file
 
         # Create NumPy matrix and labels to return
-        return_mat = np.zeros((num_of_lines, 3))
+        returning_dataset = np.zeros((num_of_lines, 3))
         class_label_vector = []
+        index = 0
 
         # Parse line to a list
-        index = 0
         for line in array_of_lines:
             line = line.strip()
             list_from_line = line.split("\t")
-            return_mat[index, :] = list_from_line[0:3]
+            returning_dataset[index, :] = list_from_line[0:3]
 
             # If previous list from line is a number, append it to the class label vector
             if(list_from_line[-1].isdigit()):
                 class_label_vector.append(int(list_from_line[-1]))
             else:
                 class_label_vector.append(classifier_dictionary.get(list_from_line[-1]))
+
             index += 1
-        return return_mat, class_label_vector
+
+        """ print("CONVERTED DATASET IS: \n{}\nCLASS LABEL VECTOR IS: \n{}\n".format(returning_dataset, class_label_vector)) """
+        return returning_dataset, class_label_vector
 
     # ===================== METHOD THAT CONVERTS IMAGE TO VECTOR =====================
-    def image_to_vector(self, file):
-        return_vector = np.zeros((1, 1024))
-        img = open(file)
+    def convert_image_to_vector(self, file):
+        image_vector = np.zeros((1, 1024))
+        IMAGE = open(file)
 
         # Converts 32x32 image to 1x1024 vector
         for iterator_outer in range(32):
-            line_str = img.readline()
+            line = IMAGE.readline()
 
             for iterator_inner in range(32):
-                return_vector[0, 32 * iterator_outer + iterator_inner] = int(line_str[iterator_inner])
+                image_vector[0, 32 * iterator_outer + iterator_inner] = int(line[iterator_inner])
 
-        # print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(return_vector[0, 0:31], return_vector[0, 32:63]))
-        return return_vector
+        """ print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(image_vector[0, 0:31], image_vector[0, 32:63])) """
+        return image_vector
 
     # =================== METHOD THAT LINEARLY NORMALIZES DATASETS ===================
-    def auto_norm(self, dataset):
+    def auto_linear_normalization(self, dataset):
         # Calculate minimum values, maximum values, and ranges across dating data set
         min_vals = dataset.min(0)
         max_vals = dataset.max(0)
         ranges = max_vals - min_vals
 
         # Normalize data set using linear algebraic transformations
-        sample_data_mat = dataset.shape[0]
-        norm_mat = np.zeros(np.shape(dataset))
-        norm_mat = dataset - np.tile(min_vals, (sample_data_mat, 1))
-        norm_mat = norm_mat / np.tile(ranges, (sample_data_mat, 1))
+        sample_dataset = dataset.shape[0]
+        norm_dataset = np.zeros(np.shape(dataset))
+        norm_dataset = dataset - np.tile(min_vals, (sample_dataset, 1))
+        norm_dataset = norm_dataset / np.tile(ranges, (sample_dataset, 1))
 
-        # print("\nDATING DATA MATRIX: \n{}\n\nNORMALIZED MATRIX: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(dataset, norm_mat, ranges, min_vals, max_vals))
-        return norm_mat, ranges, min_vals, max_vals
+        """ print("\nDATING DATASET: \n{}\n\nNORMALIZED DATASET: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(dataset, norm_dataset, ranges, min_vals, max_vals)) """
+        return norm_dataset, ranges, min_vals, max_vals
 
     # ================== METHOD THAT CREATES DATING DATA SCATTERPLOT =================
     def create_scatterplot(self, t0):
         fig = plt.figure()
         ax = fig.add_subplot(111)               # Creates visual subplot using MatPlotLib
 
-        dating_data_mat, dating_labels = self.file_to_matrix()
-        # print("\nDATING DATA MATRIX: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_data_mat, dating_labels[:20]))
+        dating_dataset, dating_labels = self.convert_file_to_matrix()
+        """ print("\nDATING DATASET: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_dataset, dating_labels[:20])) """
 
-        ax.scatter(dating_data_mat[:, 1], dating_data_mat[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
+        ax.scatter(dating_dataset[:, 1], dating_dataset[:, 2], 15.0 * np.array(dating_labels), 15.0 * np.array(dating_labels))
         self.calculate_runtime(t0)
         plt.show()
         return
 
     # ================ METHOD THAT USES CLASSIFIER AGAINST DATING DATA ===============
     def dating_class_set(self, t0):
-        dating_data_mat, dating_labels = self.file_to_matrix()
-        norm_mat, ranges, min_vals, max_vals = self.auto_norm(dating_data_mat)
-        sample_data_mat = norm_mat.shape[0]
-        # print("\nDATING DATA MATRIX: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_data_mat, dating_labels[:20]))
-        # print("\nNORMALIZED MATRIX: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(norm_mat, ranges, min_vals, max_vals))
+        dating_dataset, dating_labels = self.convert_file_to_matrix()
+        norm_dataset, ranges, min_vals, max_vals = self.auto_linear_normalization(dating_dataset)
+        sample_dataset = norm_dataset.shape[0]
+        # print("\nDATING DATASET: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_dataset, dating_labels[:20]))
+        # print("\nNORMALIZED DATASET: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(norm_dataset, ranges, min_vals, max_vals))
 
         # Creates error count and test vectors from 10% of dating data set
         error_count = 0.0
-        num_test_vectors = int(sample_data_mat * self.sampling_ratio)
+        num_test_vectors = int(sample_dataset * self.SAMPLING_RATIO)
 
         # Tests sample data in classifier function and assigns labels relatively
         for iterator in range(num_test_vectors):
-            classifier_result = self.classify0(norm_mat[iterator, :], norm_mat[num_test_vectors: sample_data_mat, :], dating_labels[num_test_vectors: sample_data_mat], 3)
-            print("The classifier came back with: {}. \nThe real answer is: {}.".format(classifier_result, dating_labels[iterator]))
+            classifier_response = self.basic_label_classifier(norm_dataset[iterator, :], norm_dataset[num_test_vectors: sample_dataset, :], dating_labels[num_test_vectors: sample_dataset], 3)
+            print("The classifier came back with: {}. \nThe real answer is: {}.".format(classifier_response, dating_labels[iterator]))
 
-            if (classifier_result != dating_labels[iterator]):
+            if (classifier_response != dating_labels[iterator]):
                 error_count += 1.0
             
         # Assigns error rate indicative of failures in classifier accuracy
@@ -175,27 +180,28 @@ class k_Nearest_Neighbors_Algorithm(object):
     def classify_person(self, t0):
         # Define resultant labels and dating attributes for data set
         result_list = ["not at all", "in small doses", "in large doses"]
+        
         t_user_start = t()
         attribute_percent_gaming = float(input("\nPercentage of time spent playing video games?  > "))
         attribute_ff_miles = float(input("Frequent flier miles earned per year?  > "))
         attribute_ice_cream = float(input("Liters of ice cream consumed per year?  > "))
         t_user_end = t()
         
-        dating_data_mat, dating_labels = self.file_to_matrix()
-        norm_mat, ranges, min_vals, max_vals = self.auto_norm(dating_data_mat)
+        dating_dataset, dating_labels = self.convert_file_to_matrix()
+        norm_dataset, ranges, min_vals, max_vals = self.auto_linear_normalization(dating_dataset)
 
         # Create array with user-entered attributes and use classifier to test attributes against training data
         attr_arr = np.array([attribute_ff_miles, attribute_percent_gaming, attribute_ice_cream])
-        classifier_result = self.classify0((attr_arr - min_vals) / ranges, norm_mat, dating_labels, 3)
+        classifier_response = self.basic_label_classifier((attr_arr - min_vals) / ranges, norm_dataset, dating_labels, 3)
 
-        print("\nYou will probably like this person... {}.".format(result_list[classifier_result - 1]))
+        print("\nYou will probably like this person... {}.".format(result_list[classifier_response - 1]))
         self.calculate_runtime(t0, t_user_start, t_user_end)
         return
 
     # ========= METHOD THAT APPLIES CLASSIFIER AGAINST HANDWRITTEN IMAGE DATA ========
     def handwriting_class_test(self, t0):
         handwriting_labels = []
-        training_file_list = ld(self.training_digits)
+        training_file_list = ld(self.TRAINING_DIGITS)
         dir_length_training = len(training_file_list)
         training_mat = np.zeros((dir_length_training, 1024))
 
@@ -206,10 +212,10 @@ class k_Nearest_Neighbors_Algorithm(object):
             class_num_str = int(file_str.split("_")[0])
 
             handwriting_labels.append(class_num_str)
-            training_mat[iterator, :] = self.image_to_vector("{}/{}".format(self.training_digits, file_name_str))
+            training_mat[iterator, :] = self.convert_image_to_vector("{}/{}".format(self.TRAINING_DIGITS, file_name_str))
         
         error_count = 0.0
-        test_file_list = ld(self.test_digits)
+        test_file_list = ld(self.TEST_DIGITS)
         dir_length_test = len(test_file_list)
 
         # Create dataset and label vectors from test image data, then use with classifier against training data
@@ -218,12 +224,12 @@ class k_Nearest_Neighbors_Algorithm(object):
             file_str = file_name_str.split(".")[0]
             class_num_str = int(file_str.split("_")[0])
 
-            vector_under_test = self.image_to_vector("{}/{}".format(self.test_digits, file_name_str))
-            classifier_result = self.classify0(vector_under_test, training_mat, handwriting_labels, 3)
+            vector_under_test = self.convert_image_to_vector("{}/{}".format(self.TEST_DIGITS, file_name_str))
+            classifier_response = self.basic_label_classifier(vector_under_test, training_mat, handwriting_labels, 3)
 
-            print("The classifier came back with: {}.\nThe real answer is: {}.\n".format(classifier_result, class_num_str))
+            print("The classifier came back with: {}.\nThe real answer is: {}.\n".format(classifier_response, class_num_str))
 
-            if (classifier_result != class_num_str):
+            if (classifier_response != class_num_str):
                 error_count += 1.0
 
         print("\nThe total number of errors is: {}.\nThe total error rate is: {}.\n".format(error_count, error_count / float(dir_length_test)))
