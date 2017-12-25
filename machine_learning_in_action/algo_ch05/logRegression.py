@@ -79,7 +79,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         # NUM_ITER = 500
         regr_weights = np.ones((NUM_COLS, 1))            # Creates array of regression weights with same size as dataset columns
 
-        print("\nTESTING BATCH PROCESSING GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER))
+        """ print("\nTESTING BATCH PROCESSING GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER)) """
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for _ in range(NUM_ITER):
@@ -92,8 +92,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
         """
 
-        """ print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
+        """
+        print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        """
         return regr_weights
 
     # ================= SIMPLE METHOD TO MAXIMIZE REGRESSION WEIGHTS =================
@@ -103,7 +105,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         ALPHA = 0.01
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
 
-        print("\nTESTING SIMPLE STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR ONE (1) ITERATION...")
+        """ print("\nTESTING SIMPLE STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR ONE (1) ITERATION...") """
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for iterator in range(NUM_ROWS):
@@ -116,8 +118,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
         """
 
-        """ print("\nTOTAL RELATIVE ERROR ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
+        """
+        print("\nTOTAL RELATIVE ERROR ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        """
         return regr_weights
 
     # ================ ADVANCED METHOD TO MAXIMIZE REGRESSION WEIGHTS ================
@@ -126,7 +130,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
 
-        print("\nTESTING ADVANCED STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER))
+        """ print("\nTESTING ADVANCED STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER)) """
 
         # Iterates over inputted number of iterations to maximize stochastic gradient optimizer
         for iterator_outer in range(NUM_ITER):
@@ -146,8 +150,10 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
         """
 
-        """ print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error)) """
+        """
+        print("\nTOTAL RELATIVE ERRORS ACROSS SIGMOID DISTRIBUTION IS: \n{}\n".format(error))
         print("\nRELATIVE REGRESSION WEIGHTS FROM OPTIMIZATION ARE: \n{}\n".format(regr_weights))
+        """
         return regr_weights
 
     # ====== METHOD TO PLOT LOGISTIC REGRESSION LINE OF BEST FIT ACROSS DATASET ======
@@ -259,7 +265,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         return error_rate
 
     # ========== METHOD TO RUN k ITERATIONS OF THE HORSE DATASET CLASSIFIER ==========
-    def k_series_of_test_classifications(self):
+    def k_series_of_test_classifications(self, TIME_I):
         number_of_tests = 10
         error_sum = 0.0
 
@@ -270,7 +276,11 @@ class logistic_Regression_Optimization_Algorithm(object):
         # Calculates average error rate of classifier across all test instances
         average_error_rate = error_sum / float(number_of_tests)
 
-        print("AFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}".format(number_of_tests, average_error_rate))
+        print("\n\nAFTER k={} ITERATIONS, THE AVERAGE ERROR RATE OF THE CLASSIFIER IS: {}\n".format(number_of_tests, average_error_rate))
+        
+        # Runs runtime tracker for particular method
+        self.track_runtime(TIME_I)
+
         return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -295,33 +305,36 @@ def main():
     # Initialize class instance of the logistic regression optimization algorithm
     logRegres = logistic_Regression_Optimization_Algorithm()
 
-    # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation
+    # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation on sample data
     """
     dataset, labels = logRegres.load_dataset()
     logRegres.batch_processing_gradient_ascent_optimization(dataset, labels)
     logRegres.track_runtime(TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with batch processing gradient ascent optimization
+    # Test plot_line_of_best_fit() with batch processing gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I, 1000)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with simple stochastic gradient ascent optimization
+    # Test plot_line_of_best_fit() with simple stochastic gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.simple_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
 
-    # Test plot_line_of_best_fit() with advanced stochastic gradient ascent optimization
+    # Test plot_line_of_best_fit() with advanced stochastic gradient ascent optimization on sample data
     """
     dataset, labels = logRegres.load_dataset()
     weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I, 1000)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
+
+    # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
+    logRegres.k_series_of_test_classifications(TIME_I)
 
     return
 
