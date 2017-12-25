@@ -19,7 +19,7 @@ ADVANTAGE(S):       Computationally cheap
 DISADVANTAGE(S):    Sensitive and prone to overfitting
                     Potential for low accuracy
 
-NOTE:               Original source code is Python 2, but my code is Python 3.
+NOTE:               Original source code is in Python 2, but my code is in Python 3.
 
 CREDIT:             Machine Learning In Action (Peter Harrington)
 """
