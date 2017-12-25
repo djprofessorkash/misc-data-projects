@@ -71,16 +71,18 @@ class logistic_Regression_Optimization_Algorithm(object):
 
     # ==================== METHOD TO MAXIMIZE REGRESSION WEIGHTS =====================
     # ============= USING GRADIENT ASCENT OPTIMIZATION (BATCH PROCESSING) ============
-    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I):
+    def batch_processing_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 500):
         dataset = np.mat(input_dataset)                 # Input dataset is array of features (columns) and training samples (rows)
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         NUM_ROWS, NUM_COLS = np.shape(dataset)
         ALPHA = 0.001
-        MAX_REPETITIONS = 500
+        # NUM_ITER = 500
         regr_weights = np.ones((NUM_COLS, 1))            # Creates array of regression weights with same size as dataset columns
 
+        print("\nTESTING BATCH PROCESSING GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER))
+
         # Iterates over sigmoid distribution to optimize training data regression weights
-        for _ in range(MAX_REPETITIONS):
+        for _ in range(NUM_ITER):
             sig = self.sigmoid_distribution(dataset * regr_weights)      # Recursively calls sigmoid function to maximize weights
             error = labels - sig
             regr_weights += ALPHA * dataset.transpose() * error
@@ -100,6 +102,8 @@ class logistic_Regression_Optimization_Algorithm(object):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         ALPHA = 0.01
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
+
+        print("\nTESTING SIMPLE STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR ONE (1) ITERATION...")
 
         # Iterates over sigmoid distribution to optimize training data regression weights
         for iterator in range(NUM_ROWS):
@@ -121,6 +125,8 @@ class logistic_Regression_Optimization_Algorithm(object):
     def advanced_stochastic_gradient_ascent_optimization(self, input_dataset, class_labels, TIME_I, NUM_ITER = 150):
         NUM_ROWS, NUM_COLS = np.shape(input_dataset)
         regr_weights = np.ones(NUM_COLS)                # Creates array of regression weights with same size as dataset columns
+
+        print("\nTESTING ADVANCED STOCHASTIC GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER))
 
         # Iterates over inputted number of iterations to maximize stochastic gradient optimizer
         for iterator_outer in range(NUM_ITER):
@@ -186,7 +192,7 @@ class logistic_Regression_Optimization_Algorithm(object):
         self.track_runtime(TIME_I)
 
         # Displays line of best fit over scatterplot of dataset
-        print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE AFTER 500 CYCLES OF GRADIENT ASCENT...\n")
+        print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE...\n")
         plt.show()
         return
 
@@ -222,7 +228,7 @@ def main():
     # Test plot_line_of_best_fit() with batch processing gradient ascent optimization
     """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I)
+    weights = logRegres.batch_processing_gradient_ascent_optimization(dataset, labels, TIME_I, 1000)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
     """
 
@@ -234,11 +240,11 @@ def main():
     """
 
     # Test plot_line_of_best_fit() with advanced stochastic gradient ascent optimization
-    
+    """
     dataset, labels = logRegres.load_dataset()
-    weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I)
+    weights = logRegres.advanced_stochastic_gradient_ascent_optimization(np.array(dataset), labels, TIME_I, 1000)
     logRegres.plot_line_of_best_fit(dataset, labels, weights, TIME_I)
-    
+    """
 
     return
 
