@@ -125,11 +125,12 @@ class logistic_Regression_Optimization_Algorithm(object):
         # Runs runtime tracker for particular method
         self.track_runtime(TIME_I)
 
+        # Displays line of best fit over scatterplot of dataset
         print("DISPLAYING LOGISTIC REGRESSION BEST-FIT LINE AFTER 500 CYCLES OF GRADIENT ASCENT...\n")
-
         plt.show()
         return
 
+    # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self, TIME_I):
         # Track ending time of program and determine overall program runtime
         TIME_F = t()
