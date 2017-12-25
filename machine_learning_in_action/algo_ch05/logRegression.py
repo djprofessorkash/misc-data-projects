@@ -238,7 +238,7 @@ class logistic_Regression_Optimization_Algorithm(object):
             training_labels.append(float(current_line[21]))
 
         # Create training regression weights using the advanced stochastic gradient ascent optimizer against the training set and training labels for 500 iterations
-        training_weights = self.advanced_stochastic_gradient_ascent_optimization(np.array(training_set), training_labels, 500)
+        training_weights = self.advanced_stochastic_gradient_ascent_optimization(np.array(training_set), training_labels)
         error_count = 0.0
         number_of_test_vectors = 0.0
 
@@ -340,7 +340,7 @@ def main():
     """
 
     # Test k_series_of_test_classifications() with modular classifier methods on horse datasets
-    logRegres.k_series_of_test_classifications(3)
+    logRegres.k_series_of_test_classifications(10)
 
     return print("Logistic regression class algorithm has finished running.\n")
 
