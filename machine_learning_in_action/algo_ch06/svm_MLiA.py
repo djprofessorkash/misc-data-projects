@@ -80,6 +80,80 @@ class support_Vector_Machine_Algorithm(object):
         print("\nALPHA VALUE PROCESSED AGAINST CONSTRAINTS IS: {}\n".format(alpha_from_potential))
         return alpha_from_potential
 
+    # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
+    # ==================== SIMPLE SEQUENTIAL MINIMAL OPTIMIZATION ====================
+    def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
+        dataset = np.mat(input_dataset)
+        labels = np.mat(class_labels).transpose()
+        b = 0
+        NUM_ROWS, NUM_COLS = np.shape(dataset)
+        
+        alphas = np.mat(np.zeros((NUM_ROWS, 1)))
+        iteration_constant = 0
+
+        while (iteration_constant < MAX_ITER):
+            changed_alpha_pairs = 0
+
+            for iterator in range(NUM_ROWS):
+                fX_iterator = float(np.multiply(alphas, labels).T * (dataset * dataset[iterator, :].T)) + b
+                E_iterator = fX_iterator - float(labels[iterator])
+
+                if ((labels[iterator] * E_iterator < -alpha_tolerance) and (alphas[iterator] < absolute_ceiling_constant)) or ((labels[iterator] * E_iterator > alpha_tolerance) and (alphas[iterator] > 0)):
+                    potential_alpha = self.select_random_potential_alpha(iterator, NUM_ROWS)
+                    fX_potential = float(np.multiply(alphas, labels).T * (dataset * dataset[potential_alpha, :].T)) + b
+                    E_potential = fX_potential - float(labels[potential_alpha])
+
+                    old_alpha_iterator = np.copy(alphas[iterator])
+                    old_alpha_potential = np.copy(alphas[potential_alpha])
+
+                    if (labels[iterator] != labels[potential_alpha]):
+                        alpha_ceiling = min(absolute_ceiling_constant, absolute_ceiling_constant + alphas[potential_alpha] - alphas[iterator])
+                        alpha_floor = max(0, alphas[potential_alpha] - alphas[iterator])
+                    else:
+                        alpha_ceiling = min(absolute_ceiling_constant, alphas[potential_alpha] + alphas[iterator])
+                        alpha_floor = max(0, alphas[potential_alpha] + alphas[iterator] - absolute_ceiling_constant)
+
+                    if alpha_ceiling == alpha_floor:
+                        print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n")
+                        continue
+
+                    optimal_alpha_change_marker = 2.0 * dataset[iterator, :] * dataset[potential_alpha, :].T - dataset[iterator, :] * dataset[iterator, :].T - dataset[potential_alpha, :] * dataset[potential_alpha, :].T
+
+                    if optimal_alpha_change_marker >= 0:
+                        print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n")
+                        continue
+
+                    alphas[potential_alpha] -= labels[potential_alpha] * (E_iterator - E_potential) / optimal_alpha_change_marker
+                    alphas[potential_alpha] = self.process_alpha_against_constraints(alphas[potential_alpha], alpha_ceiling, alpha_floor)
+
+                    if (abs(alphas[potential_alpha] - old_alpha_potential) < 0.00001):
+                        print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
+                        continue
+
+                    alphas[iterator] += labels[potential_alpha] * labels[iterator] * (old_alpha_potential - alphas[potential_alpha])
+                    b1 = b - E_iterator - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[iterator, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[iterator, :] * dataset[potential_alpha, :].T
+                    b2 = b - E_potential - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[potential_alpha, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[potential_alpha, :] * dataset[potential_alpha, :].T
+
+                    if (0 < alphas[iterator]) and (absolute_ceiling_constant > alphas[iterator]):
+                        b = b1
+                    elif (0 < alphas[potential_alpha]) and (absolute_ceiling_constant > alphas[potential_alpha]):
+                        b = b2
+                    else:
+                        b = (b1 + b2) / 2.0
+
+                    changed_alpha_pairs += 1
+                    print("\nITERATION CONSTANT IS: {}\n\nFUNCTIONAL ITERATOR IS: {}\n\nCHANGED ALPHA PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+
+            if (changed_alpha_pairs == 0):
+                iteration_constant += 1
+            else:
+                iteration_constant = 0
+            
+            print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
+        
+        print("\nB-VALUE IS: {}\n\nALPHAS ARE: \n{}\n".format(b, alphas))
+        return b, alphas
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
