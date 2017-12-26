@@ -32,11 +32,11 @@ from time import time as t                  # Package for tracking modular and p
 
 
 # ====================================================================================
-# ================================= CLASS DEFINITION =================================
+# ===================== CLASS DEFINITION: SUPPORT VECTOR MACHINE =====================
 # ====================================================================================
 
 
-class support_Vector_Machine_Algorithm(object):
+class Support_Vector_Machine_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
@@ -185,6 +185,48 @@ class support_Vector_Machine_Algorithm(object):
 
         return b, alphas
 
+    # =========== METHOD TO CALCULATE E PARAMETER FOR SVM SMO OPTIMIZATION ===========
+    def calculate_E_parameter(self, smo_optimizer, alpha_param):
+        # Produces holding SMO optimization parameters
+        fX_param = float(np.multiply(smo_optimizer.alphas, smo_optimizer.labels).T * (smo_optimizer.dataset * smo_optimizer.dataset[k, :].T)) + smo_optimizer.b
+        E_param = fX_param - float(smo_optimizer.labels[k])
+        
+        print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
+        return E_param
+
+    def select_optimized_potential_alpha(self, iterator, smo_optimizer, E_iterator):
+        maximum_alpha_param = -1
+        maximum_delta_E = 0
+        E_potential_alpha = 0
+
+        smo_optimizer.error_cache[iterator] = [1, E_iterator]
+        valid_error_cache_list = np.nonzero(smo_optimizer.error_cache[:, 0].A)[0]
+
+        if (len(valid_error_cache_list)) > 1:
+            for alpha_param in valid_error_cache_list:
+                if alpha_param == iterator:
+                    continue
+
+                E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
+                delta_E = abs(E_iterator - E_param)
+
+                if (delta_E > maximum_delta_E):
+                    maximum_alpha_param = alpha_param
+                    maximum_delta_E = delta_E
+                    E_potential_alpha = E_param
+            
+            return maximum_alpha_param, E_potential_alpha
+        else:
+            potential_alpha = self.select_random_potential_alpha(iterator, smo_optimizer.NUM_ROWS)
+            E_potential_alpha = self.calculate_E_parameter(smo_optimizer, potential_alpha)
+        
+        print("POTENTIAL ALPHA VALUE IS: {}\n\nSMO OPTIMIZATION PARAMETER FOR POTENTIAL ALPHA IS: {}\n".format(potential_alpha, E_potential_alpha))
+        return potential_alpha, E_potential_alpha
+
+    def update_E_parameter(self, smo_optimizer, alpha_param):
+        E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
+        smo_optimizer.error_cache[alpha_param] = [1, E_param]
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
@@ -199,6 +241,26 @@ class support_Vector_Machine_Algorithm(object):
 
 
 # ====================================================================================
+# ======================== CLASS DEFINITION: SMO OPTIMIZATION ========================
+# ====================================================================================
+
+
+class Platt_SMO_Support_Optimization_Structure(object):
+
+    # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
+    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, TIME_I):
+        self.dataset = input_dataset                                        # Formatted dataset from sample data
+        self.labels = class_labels                                          # Class label vector from sample data
+        self.absolute_ceiling_constant = absolute_ceiling_constant          # Alpha ceiling constant for SMO boundary parametrization
+        self.alpha_tolerance = alpha_tolerance                              # Alpha tolerance for SMO boundary parametrization
+        self.NUM_ROWS = np.shape(input_dataset)[0]                          # Constant to hold number of rows of dataset
+        self.alphas = np.mat(np.zeros((self.NUM_ROWS, 1)))                  # Alpha value range initialized as array of zeros
+        self.b = 0                                                          # SVM-SMO B-value
+        self.error_cache = np.mat(np.zeros((self.NUM_ROWS, 2)))             # Caching value for tracking compounding errors
+        self.TIME_I = TIME_I                                                # Initial time constant for runtime tracker
+
+
+# ====================================================================================
 # ================================ MAIN RUN FUNCTION =================================
 # ====================================================================================
 
@@ -208,7 +270,7 @@ def main():
     TIME_I = t()
 
     # Initialize class instance of the support vector machine algorithm
-    svm = support_Vector_Machine_Algorithm(TIME_I)
+    svm = Support_Vector_Machine_Algorithm(TIME_I)
 
     """
     # Test load_dataset() method on SVM

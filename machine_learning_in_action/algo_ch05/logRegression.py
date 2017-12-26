@@ -40,7 +40,7 @@ from time import time as t                  # Package for tracking modular and p
 # ====================================================================================
 
 
-class logistic_Regression_Optimization_Algorithm(object):
+class Logistic_Regression_Optimization_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
@@ -309,7 +309,7 @@ def main():
     TIME_I = t()
 
     # Initialize class instance of the logistic regression optimization algorithm
-    logRegres = logistic_Regression_Optimization_Algorithm(TIME_I)
+    logRegres = Logistic_Regression_Optimization_Algorithm(TIME_I)
 
     # Test batch_processing_gradient_ascent_optimization() with sigmoid function calculation on sample data
     """
