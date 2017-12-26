@@ -79,7 +79,6 @@ class logistic_Regression_Optimization_Algorithm(object):
         labels = np.mat(class_labels).transpose()       # Class label vector is linear transposition of input dataset
         NUM_ROWS, NUM_COLS = np.shape(dataset)
         ALPHA = 0.001
-        # NUM_ITER = 500
         regr_weights = np.ones((NUM_COLS, 1))            # Creates array of regression weights with same size as dataset columns
 
         """ print("\nTESTING BATCH PROCESSING GRADIENT ASCENT OPTIMIZER FOR {} ITERATIONS...".format(NUM_ITER)) """
