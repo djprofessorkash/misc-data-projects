@@ -67,7 +67,7 @@ class Support_Vector_Machine_Algorithm(object):
         """ print("\nPOTENTIAL ALPHA VALUE IS: {}\n".format(potential_alpha)) """
         return potential_alpha
 
-    # ========= METHOD TO POTENTIAL ALPHA VALUE AGAINST BOUNDARY CONSTRAINTS =========
+    # ===== METHOD TO PROCESS POTENTIAL ALPHA VALUE AGAINST BOUNDARY CONSTRAINTS =====
     def process_alpha_against_constraints(self, alpha_from_potential, alpha_ceiling, alpha_floor):
         # Processes alpha value against ceiling constraint (cannot be greater than)
         if alpha_from_potential > alpha_ceiling:
