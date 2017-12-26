@@ -64,11 +64,11 @@ class support_Vector_Machine_Algorithm(object):
         while (potential_alpha == alpha_index):
             potential_alpha = int(np.random.uniform(0, alpha_total))
         
-        print("\nJ-VALUE IS: {}\n".format(potential_alpha))
+        print("\nPOTENTIAL ALPHA VALUE IS: {}\n".format(potential_alpha))
         return potential_alpha
 
     # ========= METHOD TO POTENTIAL ALPHA VALUE AGAINST BOUNDARY CONSTRAINTS =========
-    def process_alpha_against_constraints(alpha_from_potential, alpha_ceiling, alpha_floor):
+    def process_alpha_against_constraints(self, alpha_from_potential, alpha_ceiling, alpha_floor):
         # Processes alpha value against ceiling constraint (cannot be greater than)
         if alpha_from_potential > alpha_ceiling:
             alpha_from_potential = alpha_ceiling
@@ -171,13 +171,12 @@ class support_Vector_Machine_Algorithm(object):
                 iteration_constant = 0
             
             print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
+
+        print("\nB-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(b, alphas[alphas > 0]))
         
-        """
         # Performs runtime tracker for particular method
         self.track_runtime()
-        """
 
-        print("\nB-VALUE IS: {}\n\nALPHAS ARE: \n{}\n".format(b, alphas))
         return b, alphas
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -205,8 +204,14 @@ def main():
     # Initialize class instance of the support vector machine algorithm
     svm = support_Vector_Machine_Algorithm(TIME_I)
 
+    """
     # Test load_dataset() method on SVM
     dataset, labels = svm.load_dataset()
+    """
+
+    # Test basic Platt SMO in SVM with helper methods
+    dataset, labels = svm.load_dataset()
+    b, alphas = svm.simple_sequential_minimal_optimization(dataset, labels, 0.6, 0.001, 40)
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
