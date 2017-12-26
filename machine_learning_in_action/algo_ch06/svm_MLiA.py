@@ -239,29 +239,39 @@ class Support_Vector_Machine_Algorithm(object):
     # ========== VIA A MULTILEVEL SECOND-CHOICE HEURISTIC SELECTION ROUTINE ==========
     def multilevel_choice_heuristic_smo_optimization(iterator, smo_optimizer):
         E_iterator = self.calculate_E_parameter(smo_optimizer, iterator)
+
+        # Checks if iteration constants abide by absolute and relative boundary conditions defined by the ceiling and tolerance levels
         if ((smo_optimizer.labels[iterator] * E_iterator < -smo_optimizer.alpha_tolerance) and (smo_optimizer.alphas[iterator] < smo_optimizer.absolute_ceiling_constant)) or ((smo_optimizer.labels[iterator] * E_iterator > smo_optimizer.alpha_tolerance) and (smo_optimizer.alphas[iterator] > 0)):
             potential_alpha, E_potential_alpha = self.inner_loop_heuristic_smo_optimization(iterator, smo_optimizer, E_iterator)
             
+            # Creates dummy constants to hold old alpha values from method's parent iterator and potential alpha values
             old_alpha_iterator = np.copy(smo_optimizer.alphas[iterator])
             old_alpha_potential = np.copy(smo_optimizer.alphas[potential_alpha])
 
+            # Checks if iterated labels match the expected potential alpha label values
             if (smo_optimizer.labels[iterator] != smo_optimizer.labels[potential_alpha]):
+                # Defines the alpha's ceiling and floor if there is a mismatch
                 alpha_ceiling = min(smo_optimizer.absolute_ceiling_constant, smo_optimizer.absolute_ceiling_constant + smo_optimizer.alphas[potential_alpha] - smo_optimizer.alphas[iterator])
                 alpha_floor = max(0, smo_optimizer.alphas[potential_alpha] - smo_optimizer.alphas[iterator])
             else:
+                # Defines the alpha's ceiling and floor if there is a match
                 alpha_ceiling = min(smo_optimizer.absolute_ceiling_constant, smo_optimizer.alphas[potential_alpha] + smo_optimizer.alphas[iterator])
                 alpha_floor = max(0, smo_optimizer.alphas[potential_alpha] + smo_optimizer[iterator] - smo_optimizer.absolute_ceiling_constant)
 
+            # Checks if floor and ceiling are equivalent and if so, prints for convenience
             if (alpha_ceiling == alpha_floor):
                 print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n")
                 return 0
 
+            # Defines marker value for altering the alpha value for optimization
             optimal_alpha_change_marker = 2.0 * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T - smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[iterator, :].T - smo_optimizer.dataset[potential_alpha, :] * smo_optimizer.dataset[potential_alpha, :].T
 
+            # Checks if optimal alpha marker is zero and if so, prints for convenience
             if optimal_alpha_change_marker >= 0:
                 print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n")
                 return 0
 
+            # Optimizes alpha values based on optimal marker and constraint processing method
             smo_optimizer.alphas[potential_alpha] -= smo_optimizer.labels[potential_alpha] * (E_iterator - E_potential_alpha) / optimal_alpha_change_marker
             smo_optimizer.alphas[potential_alpha] = self.process_alpha_against_constraints(smo_optimizer.alphas[potential_alpha], alpha_ceiling, alpha_floor)
             self.update_E_parameter(smo_optimizer, potential_alpha)
@@ -279,6 +289,7 @@ class Support_Vector_Machine_Algorithm(object):
             beta1 = smo_optimizer.beta - E_iterator - smo_optimizer.labels[iterator] * (smo_optimizer.alphas[iterator] - old_alpha_iterator) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[iterator, :].T - smo_optimizer.labels[potential_alpha] * (smo_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T
             beta2 = smo_optimizer.beta - E_potential_alpha - smo_optimizer.labels[iterator] * (smo_optimizer.alphas[iterator] - old_alpha_iterator) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T - smo_optimizer.labels[potential_alpha] * (smo_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_optimizer.dataset[potential_alpha, :] * smo_optimizer.dataset[potential_alpha, :].T
 
+            # Checks if new alpha values fall within beta-dependent boundary conditions for beta-value reinitialization
             if (0 < smo_optimizer.alphas[iterator]) and (smo_optimizer.absolute_ceiling_constant > smo_optimizer.alphas[iterator]):
                 smo_optimizer.beta = beta1
             elif (0 < smo_optimizer.alphas[potential_alpha]) and (smo_optimizer.absolute_ceiling_constant > smo_optimizer.alphas[potential_alpha]):
