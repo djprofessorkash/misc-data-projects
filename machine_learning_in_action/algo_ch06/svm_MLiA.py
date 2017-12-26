@@ -85,9 +85,9 @@ class Support_Vector_Machine_Algorithm(object):
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
         dataset = np.mat(input_dataset)                     # Produces formatted dataset
         labels = np.mat(class_labels).transpose()           # Produces transposed class label vector
-        beta = 0                                            # Initializes value of beta to increment later
         NUM_ROWS, NUM_COLS = np.shape(dataset)              # Produces constants of dataset's dimensionality
-        
+        beta = 0                                            # Initializes value of beta to increment later
+
         # Initializes alpha matrix of zeros by number of rows in dataset
         alphas = np.mat(np.zeros((NUM_ROWS, 1)))
         iteration_constant = 0
@@ -173,13 +173,13 @@ class Support_Vector_Machine_Algorithm(object):
             # Prints formatted iteration number for method
             """ print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant)) """
 
-        # Prints beta-values and formatted alphas greater than zero
-        print("\nBETA-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(beta, alphas[alphas > 0]))
-
         # Get number of support vectors across SVM-SMO
         print("SUPPORT VECTORS ALONG THE SAMPLE DATASET ARE:")
         [print(dataset[iterator], labels[iterator]) for iterator in range(100) if alphas[iterator] > 0.0]
 
+        # Prints beta-values and formatted alphas greater than zero
+        print("\nBETA-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(beta, alphas[alphas > 0]))
+        
         # Performs runtime tracker for particular method
         self.track_runtime()
 
