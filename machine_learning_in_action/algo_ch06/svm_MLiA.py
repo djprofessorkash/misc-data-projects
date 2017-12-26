@@ -188,8 +188,8 @@ class Support_Vector_Machine_Algorithm(object):
     # =========== METHOD TO CALCULATE E PARAMETER FOR SVM SMO OPTIMIZATION ===========
     def calculate_E_parameter(self, smo_support_optimizer, alpha_param):
         # Produces holding SMO optimization parameters
-        fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * (smo_support_optimizer.dataset * smo_support_optimizer.dataset[k, :].T)) + smo_support_optimizer.beta
-        E_param = fX_param - float(smo_support_optimizer.labels[k])
+        fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * (smo_support_optimizer.dataset * smo_support_optimizer.dataset[alpha_param, :].T)) + smo_support_optimizer.beta
+        E_param = fX_param - float(smo_support_optimizer.labels[alpha_param])
         
         print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
         return E_param
@@ -249,7 +249,7 @@ class Support_Vector_Machine_Algorithm(object):
 
             if entire_set_checked:
                 for iterator in range(smo_support_optimizer.NUM_ROWS):
-                    changed_alpha_pairs += self.inner_loop_heuristic_smo_optimization(iterator, smo_support_optimizer)
+                    changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
                     print("FOR THE FULL SET...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
                 iteration_constant += 1
             
@@ -257,7 +257,7 @@ class Support_Vector_Machine_Algorithm(object):
                 unbound_values = np.nonzero((smo_support_optimizer.alphas.A > 0) * (smo_support_optimizer.alphas.A < absolute_ceiling_constant))[0]
 
                 for iterator in unbound_values:
-                    changed_alpha_pairs += self.inner_loop_heuristic_smo_optimization(iterator, smo_support_optimizer)
+                    changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
                     print("FOR THE UNBOUND VALUES...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
                 iteration_constant += 1
             
@@ -267,7 +267,12 @@ class Support_Vector_Machine_Algorithm(object):
                 entire_set_checked = True
             print("FINAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
         
-        print("SAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas))
+        # Get number of support vectors across SVM-SMO
+        print("SUPPORT VECTORS ALONG THE SAMPLE DATASET FOR THE ADVANCED SVM-SMO ARE:")
+        [print(input_dataset[iterator], class_labels[iterator]) for iterator in range(100) if smo_support_optimizer.alphas[iterator] > 0.0]
+
+        # Prints SVM-SMO beta-values and formatted alphas greater than zero
+        print("\nSAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA (GREATER THAN ZERO) VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas[smo_support_optimizer.alphas > 0]))
         return smo_support_optimizer.beta, smo_support_optimizer.alphas
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
@@ -291,7 +296,7 @@ class Support_Vector_Machine_Algorithm(object):
             else:
                 # Defines the alpha's ceiling and floor if there is a match
                 alpha_ceiling = min(smo_support_optimizer.absolute_ceiling_constant, smo_support_optimizer.alphas[potential_alpha] + smo_support_optimizer.alphas[iterator])
-                alpha_floor = max(0, smo_support_optimizer.alphas[potential_alpha] + smo_support_optimizer[iterator] - smo_support_optimizer.absolute_ceiling_constant)
+                alpha_floor = max(0, smo_support_optimizer.alphas[potential_alpha] + smo_support_optimizer.alphas[iterator] - smo_support_optimizer.absolute_ceiling_constant)
 
             # Checks if floor and ceiling are equivalent and if so, prints for convenience
             if (alpha_ceiling == alpha_floor):
@@ -391,9 +396,15 @@ def main():
     dataset, labels = svm.load_dataset()
     """
 
+    """
     # Test basic Platt SMO in SVM with helper methods
     dataset, labels = svm.load_dataset()
     beta, alphas = svm.simple_sequential_minimal_optimization(dataset, labels, 0.6, 0.001, 40)
+    """
+
+    # Test advanced Platt SMO in SVM with helper methods, multilevel looping heuristics, and object-oriented storage
+    dataset, labels = svm.load_dataset()
+    beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
