@@ -180,8 +180,10 @@ class Support_Vector_Machine_Algorithm(object):
         # Prints beta-values and formatted alphas greater than zero
         print("\nBETA-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(beta, alphas[alphas > 0]))
 
+        """
         # Performs runtime tracker for particular method
         self.track_runtime()
+        """
 
         return beta, alphas
 
@@ -273,6 +275,10 @@ class Support_Vector_Machine_Algorithm(object):
 
         # Prints SVM-SMO beta-values and formatted alphas greater than zero
         print("\nSAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA (GREATER THAN ZERO) VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas[smo_support_optimizer.alphas > 0]))
+
+        # Performs runtime tracker for particular method
+        self.track_runtime()
+
         return smo_support_optimizer.beta, smo_support_optimizer.alphas
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
