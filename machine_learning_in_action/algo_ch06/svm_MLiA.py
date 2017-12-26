@@ -81,7 +81,7 @@ class Support_Vector_Machine_Algorithm(object):
         return alpha_from_potential
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
-    # ==================== SIMPLE SEQUENTIAL MINIMAL OPTIMIZATION ====================
+    # ================= SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION =================
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
         dataset = np.mat(input_dataset)                     # Produces formatted dataset
         labels = np.mat(class_labels).transpose()           # Produces transposed class label vector
@@ -194,22 +194,32 @@ class Support_Vector_Machine_Algorithm(object):
         print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
         return E_param
 
+    # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
     def select_optimized_potential_alpha(self, iterator, smo_optimizer, E_iterator):
+        # Predefines maximum values for change in E and alpha
         maximum_alpha_param = -1
         maximum_delta_E = 0
         E_potential_alpha = 0
 
+        # Define error cache from SMO optimization method
         smo_optimizer.error_cache[iterator] = [1, E_iterator]
         valid_error_cache_list = np.nonzero(smo_optimizer.error_cache[:, 0].A)[0]
 
+        # Check if error cache list length is significant
         if (len(valid_error_cache_list)) > 1:
+
+            # Iterates through all alpha values in the error cache
             for alpha_param in valid_error_cache_list:
+
+                # Checks if the iterator value matches the alpha value
                 if alpha_param == iterator:
                     continue
 
+                # Defines the E holding parameter from the SMO optimizer
                 E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
                 delta_E = abs(E_iterator - E_param)
 
+                # Checks if change in E holding parameter is differentially larger than the maximum change and if so, redefines the maxes
                 if (delta_E > maximum_delta_E):
                     maximum_alpha_param = alpha_param
                     maximum_delta_E = delta_E
@@ -217,15 +227,19 @@ class Support_Vector_Machine_Algorithm(object):
             
             return maximum_alpha_param, E_potential_alpha
         else:
+            # If the error cache is not significant, defines the alpha value and holding parameter using the helper methods
             potential_alpha = self.select_random_potential_alpha(iterator, smo_optimizer.NUM_ROWS)
             E_potential_alpha = self.calculate_E_parameter(smo_optimizer, potential_alpha)
         
         print("POTENTIAL ALPHA VALUE IS: {}\n\nSMO OPTIMIZATION PARAMETER FOR POTENTIAL ALPHA IS: {}\n".format(potential_alpha, E_potential_alpha))
         return potential_alpha, E_potential_alpha
 
+    # ============ METHOD TO REFRESH E PARAMETER FOR SVM SMO OPTIMIZATION ============
     def update_E_parameter(self, smo_optimizer, alpha_param):
+        # Defines the E holding parameter using the SMO optimizer helper methods
         E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
         smo_optimizer.error_cache[alpha_param] = [1, E_param]
+        return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
