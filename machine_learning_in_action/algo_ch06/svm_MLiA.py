@@ -147,10 +147,12 @@ class support_Vector_Machine_Algorithm(object):
                         print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
                         continue
 
+                    # Increments new alpha values and produces temporary b-values to track differential alpha changes
                     alphas[iterator] += labels[potential_alpha] * labels[iterator] * (old_alpha_potential - alphas[potential_alpha])
                     b1 = b - E_iterator - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[iterator, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[iterator, :] * dataset[potential_alpha, :].T
                     b2 = b - E_potential - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[potential_alpha, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[potential_alpha, :] * dataset[potential_alpha, :].T
 
+                    # Checks if new alpha values fall within b-dependent boundary conditions for b-value reinitialization
                     if (0 < alphas[iterator]) and (absolute_ceiling_constant > alphas[iterator]):
                         b = b1
                     elif (0 < alphas[potential_alpha]) and (absolute_ceiling_constant > alphas[potential_alpha]):
@@ -158,9 +160,11 @@ class support_Vector_Machine_Algorithm(object):
                     else:
                         b = (b1 + b2) / 2.0
 
+                    # Iterate dynamic alpha pair value for loop functionality
                     changed_alpha_pairs += 1
                     print("\nITERATION CONSTANT IS: {}\n\nFUNCTIONAL ITERATOR IS: {}\n\nCHANGED ALPHA PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
 
+            # Checks value of dynamic alpha pair value to iterate the method's parent iteration constant
             if (changed_alpha_pairs == 0):
                 iteration_constant += 1
             else:
