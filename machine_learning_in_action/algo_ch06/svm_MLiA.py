@@ -170,10 +170,16 @@ class support_Vector_Machine_Algorithm(object):
             else:
                 iteration_constant = 0
             
+            # Prints formatted iteration number for method
             print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
 
+        # Prints b-values and formatted alphas greater than zero
         print("\nB-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(b, alphas[alphas > 0]))
-        
+
+        # Get number of support vectors across SVM-SMO
+        print("SUPPORT VECTORS ALONG THE SAMPLE DATASET ARE: \n")
+        [print(dataset[iterator], labels[iterator]) for iterator in range(100) if alphas[iterator] > 0.0]
+
         # Performs runtime tracker for particular method
         self.track_runtime()
 
