@@ -42,15 +42,18 @@ class support_Vector_Machine_Algorithm(object):
         self.TIME_I = TIME_I                    # Initial time measure for runtime tracker
         self.FILE = open("test_set.txt")        # Open filename as read-only for test dataset
 
+    # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
     def load_dataset(self):
         dataset = []
         labels = []
 
+        # Iterates through sample file to produce sample dataset and class label vector
         for line in self.FILE.readlines():
             array_of_lines = line.strip().split("\t")
             dataset.append(float(array_of_lines[0]), float(array_of_lines[1]))
             labels.append(float(array_of_lines[2]))
 
+        print("SAMPLE DATASET IS: \n{}\nSAMPLE LABELS ARE: \n{}\n".format(dataset, labels))
         return dataset, labels
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
