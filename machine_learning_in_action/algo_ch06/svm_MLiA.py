@@ -98,39 +98,51 @@ class support_Vector_Machine_Algorithm(object):
 
             # Iterates based on number of rows in dataset to optimize alpha pairs
             for iterator in range(NUM_ROWS):
-                # Creates iteration constants for alpha ranges against dataset and labels
+                # Creates temporary constants for alpha ranges against dataset and labels by the method's parent iterator
                 fX_iterator = float(np.multiply(alphas, labels).T * (dataset * dataset[iterator, :].T)) + b
                 E_iterator = fX_iterator - float(labels[iterator])
 
-                # 
+                # Checks if iteration constants abide by absolute and relative boundary conditions defined by the ceiling and tolerance levels
                 if ((labels[iterator] * E_iterator < -alpha_tolerance) and (alphas[iterator] < absolute_ceiling_constant)) or ((labels[iterator] * E_iterator > alpha_tolerance) and (alphas[iterator] > 0)):
+                    # Creates potential alpha value from randomizer method
                     potential_alpha = self.select_random_potential_alpha(iterator, NUM_ROWS)
+                    
+                    # Creates temporary constants for alpha ranges against dataset and labels by the method's potential alpha ranges
                     fX_potential = float(np.multiply(alphas, labels).T * (dataset * dataset[potential_alpha, :].T)) + b
                     E_potential = fX_potential - float(labels[potential_alpha])
 
+                    # Creates dummy constants to hold old alpha values from method's parent iterator and potential alpha values
                     old_alpha_iterator = np.copy(alphas[iterator])
                     old_alpha_potential = np.copy(alphas[potential_alpha])
 
+                    # Checks if iterated labels match the expected potential alpha label values
                     if (labels[iterator] != labels[potential_alpha]):
+                        # Defines the alpha's ceiling and floor if there is a mismatch
                         alpha_ceiling = min(absolute_ceiling_constant, absolute_ceiling_constant + alphas[potential_alpha] - alphas[iterator])
                         alpha_floor = max(0, alphas[potential_alpha] - alphas[iterator])
                     else:
+                        # Defines the alpha's ceiling and floor if there is a match
                         alpha_ceiling = min(absolute_ceiling_constant, alphas[potential_alpha] + alphas[iterator])
                         alpha_floor = max(0, alphas[potential_alpha] + alphas[iterator] - absolute_ceiling_constant)
 
+                    # Checks if floor and ceiling are equivalent and if so, prints for convenience
                     if alpha_ceiling == alpha_floor:
                         print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n")
                         continue
 
+                    # Defines marker value for altering the alpha value for optimization
                     optimal_alpha_change_marker = 2.0 * dataset[iterator, :] * dataset[potential_alpha, :].T - dataset[iterator, :] * dataset[iterator, :].T - dataset[potential_alpha, :] * dataset[potential_alpha, :].T
 
+                    # Checks if optimal alpha marker is zero and if so, prints for convenience
                     if optimal_alpha_change_marker >= 0:
                         print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n")
                         continue
 
+                    # Optimizes alpha values based on optimal marker and constraint processing method
                     alphas[potential_alpha] -= labels[potential_alpha] * (E_iterator - E_potential) / optimal_alpha_change_marker
                     alphas[potential_alpha] = self.process_alpha_against_constraints(alphas[potential_alpha], alpha_ceiling, alpha_floor)
 
+                    # Checks if margin between new and old alphas are too small and if so, prints for convenience
                     if (abs(alphas[potential_alpha] - old_alpha_potential) < 0.00001):
                         print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
                         continue
