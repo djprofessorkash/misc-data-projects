@@ -81,7 +81,7 @@ class Support_Vector_Machine_Algorithm(object):
         return alpha_from_potential
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
-    # ================= SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION =================
+    # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
         dataset = np.mat(input_dataset)                     # Produces formatted dataset
         labels = np.mat(class_labels).transpose()           # Produces transposed class label vector
@@ -186,25 +186,25 @@ class Support_Vector_Machine_Algorithm(object):
         return beta, alphas
 
     # =========== METHOD TO CALCULATE E PARAMETER FOR SVM SMO OPTIMIZATION ===========
-    def calculate_E_parameter(self, smo_optimizer, alpha_param):
+    def calculate_E_parameter(self, smo_support_optimizer, alpha_param):
         # Produces holding SMO optimization parameters
-        fX_param = float(np.multiply(smo_optimizer.alphas, smo_optimizer.labels).T * (smo_optimizer.dataset * smo_optimizer.dataset[k, :].T)) + smo_optimizer.beta
-        E_param = fX_param - float(smo_optimizer.labels[k])
+        fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * (smo_support_optimizer.dataset * smo_support_optimizer.dataset[k, :].T)) + smo_support_optimizer.beta
+        E_param = fX_param - float(smo_support_optimizer.labels[k])
         
         print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
         return E_param
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
     # ==================== VIA AN INNER-LOOP ITERATION HEURISTIC =====================
-    def inner_loop_heuristic_smo_optimization(self, iterator, smo_optimizer, E_iterator):
+    def inner_loop_heuristic_smo_optimization(self, iterator, smo_support_optimizer, E_iterator):
         # Predefines maximum values for change in E and alpha
         maximum_alpha_param = -1
         maximum_delta_E = 0
         E_potential_alpha = 0
 
         # Define error cache from SMO optimization method
-        smo_optimizer.error_cache[iterator] = [1, E_iterator]
-        valid_error_cache_list = np.nonzero(smo_optimizer.error_cache[:, 0].A)[0]
+        smo_support_optimizer.error_cache[iterator] = [1, E_iterator]
+        valid_error_cache_list = np.nonzero(smo_support_optimizer.error_cache[:, 0].A)[0]
 
         # Check if error cache list length is significant
         if (len(valid_error_cache_list)) > 1:
@@ -217,7 +217,7 @@ class Support_Vector_Machine_Algorithm(object):
                     continue
 
                 # Defines the E holding parameter from the SMO optimizer
-                E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
+                E_param = self.calculate_E_parameter(smo_support_optimizer, alpha_param)
                 delta_E = abs(E_iterator - E_param)
 
                 # Checks if change in E holding parameter is differentially larger than the maximum change and if so, redefines the maxes
@@ -229,34 +229,69 @@ class Support_Vector_Machine_Algorithm(object):
             return maximum_alpha_param, E_potential_alpha
         else:
             # If the error cache is not significant, defines the alpha value and holding parameter using the helper methods
-            potential_alpha = self.select_random_potential_alpha(iterator, smo_optimizer.NUM_ROWS)
-            E_potential_alpha = self.calculate_E_parameter(smo_optimizer, potential_alpha)
+            potential_alpha = self.select_random_potential_alpha(iterator, smo_support_optimizer.NUM_ROWS)
+            E_potential_alpha = self.calculate_E_parameter(smo_support_optimizer, potential_alpha)
         
         print("POTENTIAL ALPHA VALUE IS: {}\n\nSMO OPTIMIZATION PARAMETER FOR POTENTIAL ALPHA IS: {}\n".format(potential_alpha, E_potential_alpha))
         return potential_alpha, E_potential_alpha
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
+    # ==================== VIA AN OUTER-LOOP ITERATION HEURISTIC =====================
+    def outer_loop_heuristic_smo_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER, param_tuple=("lin", 0)):
+        smo_support_optimizer = Platt_SMO_Support_Optimization_Structure(np.mat(input_dataset), np.mat(class_labels).transpose(), absolute_ceiling_constant, alpha_tolerance)
+
+        iteration_constant = 0
+        entire_set_checked = True
+        changed_alpha_pairs = 0
+
+        while (iteration_constant < MAX_ITER) and ((changed_alpha_pairs > 0) or (entire_set_checked)):
+            changed_alpha_pairs = 0
+
+            if entire_set_checked:
+                for iterator in range(smo_support_optimizer.NUM_ROWS):
+                    changed_alpha_pairs += self.inner_loop_heuristic_smo_optimization(iterator, smo_support_optimizer)
+                    print("FOR THE FULL SET...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+                iteration_constant += 1
+            
+            else:
+                unbound_values = np.nonzero((smo_support_optimizer.alphas.A > 0) * (smo_support_optimizer.alphas.A < absolute_ceiling_constant))[0]
+
+                for iterator in unbound_values:
+                    changed_alpha_pairs += self.inner_loop_heuristic_smo_optimization(iterator, smo_support_optimizer)
+                    print("FOR THE UNBOUND VALUES...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+                iteration_constant += 1
+            
+            if entire_set_checked:
+                entire_set_checked = False
+            elif (changed_alpha_pairs == 0):
+                entire_set_checked = True
+            print("FINAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
+        
+        print("SAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas))
+        return smo_support_optimizer.beta, smo_support_optimizer.alphas
+
+    # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
     # ========== VIA A MULTILEVEL SECOND-CHOICE HEURISTIC SELECTION ROUTINE ==========
-    def multilevel_choice_heuristic_smo_optimization(iterator, smo_optimizer):
-        E_iterator = self.calculate_E_parameter(smo_optimizer, iterator)
+    def multilevel_choice_heuristic_smo_optimization(self, iterator, smo_support_optimizer):
+        E_iterator = self.calculate_E_parameter(smo_support_optimizer, iterator)
 
         # Checks if iteration constants abide by absolute and relative boundary conditions defined by the ceiling and tolerance levels
-        if ((smo_optimizer.labels[iterator] * E_iterator < -smo_optimizer.alpha_tolerance) and (smo_optimizer.alphas[iterator] < smo_optimizer.absolute_ceiling_constant)) or ((smo_optimizer.labels[iterator] * E_iterator > smo_optimizer.alpha_tolerance) and (smo_optimizer.alphas[iterator] > 0)):
-            potential_alpha, E_potential_alpha = self.inner_loop_heuristic_smo_optimization(iterator, smo_optimizer, E_iterator)
+        if ((smo_support_optimizer.labels[iterator] * E_iterator < -smo_support_optimizer.alpha_tolerance) and (smo_support_optimizer.alphas[iterator] < smo_support_optimizer.absolute_ceiling_constant)) or ((smo_support_optimizer.labels[iterator] * E_iterator > smo_support_optimizer.alpha_tolerance) and (smo_support_optimizer.alphas[iterator] > 0)):
+            potential_alpha, E_potential_alpha = self.inner_loop_heuristic_smo_optimization(iterator, smo_support_optimizer, E_iterator)
             
             # Creates dummy constants to hold old alpha values from method's parent iterator and potential alpha values
-            old_alpha_iterator = np.copy(smo_optimizer.alphas[iterator])
-            old_alpha_potential = np.copy(smo_optimizer.alphas[potential_alpha])
+            old_alpha_iterator = np.copy(smo_support_optimizer.alphas[iterator])
+            old_alpha_potential = np.copy(smo_support_optimizer.alphas[potential_alpha])
 
             # Checks if iterated labels match the expected potential alpha label values
-            if (smo_optimizer.labels[iterator] != smo_optimizer.labels[potential_alpha]):
+            if (smo_support_optimizer.labels[iterator] != smo_support_optimizer.labels[potential_alpha]):
                 # Defines the alpha's ceiling and floor if there is a mismatch
-                alpha_ceiling = min(smo_optimizer.absolute_ceiling_constant, smo_optimizer.absolute_ceiling_constant + smo_optimizer.alphas[potential_alpha] - smo_optimizer.alphas[iterator])
-                alpha_floor = max(0, smo_optimizer.alphas[potential_alpha] - smo_optimizer.alphas[iterator])
+                alpha_ceiling = min(smo_support_optimizer.absolute_ceiling_constant, smo_support_optimizer.absolute_ceiling_constant + smo_support_optimizer.alphas[potential_alpha] - smo_support_optimizer.alphas[iterator])
+                alpha_floor = max(0, smo_support_optimizer.alphas[potential_alpha] - smo_support_optimizer.alphas[iterator])
             else:
                 # Defines the alpha's ceiling and floor if there is a match
-                alpha_ceiling = min(smo_optimizer.absolute_ceiling_constant, smo_optimizer.alphas[potential_alpha] + smo_optimizer.alphas[iterator])
-                alpha_floor = max(0, smo_optimizer.alphas[potential_alpha] + smo_optimizer[iterator] - smo_optimizer.absolute_ceiling_constant)
+                alpha_ceiling = min(smo_support_optimizer.absolute_ceiling_constant, smo_support_optimizer.alphas[potential_alpha] + smo_support_optimizer.alphas[iterator])
+                alpha_floor = max(0, smo_support_optimizer.alphas[potential_alpha] + smo_support_optimizer[iterator] - smo_support_optimizer.absolute_ceiling_constant)
 
             # Checks if floor and ceiling are equivalent and if so, prints for convenience
             if (alpha_ceiling == alpha_floor):
@@ -264,7 +299,7 @@ class Support_Vector_Machine_Algorithm(object):
                 return 0
 
             # Defines marker value for altering the alpha value for optimization
-            optimal_alpha_change_marker = 2.0 * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T - smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[iterator, :].T - smo_optimizer.dataset[potential_alpha, :] * smo_optimizer.dataset[potential_alpha, :].T
+            optimal_alpha_change_marker = 2.0 * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T - smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[iterator, :].T - smo_support_optimizer.dataset[potential_alpha, :] * smo_support_optimizer.dataset[potential_alpha, :].T
 
             # Checks if optimal alpha marker is zero and if so, prints for convenience
             if optimal_alpha_change_marker >= 0:
@@ -272,39 +307,39 @@ class Support_Vector_Machine_Algorithm(object):
                 return 0
 
             # Optimizes alpha values based on optimal marker and constraint processing method
-            smo_optimizer.alphas[potential_alpha] -= smo_optimizer.labels[potential_alpha] * (E_iterator - E_potential_alpha) / optimal_alpha_change_marker
-            smo_optimizer.alphas[potential_alpha] = self.process_alpha_against_constraints(smo_optimizer.alphas[potential_alpha], alpha_ceiling, alpha_floor)
-            self.update_E_parameter(smo_optimizer, potential_alpha)
+            smo_support_optimizer.alphas[potential_alpha] -= smo_support_optimizer.labels[potential_alpha] * (E_iterator - E_potential_alpha) / optimal_alpha_change_marker
+            smo_support_optimizer.alphas[potential_alpha] = self.process_alpha_against_constraints(smo_support_optimizer.alphas[potential_alpha], alpha_ceiling, alpha_floor)
+            self.update_E_parameter(smo_support_optimizer, potential_alpha)
 
             # Checks if margin between new and old alphas are too small and if so, prints for convenience
-            if (abs(smo_optimizer.alphas[potential_alpha] - old_alpha_potential) < 0.00001):
+            if (abs(smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) < 0.00001):
                 print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
                 return 0
 
             # Increments alpha values by SMO optimizer and updates E parameter
-            smo_optimizer.alphas[iterator] += smo_optimizer.labels[potential_alpha] * smo_optimizer.labels[iterator] * (old_alpha_potential - smo_optimizer.alphas[potential_alpha])
-            self.update_E_parameter(smo_optimizer, iterator)
+            smo_support_optimizer.alphas[iterator] += smo_support_optimizer.labels[potential_alpha] * smo_support_optimizer.labels[iterator] * (old_alpha_potential - smo_support_optimizer.alphas[potential_alpha])
+            self.update_E_parameter(smo_support_optimizer, iterator)
 
             # Produces temporary beta-values to track differential alpha changes
-            beta1 = smo_optimizer.beta - E_iterator - smo_optimizer.labels[iterator] * (smo_optimizer.alphas[iterator] - old_alpha_iterator) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[iterator, :].T - smo_optimizer.labels[potential_alpha] * (smo_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T
-            beta2 = smo_optimizer.beta - E_potential_alpha - smo_optimizer.labels[iterator] * (smo_optimizer.alphas[iterator] - old_alpha_iterator) * smo_optimizer.dataset[iterator, :] * smo_optimizer.dataset[potential_alpha, :].T - smo_optimizer.labels[potential_alpha] * (smo_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_optimizer.dataset[potential_alpha, :] * smo_optimizer.dataset[potential_alpha, :].T
+            beta1 = smo_support_optimizer.beta - E_iterator - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[iterator, :].T - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T
+            beta2 = smo_support_optimizer.beta - E_potential_alpha - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.dataset[potential_alpha, :] * smo_support_optimizer.dataset[potential_alpha, :].T
 
             # Checks if new alpha values fall within beta-dependent boundary conditions for beta-value reinitialization
-            if (0 < smo_optimizer.alphas[iterator]) and (smo_optimizer.absolute_ceiling_constant > smo_optimizer.alphas[iterator]):
-                smo_optimizer.beta = beta1
-            elif (0 < smo_optimizer.alphas[potential_alpha]) and (smo_optimizer.absolute_ceiling_constant > smo_optimizer.alphas[potential_alpha]):
-                smo_optimizer.beta = beta2
+            if (0 < smo_support_optimizer.alphas[iterator]) and (smo_support_optimizer.absolute_ceiling_constant > smo_support_optimizer.alphas[iterator]):
+                smo_support_optimizer.beta = beta1
+            elif (0 < smo_support_optimizer.alphas[potential_alpha]) and (smo_support_optimizer.absolute_ceiling_constant > smo_support_optimizer.alphas[potential_alpha]):
+                smo_support_optimizer.beta = beta2
             else:
-                smo_optimizer.beta = (beta1 + beta2) / 2.0
+                smo_support_optimizer.beta = (beta1 + beta2) / 2.0
             return 1
         else:
             return 0
 
     # ============ METHOD TO REFRESH E PARAMETER FOR SVM SMO OPTIMIZATION ============
-    def update_E_parameter(self, smo_optimizer, alpha_param):
+    def update_E_parameter(self, smo_support_optimizer, alpha_param):
         # Defines the E holding parameter using the SMO optimizer helper methods
-        E_param = self.calculate_E_parameter(smo_optimizer, alpha_param)
-        smo_optimizer.error_cache[alpha_param] = [1, E_param]
+        E_param = self.calculate_E_parameter(smo_support_optimizer, alpha_param)
+        smo_support_optimizer.error_cache[alpha_param] = [1, E_param]
         return
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -321,14 +356,14 @@ class Support_Vector_Machine_Algorithm(object):
 
 
 # ====================================================================================
-# ======================== CLASS DEFINITION: SMO OPTIMIZATION ========================
+# ===================== CLASS DEFINITION: SMO SUPPORT OPTIMIZER ======================
 # ====================================================================================
 
 
 class Platt_SMO_Support_Optimization_Structure(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
-    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, TIME_I):
+    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance):
         self.dataset = input_dataset                                        # Formatted dataset from sample data
         self.labels = class_labels                                          # Class label vector from sample data
         self.absolute_ceiling_constant = absolute_ceiling_constant          # Alpha ceiling constant for SMO boundary parametrization
@@ -337,7 +372,6 @@ class Platt_SMO_Support_Optimization_Structure(object):
         self.alphas = np.mat(np.zeros((self.NUM_ROWS, 1)))                  # Alpha value range initialized as array of zeros
         self.beta = 0                                                       # SVM-SMO beta value
         self.error_cache = np.mat(np.zeros((self.NUM_ROWS, 2)))             # Caching value for tracking compounding errors
-        self.TIME_I = TIME_I                                                # Initial time constant for runtime tracker
 
 
 # ====================================================================================
