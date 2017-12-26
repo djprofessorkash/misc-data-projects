@@ -172,6 +172,11 @@ class support_Vector_Machine_Algorithm(object):
             
             print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
         
+        """
+        # Performs runtime tracker for particular method
+        self.track_runtime()
+        """
+
         print("\nB-VALUE IS: {}\n\nALPHAS ARE: \n{}\n".format(b, alphas))
         return b, alphas
 
