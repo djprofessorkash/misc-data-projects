@@ -27,6 +27,7 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 # ====================================================================================
 
 
+import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
 
@@ -50,11 +51,34 @@ class support_Vector_Machine_Algorithm(object):
         # Iterates through sample file to produce sample dataset and class label vector
         for line in self.FILE.readlines():
             array_of_lines = line.strip().split("\t")
-            dataset.append(float(array_of_lines[0]), float(array_of_lines[1]))
+            dataset.append([float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(float(array_of_lines[2]))
 
-        print("SAMPLE DATASET IS: \n{}\nSAMPLE LABELS ARE: \n{}\n".format(dataset, labels))
+        """ print("\nSAMPLE DATASET IS: \n{}\n\nSAMPLE LABELS ARE: \n{}\n".format(dataset, labels)) """
         return dataset, labels
+
+    # ========== METHOD TO SELECT POTENTIAL ALPHA FROM UNIFORM DISTRIBUTION ==========
+    def select_random_potential_alpha(self, alpha_index, alpha_total):
+        potential_alpha = alpha_index
+
+        while (potential_alpha == alpha_index):
+            potential_alpha = int(np.random.uniform(0, alpha_total))
+        
+        print("\nJ-VALUE IS: {}\n".format(potential_alpha))
+        return potential_alpha
+
+    # ========= METHOD TO POTENTIAL ALPHA VALUE AGAINST BOUNDARY CONSTRAINTS =========
+    def process_alpha_against_constraints(alpha_from_potential, alpha_ceiling, alpha_floor):
+        # Processes alpha value against ceiling constraint (cannot be greater than)
+        if alpha_from_potential > alpha_ceiling:
+            alpha_from_potential = alpha_ceiling
+
+        # Processes alpha value against floor constraint (cannot be less than)
+        if alpha_floor > alpha_from_potential:
+            alpha_from_potential = alpha_floor
+
+        print("\nALPHA VALUE PROCESSED AGAINST CONSTRAINTS IS: {}\n".format(alpha_from_potential))
+        return alpha_from_potential
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -81,7 +105,10 @@ def main():
     # Initialize class instance of the support vector machine algorithm
     svm = support_Vector_Machine_Algorithm(TIME_I)
 
-    return print("Support vector machine class algorithm is done.\n")
+    # Test load_dataset() method on SVM
+    dataset, labels = svm.load_dataset()
+
+    return print("\nSupport vector machine class algorithm is done.\n")
 
 if __name__ == "__main__":
     main()
