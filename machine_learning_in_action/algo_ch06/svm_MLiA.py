@@ -64,7 +64,7 @@ class support_Vector_Machine_Algorithm(object):
         while (potential_alpha == alpha_index):
             potential_alpha = int(np.random.uniform(0, alpha_total))
         
-        print("\nPOTENTIAL ALPHA VALUE IS: {}\n".format(potential_alpha))
+        """ print("\nPOTENTIAL ALPHA VALUE IS: {}\n".format(potential_alpha)) """
         return potential_alpha
 
     # ========= METHOD TO POTENTIAL ALPHA VALUE AGAINST BOUNDARY CONSTRAINTS =========
@@ -77,7 +77,7 @@ class support_Vector_Machine_Algorithm(object):
         if alpha_floor > alpha_from_potential:
             alpha_from_potential = alpha_floor
 
-        print("\nALPHA VALUE PROCESSED AGAINST CONSTRAINTS IS: {}\n".format(alpha_from_potential))
+        """ print("\nALPHA VALUE PROCESSED AGAINST CONSTRAINTS IS: {}\n".format(alpha_from_potential)) """
         return alpha_from_potential
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
@@ -127,7 +127,7 @@ class support_Vector_Machine_Algorithm(object):
 
                     # Checks if floor and ceiling are equivalent and if so, prints for convenience
                     if alpha_ceiling == alpha_floor:
-                        print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n")
+                        """ print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n") """
                         continue
 
                     # Defines marker value for altering the alpha value for optimization
@@ -135,7 +135,7 @@ class support_Vector_Machine_Algorithm(object):
 
                     # Checks if optimal alpha marker is zero and if so, prints for convenience
                     if optimal_alpha_change_marker >= 0:
-                        print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n")
+                        """ print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n") """
                         continue
 
                     # Optimizes alpha values based on optimal marker and constraint processing method
@@ -144,7 +144,7 @@ class support_Vector_Machine_Algorithm(object):
 
                     # Checks if margin between new and old alphas are too small and if so, prints for convenience
                     if (abs(alphas[potential_alpha] - old_alpha_potential) < 0.00001):
-                        print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
+                        """ print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n") """
                         continue
 
                     # Increments new alpha values and produces temporary b-values to track differential alpha changes
@@ -162,7 +162,7 @@ class support_Vector_Machine_Algorithm(object):
 
                     # Iterate dynamic alpha pair value for loop functionality
                     changed_alpha_pairs += 1
-                    print("\nITERATION CONSTANT IS: {}\n\nFUNCTIONAL ITERATOR IS: {}\n\nCHANGED ALPHA PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+                    """ print("\nITERATION CONSTANT IS: {}\n\nFUNCTIONAL ITERATOR IS: {}\n\nCHANGED ALPHA PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs)) """
 
             # Checks value of dynamic alpha pair value to iterate the method's parent iteration constant
             if (changed_alpha_pairs == 0):
@@ -171,13 +171,13 @@ class support_Vector_Machine_Algorithm(object):
                 iteration_constant = 0
             
             # Prints formatted iteration number for method
-            print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
+            """ print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant)) """
 
         # Prints b-values and formatted alphas greater than zero
         print("\nB-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(b, alphas[alphas > 0]))
 
         # Get number of support vectors across SVM-SMO
-        print("SUPPORT VECTORS ALONG THE SAMPLE DATASET ARE: \n")
+        print("SUPPORT VECTORS ALONG THE SAMPLE DATASET ARE:")
         [print(dataset[iterator], labels[iterator]) for iterator in range(100) if alphas[iterator] > 0.0]
 
         # Performs runtime tracker for particular method
