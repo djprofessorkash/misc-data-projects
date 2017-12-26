@@ -83,21 +83,26 @@ class support_Vector_Machine_Algorithm(object):
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ==================== SIMPLE SEQUENTIAL MINIMAL OPTIMIZATION ====================
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
-        dataset = np.mat(input_dataset)
-        labels = np.mat(class_labels).transpose()
-        b = 0
-        NUM_ROWS, NUM_COLS = np.shape(dataset)
+        dataset = np.mat(input_dataset)                     # Produces formatted dataset
+        labels = np.mat(class_labels).transpose()           # Produces transposed class label vector
+        b = 0                                               # Initializes value of b to increment later
+        NUM_ROWS, NUM_COLS = np.shape(dataset)              # Produces constants of dataset's dimensionality
         
+        # Initializes alpha matrix of zeros by number of rows in dataset
         alphas = np.mat(np.zeros((NUM_ROWS, 1)))
         iteration_constant = 0
 
+        # Iterates until predefined iteration constant and iteration ceiling are equal
         while (iteration_constant < MAX_ITER):
-            changed_alpha_pairs = 0
+            changed_alpha_pairs = 0                         # Initializes dynamic alpha pair values to change later
 
+            # Iterates based on number of rows in dataset to optimize alpha pairs
             for iterator in range(NUM_ROWS):
+                # Creates iteration constants for alpha ranges against dataset and labels
                 fX_iterator = float(np.multiply(alphas, labels).T * (dataset * dataset[iterator, :].T)) + b
                 E_iterator = fX_iterator - float(labels[iterator])
 
+                # 
                 if ((labels[iterator] * E_iterator < -alpha_tolerance) and (alphas[iterator] < absolute_ceiling_constant)) or ((labels[iterator] * E_iterator > alpha_tolerance) and (alphas[iterator] > 0)):
                     potential_alpha = self.select_random_potential_alpha(iterator, NUM_ROWS)
                     fX_potential = float(np.multiply(alphas, labels).T * (dataset * dataset[potential_alpha, :].T)) + b
