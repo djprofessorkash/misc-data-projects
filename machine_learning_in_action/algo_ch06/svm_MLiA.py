@@ -193,7 +193,7 @@ class Support_Vector_Machine_Algorithm(object):
         fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * (smo_support_optimizer.dataset * smo_support_optimizer.dataset[alpha_param, :].T)) + smo_support_optimizer.beta
         E_param = fX_param - float(smo_support_optimizer.labels[alpha_param])
         
-        print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
+        """ print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param)) """
         return E_param
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
@@ -234,7 +234,7 @@ class Support_Vector_Machine_Algorithm(object):
             potential_alpha = self.select_random_potential_alpha(iterator, smo_support_optimizer.NUM_ROWS)
             E_potential_alpha = self.calculate_E_parameter(smo_support_optimizer, potential_alpha)
         
-        print("POTENTIAL ALPHA VALUE IS: {}\n\nSMO OPTIMIZATION PARAMETER FOR POTENTIAL ALPHA IS: {}\n".format(potential_alpha, E_potential_alpha))
+        """ print("POTENTIAL ALPHA VALUE IS: {}\n\nSMO OPTIMIZATION PARAMETER FOR POTENTIAL ALPHA IS: {}\n".format(potential_alpha, E_potential_alpha)) """
         return potential_alpha, E_potential_alpha
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
@@ -252,7 +252,7 @@ class Support_Vector_Machine_Algorithm(object):
             if entire_set_checked:
                 for iterator in range(smo_support_optimizer.NUM_ROWS):
                     changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
-                    print("FOR THE FULL SET...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+                    """ print("FOR THE FULL SET...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs)) """
                 iteration_constant += 1
             
             else:
@@ -260,18 +260,18 @@ class Support_Vector_Machine_Algorithm(object):
 
                 for iterator in unbound_values:
                     changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
-                    print("FOR THE UNBOUND VALUES...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs))
+                    """ print("FOR THE UNBOUND VALUES...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs)) """
                 iteration_constant += 1
             
             if entire_set_checked:
                 entire_set_checked = False
             elif (changed_alpha_pairs == 0):
                 entire_set_checked = True
-            print("FINAL ITERATION NUMBER IS: {}\n".format(iteration_constant))
+            """ print("FINAL ITERATION NUMBER IS: {}\n".format(iteration_constant)) """
         
         # Get number of support vectors across SVM-SMO
-        print("SUPPORT VECTORS ALONG THE SAMPLE DATASET FOR THE ADVANCED SVM-SMO ARE:")
-        [print(input_dataset[iterator], class_labels[iterator]) for iterator in range(100) if smo_support_optimizer.alphas[iterator] > 0.0]
+        print("\nSUPPORT VECTORS ALONG THE SAMPLE DATASET FOR THE ADVANCED SVM-SMO ARE:")
+        [print(input_dataset[iterator], class_labels[iterator], sep = " --> ") for iterator in range(100) if smo_support_optimizer.alphas[iterator] > 0.0]
 
         # Prints SVM-SMO beta-values and formatted alphas greater than zero
         print("\nSAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA (GREATER THAN ZERO) VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas[smo_support_optimizer.alphas > 0]))
@@ -306,7 +306,7 @@ class Support_Vector_Machine_Algorithm(object):
 
             # Checks if floor and ceiling are equivalent and if so, prints for convenience
             if (alpha_ceiling == alpha_floor):
-                print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n")
+                """ print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n") """
                 return 0
 
             # Defines marker value for altering the alpha value for optimization
@@ -314,7 +314,7 @@ class Support_Vector_Machine_Algorithm(object):
 
             # Checks if optimal alpha marker is zero and if so, prints for convenience
             if optimal_alpha_change_marker >= 0:
-                print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n")
+                """ print("\nFOR ALPHA'S OPTIMIZATION, THE VALUE OF THE OPTIMAL ALPHA CHANGE MARKER IS EQUAL TO OR GREATER THAN ZERO.\n") """
                 return 0
 
             # Optimizes alpha values based on optimal marker and constraint processing method
@@ -324,7 +324,7 @@ class Support_Vector_Machine_Algorithm(object):
 
             # Checks if margin between new and old alphas are too small and if so, prints for convenience
             if (abs(smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) < 0.00001):
-                print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n")
+                """ print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n") """
                 return 0
 
             # Increments alpha values by SMO optimizer and updates E parameter
