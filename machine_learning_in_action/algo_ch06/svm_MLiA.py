@@ -85,7 +85,7 @@ class Support_Vector_Machine_Algorithm(object):
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
         dataset = np.mat(input_dataset)                     # Produces formatted dataset
         labels = np.mat(class_labels).transpose()           # Produces transposed class label vector
-        b = 0                                               # Initializes value of b to increment later
+        beta = 0                                            # Initializes value of beta to increment later
         NUM_ROWS, NUM_COLS = np.shape(dataset)              # Produces constants of dataset's dimensionality
         
         # Initializes alpha matrix of zeros by number of rows in dataset
@@ -99,7 +99,7 @@ class Support_Vector_Machine_Algorithm(object):
             # Iterates based on number of rows in dataset to optimize alpha pairs
             for iterator in range(NUM_ROWS):
                 # Creates temporary constants for alpha ranges against dataset and labels by the method's parent iterator
-                fX_iterator = float(np.multiply(alphas, labels).T * (dataset * dataset[iterator, :].T)) + b
+                fX_iterator = float(np.multiply(alphas, labels).T * (dataset * dataset[iterator, :].T)) + beta
                 E_iterator = fX_iterator - float(labels[iterator])
 
                 # Checks if iteration constants abide by absolute and relative boundary conditions defined by the ceiling and tolerance levels
@@ -108,7 +108,7 @@ class Support_Vector_Machine_Algorithm(object):
                     potential_alpha = self.select_random_potential_alpha(iterator, NUM_ROWS)
                     
                     # Creates temporary constants for alpha ranges against dataset and labels by the method's potential alpha ranges
-                    fX_potential = float(np.multiply(alphas, labels).T * (dataset * dataset[potential_alpha, :].T)) + b
+                    fX_potential = float(np.multiply(alphas, labels).T * (dataset * dataset[potential_alpha, :].T)) + beta
                     E_potential = fX_potential - float(labels[potential_alpha])
 
                     # Creates dummy constants to hold old alpha values from method's parent iterator and potential alpha values
@@ -147,18 +147,18 @@ class Support_Vector_Machine_Algorithm(object):
                         """ print("\nTHE POTENTIAL ALPHA VALUE IS NOT MOVING ENOUGH.\n") """
                         continue
 
-                    # Increments new alpha values and produces temporary b-values to track differential alpha changes
+                    # Increments new alpha values and produces temporary beta-values to track differential alpha changes
                     alphas[iterator] += labels[potential_alpha] * labels[iterator] * (old_alpha_potential - alphas[potential_alpha])
-                    b1 = b - E_iterator - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[iterator, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[iterator, :] * dataset[potential_alpha, :].T
-                    b2 = b - E_potential - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[potential_alpha, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[potential_alpha, :] * dataset[potential_alpha, :].T
+                    beta1 = beta - E_iterator - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[iterator, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[iterator, :] * dataset[potential_alpha, :].T
+                    beta2 = beta - E_potential - labels[iterator] * (alphas[iterator] - old_alpha_iterator) * dataset[iterator, :] * dataset[potential_alpha, :].T - labels[potential_alpha] * (alphas[potential_alpha] - old_alpha_potential) * dataset[potential_alpha, :] * dataset[potential_alpha, :].T
 
-                    # Checks if new alpha values fall within b-dependent boundary conditions for b-value reinitialization
+                    # Checks if new alpha values fall within beta-dependent boundary conditions for beta-value reinitialization
                     if (0 < alphas[iterator]) and (absolute_ceiling_constant > alphas[iterator]):
-                        b = b1
+                        beta = beta1
                     elif (0 < alphas[potential_alpha]) and (absolute_ceiling_constant > alphas[potential_alpha]):
-                        b = b2
+                        beta = beta2
                     else:
-                        b = (b1 + b2) / 2.0
+                        beta = (beta1 + beta2) / 2.0
 
                     # Iterate dynamic alpha pair value for loop functionality
                     changed_alpha_pairs += 1
@@ -173,8 +173,8 @@ class Support_Vector_Machine_Algorithm(object):
             # Prints formatted iteration number for method
             """ print("\nTOTAL ITERATION NUMBER IS: {}\n".format(iteration_constant)) """
 
-        # Prints b-values and formatted alphas greater than zero
-        print("\nB-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(b, alphas[alphas > 0]))
+        # Prints beta-values and formatted alphas greater than zero
+        print("\nBETA-VALUE IS: {}\n\nALPHAS (GREATER THAN ZERO) ARE: \n{}\n".format(beta, alphas[alphas > 0]))
 
         # Get number of support vectors across SVM-SMO
         print("SUPPORT VECTORS ALONG THE SAMPLE DATASET ARE:")
@@ -183,12 +183,12 @@ class Support_Vector_Machine_Algorithm(object):
         # Performs runtime tracker for particular method
         self.track_runtime()
 
-        return b, alphas
+        return beta, alphas
 
     # =========== METHOD TO CALCULATE E PARAMETER FOR SVM SMO OPTIMIZATION ===========
     def calculate_E_parameter(self, smo_optimizer, alpha_param):
         # Produces holding SMO optimization parameters
-        fX_param = float(np.multiply(smo_optimizer.alphas, smo_optimizer.labels).T * (smo_optimizer.dataset * smo_optimizer.dataset[k, :].T)) + smo_optimizer.b
+        fX_param = float(np.multiply(smo_optimizer.alphas, smo_optimizer.labels).T * (smo_optimizer.dataset * smo_optimizer.dataset[k, :].T)) + smo_optimizer.beta
         E_param = fX_param - float(smo_optimizer.labels[k])
         
         print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param))
@@ -269,7 +269,7 @@ class Platt_SMO_Support_Optimization_Structure(object):
         self.alpha_tolerance = alpha_tolerance                              # Alpha tolerance for SMO boundary parametrization
         self.NUM_ROWS = np.shape(input_dataset)[0]                          # Constant to hold number of rows of dataset
         self.alphas = np.mat(np.zeros((self.NUM_ROWS, 1)))                  # Alpha value range initialized as array of zeros
-        self.b = 0                                                          # SVM-SMO B-value
+        self.beta = 0                                                       # SVM-SMO beta value
         self.error_cache = np.mat(np.zeros((self.NUM_ROWS, 2)))             # Caching value for tracking compounding errors
         self.TIME_I = TIME_I                                                # Initial time constant for runtime tracker
 
@@ -293,7 +293,7 @@ def main():
 
     # Test basic Platt SMO in SVM with helper methods
     dataset, labels = svm.load_dataset()
-    b, alphas = svm.simple_sequential_minimal_optimization(dataset, labels, 0.6, 0.001, 40)
+    beta, alphas = svm.simple_sequential_minimal_optimization(dataset, labels, 0.6, 0.001, 40)
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
