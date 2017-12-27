@@ -363,6 +363,20 @@ class Support_Vector_Machine_Algorithm(object):
         smo_support_optimizer.error_cache[alpha_param] = [1, E_param]
         return
 
+    # ====== METHOD TO RETRIEVE HYPERPLANE DISTRIBUTION FROM ALPHA VALUE SPREAD ======
+    def get_hyperplane_from_alphas(alphas, input_dataset, class_labels):
+        dataset = np.mat(input_dataset)
+        labels = np.mat(class_labels).transpose()
+        NUM_ROWS, NUM_COLS = np.shape(dataset)          # Grab dataset dimensionalities
+        hyperplane = np.zeros((NUM_COLS, 1))            # Predefine hyperplane as array of zeros
+
+        # Iterates through dataset dimensionality to produce hyperplane from alpha value spread
+        for iterator in range(NUM_ROWS):
+            hyperplane += np.multiply(alphas[iterator] * labels[iterator], dataset[iterator, :].T)
+
+        print("\nHYPERPLANE DISTRIBUTION FROM ALPHA VALUES IS: \n{}\n".format(hyperplane))
+        return hyperplane
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
