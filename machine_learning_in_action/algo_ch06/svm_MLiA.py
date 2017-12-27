@@ -29,6 +29,7 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 
 import sys                                  # Library for interpreter system flexibility
 import numpy as np                          # Library for simple linear mathematical operations
+from os import listdir as ld                # Package for returning list of directory filenames
 from time import time as t                  # Package for tracking modular and program runtime
 
 
@@ -496,7 +497,7 @@ class Support_Vector_Machine_Algorithm(object):
 
     # ================== METHOD TO CLASSIFY SELECT DATA AGAINST SVM ==================
     def classify_data_with_machine(self, SELECT_INDEX = 0):
-        # 
+        # Produces dataset, label vector, beta and alpha values from explicit methods
         dataset, labels = self.load_dataset()
         beta, alphas = self.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
         
@@ -511,6 +512,47 @@ class Support_Vector_Machine_Algorithm(object):
         
         # Performs runtime tracker for particular method
         return self.track_runtime()
+
+    # ========== METHOD THAT CONVERTS IMAGE TO VECTOR (FROM kNN CLASSIFIER) ==========
+    def convert_image_to_vector(self, path_to_file):
+        image_vector = np.zeros((1, 1024))
+        IMAGE = open(path_to_file)
+
+        # Converts 32x32 image to 1x1024 vector
+        for iterator_outer in range(32):
+            line = IMAGE.readline()
+
+            for iterator_inner in range(32):
+                image_vector[0, 32 * iterator_outer + iterator_inner] = int(line[iterator_inner])
+
+        """ print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(image_vector[0, 0:31], image_vector[0, 32:63])) """
+        return image_vector
+
+    # ==== METHOD THAT LOADS IMAGES INTO DATASET AND LABELS (FROM kNN CLASSIFIER) ====
+    def load_images_from_directory(self, dirname):
+        # Initializes dataset, class label vector, and data's dimensionality constant
+        handwriting_labels = []
+        training_file_list = ld(dirname)
+        DIR_LENGTH = len(training_file_list)
+        training_mat = np.zeros((DIR_LENGTH, 1024))
+
+        # Iterates through data's length to log every image file and class label
+        for iterator in range(DIR_LENGTH):
+            filename = training_file_list[iterator]
+            file = filename.split(".")[0]
+            class_number = int(file.split("_")[0])
+
+            # Contextually labels every image by class number (provided in dataset)
+            if class_number == 9:
+                handwriting_labels.append(-1)
+            else:
+                handwriting_labels.append(1)
+
+            # Converts training image data to information vector
+            training_mat[iterator, :] = self.convert_image_to_vector("{}/{}".format(dirname, filename))
+        
+        print("\nTRAINING DATA MATRIX IS: \n{}\n\nHANDWRITING IMAGE LABEL VECTOR IS: \n{}\n".format(training_mat, handwriting_labels))
+        return training_mat, handwriting_labels
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
