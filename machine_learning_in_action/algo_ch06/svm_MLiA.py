@@ -286,8 +286,10 @@ class Support_Vector_Machine_Algorithm(object):
         # Prints SVM-SMO beta-values and formatted alphas greater than zero
         print("\nSAVED SVM-SMO BETA VALUE IS: {}\n\nSAVED SVM-SMO ALPHA (GREATER THAN ZERO) VALUES ARE: \n{}\n".format(smo_support_optimizer.beta, smo_support_optimizer.alphas[smo_support_optimizer.alphas > 0]))
 
+        """
         # Performs runtime tracker for particular method
         self.track_runtime()
+        """
 
         return smo_support_optimizer.beta, smo_support_optimizer.alphas
 
@@ -377,6 +379,20 @@ class Support_Vector_Machine_Algorithm(object):
         print("\nHYPERPLANE DISTRIBUTIVE VALUES FROM ALPHA VALUE SPREAD IS: \n{}\n".format(hyperplane))
         return hyperplane
 
+    # ================== METHOD TO CLASSIFY SELECT DATA AGAINST SVM ==================
+    def classify_data_with_machine(self, dataset, labels, alphas, beta):
+        # Calculate formatted data matrix and hyperplane distributive values from data and alpha spread
+        hyperplane = self.get_hyperplane_from_alphas(alphas, dataset, labels)
+        datamat = np.mat(dataset)
+
+        # Calculate SVM data projection from data matrix, hyperplane distributive values, and beta value
+        svm_data_projection = datamat * np.mat(hyperplane) + beta
+
+        # Performs runtime tracker for particular method
+        self.track_runtime()
+        
+        return print("PROJECTION OF NEW DATA FROM LABEL CLASSIFIER IS: \n{}\n\nEXACT LABEL OF DATA IS: \n{}\n".format(svm_data_projection[4], labels[4]))
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
@@ -442,11 +458,7 @@ def main():
     # Classify new data using advanced Platt SMO in SVM
     dataset, labels = svm.load_dataset()
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
-    hyperplane = svm.get_hyperplane_from_alphas(alphas, dataset, labels)
-    
-    datamat = np.mat(dataset)
-    print(datamat[0] * np.mat(hyperplane) + beta)
-    print(labels[0])
+    svm.classify_data_with_machine(dataset, labels, alphas, beta)
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
