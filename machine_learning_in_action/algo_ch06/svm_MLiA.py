@@ -357,8 +357,13 @@ class Support_Vector_Machine_Algorithm(object):
                 """ print("\nFOR ALPHA'S BOUNDARY CONSTRAINTS, THE CEILING AND FLOOR ARE FOUND TO BE EQUAL.\n") """
                 return 0
 
-            # Defines marker value for altering the alpha value for optimization
+            """
+            # Defines delta marker value for optimizing alpha value (NOTE: No kernel transformation)
             optimal_alpha_change_marker = 2.0 * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T - smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[iterator, :].T - smo_support_optimizer.dataset[potential_alpha, :] * smo_support_optimizer.dataset[potential_alpha, :].T
+            """
+
+            # Defines delta marker value for optimizing alpha value (NOTE: Kernel transformation)
+            optimal_alpha_change_marker = 2.0 * smo_support_optimizer.kernel[iterator, potential_alpha] - smo_support_optimizer.kernel[iterator, iterator] - smo_support_optimizer.kernel[potential_alpha, potential_alpha]
 
             # Checks if optimal alpha marker is zero and if so, prints for convenience
             if optimal_alpha_change_marker >= 0:
@@ -379,9 +384,15 @@ class Support_Vector_Machine_Algorithm(object):
             smo_support_optimizer.alphas[iterator] += smo_support_optimizer.labels[potential_alpha] * smo_support_optimizer.labels[iterator] * (old_alpha_potential - smo_support_optimizer.alphas[potential_alpha])
             self.update_E_parameter(smo_support_optimizer, iterator)
 
-            # Produces temporary beta-values to track differential alpha changes
+            """
+            # Produces dummy beta-values to track differential alpha changes (NOTE: no kernel transformation)
             beta1 = smo_support_optimizer.beta - E_iterator - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[iterator, :].T - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T
             beta2 = smo_support_optimizer.beta - E_potential_alpha - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.dataset[iterator, :] * smo_support_optimizer.dataset[potential_alpha, :].T - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.dataset[potential_alpha, :] * smo_support_optimizer.dataset[potential_alpha, :].T
+            """
+
+            # Produces dummy beta-values to track differential alpha changes (NOTE: Kernal transformation)
+            beta1 = smo_support_optimizer.beta - E_iterator - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.kernel[iterator, iterator] - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.kernel[iterator, potential_alpha]
+            beta2 = smo_support_optimizer.beta - E_potential_alpha - smo_support_optimizer.labels[iterator] * (smo_support_optimizer.alphas[iterator] - old_alpha_iterator) * smo_support_optimizer.kernel[iterator, potential_alpha] - smo_support_optimizer.labels[potential_alpha] * (smo_support_optimizer.alphas[potential_alpha] - old_alpha_potential) * smo_support_optimizer.kernel[potential_alpha, potential_alpha]
 
             # Checks if new alpha values fall within beta-dependent boundary conditions for beta-value reinitialization
             if (0 < smo_support_optimizer.alphas[iterator]) and (smo_support_optimizer.absolute_ceiling_constant > smo_support_optimizer.alphas[iterator]):
