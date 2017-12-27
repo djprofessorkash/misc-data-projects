@@ -42,15 +42,16 @@ class Support_Vector_Machine_Algorithm(object):
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
-        self.FILE = open("sample_test_set.txt")         # Open filename as read-only for test dataset
+        # self.FILE = open("sample_test_set.txt")         # Open filename as read-only for test dataset
 
     # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
-    def load_dataset(self):
+    def load_dataset(self, filename):
+        FILE = open(filename)
         dataset = []
         labels = []
 
         # Iterates through sample file to produce sample dataset and class label vector
-        for line in self.FILE.readlines():
+        for line in FILE.readlines():
             array_of_lines = line.strip().split("\t")
             dataset.append([float(array_of_lines[0]), float(array_of_lines[1])])
             labels.append(float(array_of_lines[2]))
@@ -116,6 +117,8 @@ class Support_Vector_Machine_Algorithm(object):
         """ print("KERNEL TYPE IS: {}\n\nKERNEL IS: \n{}\n".format(kernel_type, kernel)) """
         return kernel
 
+    # ============== METHOD TO TEST KERNEL DATA TRANSFORMATION AGAINST A =============
+    # ====================== RADIAL BIAS FUNCTIONAL DISTRIBUTION =====================
     def test_kernel_transform_against_rbf(self, KERNEL_CONSTANT = 1.3):
         # Loads training data, class label vectors, and values for beta and alphas
         training_dataset, training_labels = self.load_dataset("./training_set_RBF.txt")
@@ -129,7 +132,7 @@ class Support_Vector_Machine_Algorithm(object):
         support_vector_indices = np.nonzero(alphas.A > 0)[0]
         support_vector_mat = training_data_mat[support_vector_indices]
         support_vector_labels = training_label_mat[support_vector_indices]
-        print("\nTHERE ARE {} SUPPORT VECTORS FOR OUR DATASET.\n".format(np.shape(support_vector_mat)))
+        print("\nTHERE ARE {} SUPPORT VECTORS FOR OUR DATASET.\n".format(np.shape(support_vector_mat)[0]))
 
         # Defines training data's dimensionality constants and initializes training error
         TRAINING_NUM_ROWS, TRAINING_NUM_COLS = np.shape(training_data_mat)
@@ -141,7 +144,7 @@ class Support_Vector_Machine_Algorithm(object):
             training_prediction = training_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
 
             # Increments training error count for every data prediction mismatch
-            if np.sign(training_prediction) != np.sign(labels[iterator]):
+            if np.sign(training_prediction) != np.sign(training_labels[iterator]):
                 training_error_count += 1.0
 
         # Calculates training error rate over kernel transformation
@@ -165,7 +168,7 @@ class Support_Vector_Machine_Algorithm(object):
             test_prediction = test_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
 
             # Increments test error count for every data prediction mismatch
-            if np.sign(test_prediction) != np.sign(labels[iterator]):
+            if np.sign(test_prediction) != np.sign(test_labels[iterator]):
                 test_error_count += 1.0
 
         # Calculates test error rate over kernel transformation
@@ -574,13 +577,17 @@ def main():
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
     hyperplane = svm.get_hyperplane_from_alphas(alphas, dataset, labels)
     """
-    
+
+    """
     # Classify new data using advanced Platt SMO in SVM
-    # Checks if user inputs specific selection index for SVM classifier
     if len(sys.argv) > 1:
         svm.classify_data_with_machine(SELECT_INDEX = int(sys.argv[1]))
     else:
         svm.classify_data_with_machine()
+    """
+
+    # Test RBF datasets using kernel transformation with SVM-SMO classifier
+    svm.test_kernel_transform_against_rbf()
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
