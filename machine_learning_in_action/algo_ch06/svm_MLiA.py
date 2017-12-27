@@ -41,8 +41,8 @@ class Support_Vector_Machine_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
-        self.TIME_I = TIME_I                    # Initial time measure for runtime tracker
-        self.FILE = open("test_set.txt")        # Open filename as read-only for test dataset
+        self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
+        self.FILE = open("sample_test_set.txt")         # Open filename as read-only for test dataset
 
     # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
     def load_dataset(self):
@@ -117,7 +117,7 @@ class Support_Vector_Machine_Algorithm(object):
         return kernel
 
     def test_kernel_transform_against_rbf(self, KERNEL_CONSTANT = 1.3):
-        dataset, labels = self.load_dataset("./test_set_RBF.txt")
+        dataset, labels = self.load_dataset("./training_set_RBF.txt")
         beta, alphas = self.outer_loop_heuristic_smo_optimization(dataset, labels, 200, 0.0001, 10000, ("rbf", KERNEL_CONSTANT))
         
         # Produces formatted matrices for the data and the class label vectors
