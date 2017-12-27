@@ -363,8 +363,8 @@ class Support_Vector_Machine_Algorithm(object):
         smo_support_optimizer.error_cache[alpha_param] = [1, E_param]
         return
 
-    # ====== METHOD TO RETRIEVE HYPERPLANE DISTRIBUTION FROM ALPHA VALUE SPREAD ======
-    def get_hyperplane_from_alphas(alphas, input_dataset, class_labels):
+    # ======== METHOD TO RETRIEVE HYPERPLANE DISTRIBUTIVE VALUES FROM ALPHAS =========
+    def get_hyperplane_from_alphas(self, alphas, input_dataset, class_labels):
         dataset = np.mat(input_dataset)
         labels = np.mat(class_labels).transpose()
         NUM_ROWS, NUM_COLS = np.shape(dataset)          # Grab dataset dimensionalities
@@ -374,7 +374,7 @@ class Support_Vector_Machine_Algorithm(object):
         for iterator in range(NUM_ROWS):
             hyperplane += np.multiply(alphas[iterator] * labels[iterator], dataset[iterator, :].T)
 
-        print("\nHYPERPLANE DISTRIBUTION FROM ALPHA VALUES IS: \n{}\n".format(hyperplane))
+        print("\nHYPERPLANE DISTRIBUTIVE VALUES FROM ALPHA VALUE SPREAD IS: \n{}\n".format(hyperplane))
         return hyperplane
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -432,9 +432,21 @@ def main():
     beta, alphas = svm.simple_sequential_minimal_optimization(dataset, labels, 0.6, 0.001, 40)
     """
 
+    """
     # Test advanced Platt SMO in SVM with helper methods, multilevel looping heuristics, and object-oriented storage
     dataset, labels = svm.load_dataset()
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
+    hyperplane = svm.get_hyperplane_from_alphas(alphas, dataset, labels)
+    """
+
+    # Classify new data using advanced Platt SMO in SVM
+    dataset, labels = svm.load_dataset()
+    beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
+    hyperplane = svm.get_hyperplane_from_alphas(alphas, dataset, labels)
+    
+    datamat = np.mat(dataset)
+    print(datamat[0] * np.mat(hyperplane) + beta)
+    print(labels[0])
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
