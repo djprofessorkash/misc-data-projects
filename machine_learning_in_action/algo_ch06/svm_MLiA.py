@@ -82,6 +82,40 @@ class Support_Vector_Machine_Algorithm(object):
         """ print("\nALPHA VALUE PROCESSED AGAINST CONSTRAINTS IS: {}\n".format(alpha_from_potential)) """
         return alpha_from_potential
 
+    # ========= METHOD TO TRANSFORM DATA DISTRIBUTION FROM VECTOR TO SCALAR ==========
+    # =========== USING LINEAR KERNELS AND GAUSSIAN RADIAL BIAS FUNCTIONS ============
+    def kernel_transformation_linear_RBF(self, dataset, data_subset, kernel_tuple):
+        NUM_ROWS, NUM_COLS = np.shape(dataset)
+        kernel = np.mat(np.zeros((NUM_ROWS, 1)))
+        kernel_classes = ["LINEAR", "GAUSSIAN RADIAL BIAS FUNCTION", "UNKNOWN"]
+
+        # Classifies kernel type based on tuple property value
+        if kernel_tuple[0] == "lin":
+            kernel_type = kernel_classes[0]
+        elif kernel_tuple[0] == "rbf":
+            kernel_type = kernel_classes[1]
+        else:
+            kernel_type = kernel_classes[2]
+
+        # Checks kernel type and transforms kernel contextually
+        if kernel_type == kernel_classes[0]
+            # Transforms linear kernel
+            kernel = dataset * data_subset.T 
+        elif: kernel_type == kernel_classes[1]
+            # Iterates through dataset size to create kernel spread
+            for iterator in range(NUM_ROWS):
+                delta_rows = dataset[iterator, :] - data_subset
+                kernel[iterator] = delta_rows * delta_rows.T
+
+            # Transforms Gaussian radial bias function
+            kernel = np.exp(kernel / (-1 * kernel_tuple[1] ** 2))
+        else:
+            # Raises error if kernel type is not linear or RBF
+            raise NameError("\nKERNEL NOT RECOGNIZED OR OF BAD TYPE.\n")
+
+        print("KERNEL TYPE IS: {}\n\nKERNEL IS: \n{}\n".format(kernel_type, kernel))
+        return kernel
+
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
@@ -241,7 +275,7 @@ class Support_Vector_Machine_Algorithm(object):
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
     # ==================== VIA AN OUTER-LOOP ITERATION HEURISTIC =====================
-    def outer_loop_heuristic_smo_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER, param_tuple=("lin", 0)):
+    def outer_loop_heuristic_smo_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER, kernel_tuple=("lin", 0)):
         # Call the SVM-SMO Support Optimizer object
         smo_support_optimizer = Platt_SMO_Support_Optimization_Structure(np.mat(input_dataset), np.mat(class_labels).transpose(), absolute_ceiling_constant, alpha_tolerance)
 
