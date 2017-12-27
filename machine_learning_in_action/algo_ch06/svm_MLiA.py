@@ -389,11 +389,11 @@ class Support_Vector_Machine_Algorithm(object):
 
         # Calculate SVM data projection from data matrix, hyperplane distributive values, and beta value
         svm_data_projection = datamat * np.mat(hyperplane) + beta
-
-        # Performs runtime tracker for particular method
-        self.track_runtime()
         
-        return print("PROJECTION OF NEW DATA AT INDEX {} FROM LABEL CLASSIFIER IS: \n{}\n\nEXACT LABEL OF DATA AT INDEX {} IS: \n{}\n".format(SELECT_INDEX, svm_data_projection[SELECT_INDEX], SELECT_INDEX, labels[SELECT_INDEX]))
+        print("PROJECTION OF NEW DATA AT INDEX {} FROM LABEL CLASSIFIER IS: \n{}\n\nEXACT LABEL OF DATA AT INDEX {} IS: \n{}\n".format(SELECT_INDEX, svm_data_projection[SELECT_INDEX], SELECT_INDEX, labels[SELECT_INDEX]))
+        
+        # Performs runtime tracker for particular method
+        return self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
