@@ -450,7 +450,7 @@ class Support_Vector_Machine_Algorithm(object):
 class Platt_SMO_Support_Optimization_Structure(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
-    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance):
+    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, kernel_tuple):
         self.dataset = input_dataset                                        # Formatted dataset from sample data
         self.labels = class_labels                                          # Class label vector from sample data
         self.absolute_ceiling_constant = absolute_ceiling_constant          # Alpha ceiling constant for SMO boundary parametrization
@@ -459,6 +459,9 @@ class Platt_SMO_Support_Optimization_Structure(object):
         self.alphas = np.mat(np.zeros((self.NUM_ROWS, 1)))                  # Alpha value range initialized as array of zeros
         self.beta = 0                                                       # SVM-SMO beta value
         self.error_cache = np.mat(np.zeros((self.NUM_ROWS, 2)))             # Caching value for tracking compounding errors
+        self.kernel = np.mat(np.zeros((self.NUM_ROWS, self.NUM_ROWS)))      # Kernel distribution for non/linear data transformations
+        for iterator in range(self.NUM_ROWS):
+            self.kernel[:, iterator] = Support_Vector_Machine_Algorithm().kernel_transformation_linear_RBF(self.dataset, self.dataset[iterator, :], kernel_tuple)
 
 
 # ====================================================================================
