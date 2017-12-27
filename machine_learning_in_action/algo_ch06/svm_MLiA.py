@@ -27,7 +27,7 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 # ====================================================================================
 
 
-import sys
+import sys                                  # Library for interpreter system flexibility
 import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
@@ -62,6 +62,7 @@ class Support_Vector_Machine_Algorithm(object):
     def select_random_potential_alpha(self, alpha_index, alpha_total):
         potential_alpha = alpha_index
 
+        # Produces potential alpha values while they match alpha index values
         while (potential_alpha == alpha_index):
             potential_alpha = int(np.random.uniform(0, alpha_total))
         
@@ -459,7 +460,9 @@ def main():
     # Classify new data using advanced Platt SMO in SVM
     dataset, labels = svm.load_dataset()
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
-    if sys.argv[1]:
+    
+    # Checks if user inputs specific selection index for SVM classifier
+    if len(sys.argv) > 1:
         svm.classify_data_with_machine(dataset, labels, alphas, beta, SELECT_INDEX = int(sys.argv[1]))
     else:
         svm.classify_data_with_machine(dataset, labels, alphas, beta)
