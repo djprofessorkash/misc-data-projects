@@ -117,35 +117,63 @@ class Support_Vector_Machine_Algorithm(object):
         return kernel
 
     def test_kernel_transform_against_rbf(self, KERNEL_CONSTANT = 1.3):
+        # Loads training data, class label vectors, and values for beta and alphas
         training_dataset, training_labels = self.load_dataset("./training_set_RBF.txt")
         beta, alphas = self.outer_loop_heuristic_smo_optimization(training_dataset, training_labels, 200, 0.0001, 10000, ("rbf", KERNEL_CONSTANT))
         
-        # Produces formatted matrices for the training data and the class label vectors
+        # Produces formatted matrices for training data and class label vectors
         training_data_mat = np.mat(training_dataset)
         training_label_mat = np.mat(training_labels).transpose()
 
-        # Produces support vectors and conditional SV information for the training data
+        # Produces support vectors and conditional SV information for training data
         support_vector_indices = np.nonzero(alphas.A > 0)[0]
         support_vector_mat = training_data_mat[support_vector_indices]
         support_vector_labels = training_label_mat[support_vector_indices]
         print("\nTHERE ARE {} SUPPORT VECTORS FOR OUR DATASET.\n".format(np.shape(support_vector_mat)))
 
-        # Defines the data matrix's dimensionality constants
-        NUM_ROWS, NUM_COLS = np.shape(training_data_mat)
+        # Defines training data's dimensionality constants and initializes training error
+        TRAINING_NUM_ROWS, TRAINING_NUM_COLS = np.shape(training_data_mat)
         training_error_count = 0.0
 
-        # Iterates over the dataset's length to evaluate and transform all kernel data and then write predictions using support vectors
-        for iterator in range(NUM_ROWS):
+        # Iterates over training dataset's length to evaluate and transform kernel data and then write predictions using support vectors
+        for iterator in range(TRAINING_NUM_ROWS):
             training_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, training_data_mat[iterator, :], ("rbf", KERNEL_CONSTANT))
             training_prediction = training_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
 
-            # Increments the training error count for every data prediction mismatch
-            if np.sign(training_prediction) != np.sign(labels):
+            # Increments training error count for every data prediction mismatch
+            if np.sign(training_prediction) != np.sign(labels[iterator]):
                 training_error_count += 1.0
 
-        # Calculates the training error rate over the kernel transformation
-        training_error_rate = training_error_count / NUM_ROWS
-        print("THE TRAINING ERROR RATE FOR TRANSFORMING THE RBF KERNEL DATA IS: {}\n".format(training_error_rate))
+        # Calculates training error rate over kernel transformation
+        training_error_rate = training_error_count / TRAINING_NUM_ROWS
+        print("THE TRAINING ERROR RATE FOR PREDICTING FROM THE RBF KERNEL DATA IS: {}\n".format(training_error_rate))
+
+        # Loads test data and class label vectors
+        test_dataset, test_labels = self.load_dataset("./test_set_RBF.txt")
+        
+        # Produces formatted matrices for test data and class label vectors
+        test_data_mat = np.mat(test_dataset)
+        test_label_mat = np.mat(test_labels).transpose()
+
+        # Defines test data's dimensionality constants and initializes test error
+        TEST_NUM_ROWS, TEST_NUM_COLS = np.shape(test_data_mat)
+        test_error_count = 0.0
+
+        # Iterates over test dataset's length to evaluate and transform kernel data and then write predictions using support vectors
+        for iterator in range(TEST_NUM_ROWS):
+            test_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, test_data_mat[iterator, :], ("rbf", KERNEL_CONSTANT))
+            test_prediction = test_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
+
+            # Increments test error count for every data prediction mismatch
+            if np.sign(test_prediction) != np.sign(labels[iterator]):
+                test_error_count += 1.0
+
+        # Calculates test error rate over kernel transformation
+        test_error_rate = test_error_count / TEST_NUM_ROWS
+        print("THE TEST ERROR RATE FOR PREDICTING FROM THE RBF KERNEL DATA IS: {}\n".format(test_error_rate))
+        
+        # Performs runtime tracker for particular method
+        return self.track_runtime()
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
