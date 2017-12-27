@@ -230,7 +230,21 @@ class Support_Vector_Machine_Algorithm(object):
         support_vector_indices = np.nonzero(alphas.A > 0)[0]
         support_vector_mat = training_data_mat[support_vector_indices]
         support_vector_labels = training_label_mat[support_vector_indices]
-        print("")
+        print("\nTHERE ARE {} SUPPORT VECTORS FOR THE HANDWRITING IMAGES DATASET.\n".format(np.shape(support_vector_mat)[0]))
+
+        NUM_ROWS, NUM_COLS = np.shape(training_data_mat)
+        training_error_count = 0.0
+
+        for iterator in range(NUM_ROWS):
+            training_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, training_data_mat[iterator, :], kernel_tuple)
+            training_prediction = training_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
+
+            if np.sign(training_prediction) != np.sign(training_labels[iterator]):
+                training_error_count += 1.0
+
+        # Calculates training error rate over kernel transformation
+        training_error_rate = training_error_count / TRAINING_NUM_ROWS
+        print("THE TRAINING ERROR RATE FOR PREDICTING FROM THE RBF KERNEL OF THE HANDWRITING IMAGES DATASET IS: {}\n".format(training_error_rate))
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
