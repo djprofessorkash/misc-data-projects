@@ -225,11 +225,17 @@ class Support_Vector_Machine_Algorithm(object):
 
     # =========== METHOD TO CALCULATE E PARAMETER FOR SVM SMO OPTIMIZATION ===========
     def calculate_E_parameter(self, smo_support_optimizer, alpha_param):
-        # Produces holding SMO optimization parameters
+        """
+        # Produces temporary holding SMO optimization parameter (NOTE: No kernel transformation)
         fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * (smo_support_optimizer.dataset * smo_support_optimizer.dataset[alpha_param, :].T)) + smo_support_optimizer.beta
+        """
+
+        # Produces temporary holding SMO optimization parameter (NOTE: Kernel transformation)
+        fX_param = float(np.multiply(smo_support_optimizer.alphas, smo_support_optimizer.labels).T * smo_support_optimizer.kernel[:, alpha_param] + smo_support_optimizer.beta)
+        # Calculates E-parameter from temporary holding SMO optimization parameters
         E_param = fX_param - float(smo_support_optimizer.labels[alpha_param])
         
-        """ print("FIRST HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND HOLDING SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param)) """
+        """ print("FIRST TEMPORARY HOLDING SMO OPTIMIZATION PARAMETER fX IS: {}\n\nSECOND SMO OPTIMIZATION PARAMETER E IS: {}\n".format(fX_param, E_param)) """
         return E_param
 
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
