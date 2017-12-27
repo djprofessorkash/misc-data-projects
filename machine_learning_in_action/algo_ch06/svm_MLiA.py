@@ -113,7 +113,7 @@ class Support_Vector_Machine_Algorithm(object):
             # Raises error if kernel type is not linear or RBF
             raise NameError("\nKERNEL NOT RECOGNIZED OR OF BAD TYPE.\n")
 
-        print("KERNEL TYPE IS: {}\n\nKERNEL IS: \n{}\n".format(kernel_type, kernel))
+        """ print("KERNEL TYPE IS: {}\n\nKERNEL IS: \n{}\n".format(kernel_type, kernel)) """
         return kernel
 
     def test_kernel_transform_against_rbf(self, KERNEL_CONSTANT = 1.3):
@@ -492,7 +492,11 @@ class Support_Vector_Machine_Algorithm(object):
         return hyperplane
 
     # ================== METHOD TO CLASSIFY SELECT DATA AGAINST SVM ==================
-    def classify_data_with_machine(self, dataset, labels, alphas, beta, SELECT_INDEX = 0):
+    def classify_data_with_machine(self, SELECT_INDEX = 0):
+        # 
+        dataset, labels = self.load_dataset()
+        beta, alphas = self.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
+        
         # Calculate formatted data matrix and hyperplane distributive values from data and alpha spread
         hyperplane = self.get_hyperplane_from_alphas(alphas, dataset, labels)
         datamat = np.mat(dataset)
@@ -570,16 +574,13 @@ def main():
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
     hyperplane = svm.get_hyperplane_from_alphas(alphas, dataset, labels)
     """
-
-    # Classify new data using advanced Platt SMO in SVM
-    dataset, labels = svm.load_dataset()
-    beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
     
+    # Classify new data using advanced Platt SMO in SVM
     # Checks if user inputs specific selection index for SVM classifier
     if len(sys.argv) > 1:
-        svm.classify_data_with_machine(dataset, labels, alphas, beta, SELECT_INDEX = int(sys.argv[1]))
+        svm.classify_data_with_machine(SELECT_INDEX = int(sys.argv[1]))
     else:
-        svm.classify_data_with_machine(dataset, labels, alphas, beta)
+        svm.classify_data_with_machine()
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
