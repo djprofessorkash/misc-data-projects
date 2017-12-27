@@ -117,30 +117,30 @@ class Support_Vector_Machine_Algorithm(object):
         return kernel
 
     def test_kernel_transform_against_rbf(self, KERNEL_CONSTANT = 1.3):
-        dataset, labels = self.load_dataset("./training_set_RBF.txt")
-        beta, alphas = self.outer_loop_heuristic_smo_optimization(dataset, labels, 200, 0.0001, 10000, ("rbf", KERNEL_CONSTANT))
+        training_dataset, training_labels = self.load_dataset("./training_set_RBF.txt")
+        beta, alphas = self.outer_loop_heuristic_smo_optimization(training_dataset, training_labels, 200, 0.0001, 10000, ("rbf", KERNEL_CONSTANT))
         
-        # Produces formatted matrices for the data and the class label vectors
-        data_mat = np.mat(dataset)
-        label_mat = np.mat(labels).transpose()
+        # Produces formatted matrices for the training data and the class label vectors
+        training_data_mat = np.mat(training_dataset)
+        training_label_mat = np.mat(training_labels).transpose()
 
         # Produces support vectors and conditional SV information for the training data
         support_vector_indices = np.nonzero(alphas.A > 0)[0]
-        support_vector_mat = data_mat[support_vector_indices]
-        support_vector_labels = label_mat[support_vector_indices]
+        support_vector_mat = training_data_mat[support_vector_indices]
+        support_vector_labels = training_label_mat[support_vector_indices]
         print("\nTHERE ARE {} SUPPORT VECTORS FOR OUR DATASET.\n".format(np.shape(support_vector_mat)))
 
         # Defines the data matrix's dimensionality constants
-        NUM_ROWS, NUM_COLS = np.shape(data_mat)
+        NUM_ROWS, NUM_COLS = np.shape(training_data_mat)
         training_error_count = 0.0
 
         # Iterates over the dataset's length to evaluate and transform all kernel data and then write predictions using support vectors
         for iterator in range(NUM_ROWS):
-            kernel_evaluate = self.kernel_transformation_linear_RBF(support_vector_mat, data_mat[iterator, :], ("rbf", KERNEL_CONSTANT))
-            data_prediction = kernel_evaluate.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
+            training_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, training_data_mat[iterator, :], ("rbf", KERNEL_CONSTANT))
+            training_prediction = training_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
 
             # Increments the training error count for every data prediction mismatch
-            if np.sign(data_prediction) != np.sign(labels):
+            if np.sign(training_prediction) != np.sign(labels):
                 training_error_count += 1.0
 
         # Calculates the training error rate over the kernel transformation
