@@ -179,6 +179,59 @@ class Support_Vector_Machine_Algorithm(object):
         # Performs runtime tracker for particular method
         return self.track_runtime()
 
+        # ========== METHOD THAT CONVERTS IMAGE TO VECTOR (FROM kNN CLASSIFIER) ==========
+    def convert_image_to_vector(self, path_to_file):
+        image_vector = np.zeros((1, 1024))
+        IMAGE = open(path_to_file)
+
+        # Converts 32x32 image to 1x1024 vector
+        for iterator_outer in range(32):
+            line = IMAGE.readline()
+
+            for iterator_inner in range(32):
+                image_vector[0, 32 * iterator_outer + iterator_inner] = int(line[iterator_inner])
+
+        """ print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(image_vector[0, 0:31], image_vector[0, 32:63])) """
+        return image_vector
+
+    # ==== METHOD THAT LOADS IMAGES INTO DATASET AND LABELS (FROM kNN CLASSIFIER) ====
+    def load_images_from_directory(self, dirname):
+        # Initializes dataset, class label vector, and data's dimensionality constant
+        handwriting_labels = []
+        training_file_list = ld(dirname)
+        DIR_LENGTH = len(training_file_list)
+        training_mat = np.zeros((DIR_LENGTH, 1024))
+
+        # Iterates through data's length to log every image file and class label
+        for iterator in range(DIR_LENGTH):
+            filename = training_file_list[iterator]
+            file = filename.split(".")[0]
+            class_number = int(file.split("_")[0])
+
+            # Contextually labels every image by class number (provided in dataset)
+            if class_number == 9:
+                handwriting_labels.append(-1)
+            else:
+                handwriting_labels.append(1)
+
+            # Converts training image data to information vector
+            training_mat[iterator, :] = self.convert_image_to_vector("{}/{}".format(dirname, filename))
+        
+        print("\nTRAINING DATA MATRIX IS: \n{}\n\nHANDWRITING IMAGE LABEL VECTOR IS: \n{}\n".format(training_mat, handwriting_labels))
+        return training_mat, handwriting_labels
+
+    def test_handwriting_digits_with_advanced_svm(self, kernel_tuple = ("rbf", 10)):
+        training_dataset, training_labels = self.load_images_from_directory("./digits/training_digits/")
+        beta, alphas = self.outer_loop_heuristic_smo_optimization(training_dataset, training_labels, 200, 0.0001, 10000, kernel_tuple)
+
+        training_data_mat = np.mat(training_dataset)
+        training_label_mat = np.mat(training_labels).transpose()
+
+        support_vector_indices = np.nonzero(alphas.A > 0)[0]
+        support_vector_mat = training_data_mat[support_vector_indices]
+        support_vector_labels = training_label_mat[support_vector_indices]
+        print("")
+
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
     def simple_sequential_minimal_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER):
@@ -512,47 +565,6 @@ class Support_Vector_Machine_Algorithm(object):
         
         # Performs runtime tracker for particular method
         return self.track_runtime()
-
-    # ========== METHOD THAT CONVERTS IMAGE TO VECTOR (FROM kNN CLASSIFIER) ==========
-    def convert_image_to_vector(self, path_to_file):
-        image_vector = np.zeros((1, 1024))
-        IMAGE = open(path_to_file)
-
-        # Converts 32x32 image to 1x1024 vector
-        for iterator_outer in range(32):
-            line = IMAGE.readline()
-
-            for iterator_inner in range(32):
-                image_vector[0, 32 * iterator_outer + iterator_inner] = int(line[iterator_inner])
-
-        """ print("SAMPLE IMAGE VECTOR, FIRST 32 DIGITS: \n{}.\nSAMPLE IMAGE VECTOR, SECOND 32 DIGITS: \n{}.\n".format(image_vector[0, 0:31], image_vector[0, 32:63])) """
-        return image_vector
-
-    # ==== METHOD THAT LOADS IMAGES INTO DATASET AND LABELS (FROM kNN CLASSIFIER) ====
-    def load_images_from_directory(self, dirname):
-        # Initializes dataset, class label vector, and data's dimensionality constant
-        handwriting_labels = []
-        training_file_list = ld(dirname)
-        DIR_LENGTH = len(training_file_list)
-        training_mat = np.zeros((DIR_LENGTH, 1024))
-
-        # Iterates through data's length to log every image file and class label
-        for iterator in range(DIR_LENGTH):
-            filename = training_file_list[iterator]
-            file = filename.split(".")[0]
-            class_number = int(file.split("_")[0])
-
-            # Contextually labels every image by class number (provided in dataset)
-            if class_number == 9:
-                handwriting_labels.append(-1)
-            else:
-                handwriting_labels.append(1)
-
-            # Converts training image data to information vector
-            training_mat[iterator, :] = self.convert_image_to_vector("{}/{}".format(dirname, filename))
-        
-        print("\nTRAINING DATA MATRIX IS: \n{}\n\nHANDWRITING IMAGE LABEL VECTOR IS: \n{}\n".format(training_mat, handwriting_labels))
-        return training_mat, handwriting_labels
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
