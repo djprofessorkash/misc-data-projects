@@ -98,10 +98,10 @@ class Support_Vector_Machine_Algorithm(object):
             kernel_type = kernel_classes[2]
 
         # Checks kernel type and transforms kernel contextually
-        if kernel_type == kernel_classes[0]
+        if kernel_type == kernel_classes[0]:
             # Transforms linear kernel
             kernel = dataset * data_subset.T 
-        elif: kernel_type == kernel_classes[1]
+        elif kernel_type == kernel_classes[1]:
             # Iterates through dataset size to create kernel spread
             for iterator in range(NUM_ROWS):
                 delta_rows = dataset[iterator, :] - data_subset
@@ -283,7 +283,7 @@ class Support_Vector_Machine_Algorithm(object):
     # ==================== VIA AN OUTER-LOOP ITERATION HEURISTIC =====================
     def outer_loop_heuristic_smo_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER, kernel_tuple=("lin", 0)):
         # Call the SVM-SMO Support Optimizer object
-        smo_support_optimizer = Platt_SMO_Support_Optimization_Structure(np.mat(input_dataset), np.mat(class_labels).transpose(), absolute_ceiling_constant, alpha_tolerance)
+        smo_support_optimizer = Platt_SMO_Support_Optimization_Structure(np.mat(input_dataset), np.mat(class_labels).transpose(), absolute_ceiling_constant, alpha_tolerance, kernel_tuple, self.TIME_I)
 
         # Predefine iteration constant and boolean to track full set progress
         iteration_constant = 0
@@ -467,7 +467,8 @@ class Support_Vector_Machine_Algorithm(object):
 class Platt_SMO_Support_Optimization_Structure(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
-    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, kernel_tuple):
+    def __init__(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, kernel_tuple, TIME_I):
+        self.TIME_I = TIME_I                                                # Initial time for runtime tracker
         self.dataset = input_dataset                                        # Formatted dataset from sample data
         self.labels = class_labels                                          # Class label vector from sample data
         self.absolute_ceiling_constant = absolute_ceiling_constant          # Alpha ceiling constant for SMO boundary parametrization
@@ -478,7 +479,7 @@ class Platt_SMO_Support_Optimization_Structure(object):
         self.error_cache = np.mat(np.zeros((self.NUM_ROWS, 2)))             # Caching value for tracking compounding errors
         self.kernel = np.mat(np.zeros((self.NUM_ROWS, self.NUM_ROWS)))      # Kernel distribution for non/linear data transformations
         for iterator in range(self.NUM_ROWS):
-            self.kernel[:, iterator] = Support_Vector_Machine_Algorithm().kernel_transformation_linear_RBF(self.dataset, self.dataset[iterator, :], kernel_tuple)
+            self.kernel[:, iterator] = Support_Vector_Machine_Algorithm(TIME_I).kernel_transformation_linear_RBF(self.dataset, self.dataset[iterator, :], kernel_tuple)
 
 
 # ====================================================================================
