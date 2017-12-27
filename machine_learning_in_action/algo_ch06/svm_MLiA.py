@@ -27,6 +27,7 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 # ====================================================================================
 
 
+import sys
 import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
 
@@ -380,7 +381,7 @@ class Support_Vector_Machine_Algorithm(object):
         return hyperplane
 
     # ================== METHOD TO CLASSIFY SELECT DATA AGAINST SVM ==================
-    def classify_data_with_machine(self, dataset, labels, alphas, beta):
+    def classify_data_with_machine(self, dataset, labels, alphas, beta, SELECT_INDEX = 0):
         # Calculate formatted data matrix and hyperplane distributive values from data and alpha spread
         hyperplane = self.get_hyperplane_from_alphas(alphas, dataset, labels)
         datamat = np.mat(dataset)
@@ -391,7 +392,7 @@ class Support_Vector_Machine_Algorithm(object):
         # Performs runtime tracker for particular method
         self.track_runtime()
         
-        return print("PROJECTION OF NEW DATA FROM LABEL CLASSIFIER IS: \n{}\n\nEXACT LABEL OF DATA IS: \n{}\n".format(svm_data_projection[4], labels[4]))
+        return print("PROJECTION OF NEW DATA AT INDEX {} FROM LABEL CLASSIFIER IS: \n{}\n\nEXACT LABEL OF DATA AT INDEX {} IS: \n{}\n".format(SELECT_INDEX, svm_data_projection[SELECT_INDEX], SELECT_INDEX, labels[SELECT_INDEX]))
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -458,7 +459,10 @@ def main():
     # Classify new data using advanced Platt SMO in SVM
     dataset, labels = svm.load_dataset()
     beta, alphas = svm.outer_loop_heuristic_smo_optimization(dataset, labels, 0.6, 0.001, 40)
-    svm.classify_data_with_machine(dataset, labels, alphas, beta)
+    if sys.argv[1]:
+        svm.classify_data_with_machine(dataset, labels, alphas, beta, SELECT_INDEX = int(sys.argv[1]))
+    else:
+        svm.classify_data_with_machine(dataset, labels, alphas, beta)
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
