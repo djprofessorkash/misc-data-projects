@@ -240,29 +240,39 @@ class Support_Vector_Machine_Algorithm(object):
     # ====== METHOD TO SELECT OPTIMIZED ALPHA FROM SMO OPTIMIZER AND PARAMETERS ======
     # ==================== VIA AN OUTER-LOOP ITERATION HEURISTIC =====================
     def outer_loop_heuristic_smo_optimization(self, input_dataset, class_labels, absolute_ceiling_constant, alpha_tolerance, MAX_ITER, param_tuple=("lin", 0)):
+        # Call the SVM-SMO Support Optimizer object
         smo_support_optimizer = Platt_SMO_Support_Optimization_Structure(np.mat(input_dataset), np.mat(class_labels).transpose(), absolute_ceiling_constant, alpha_tolerance)
 
+        # Predefine iteration constant and boolean to track full set progress
         iteration_constant = 0
         entire_set_checked = True
         changed_alpha_pairs = 0
 
+        # Iterates while iteration constant falls within method's boundary conditions
         while (iteration_constant < MAX_ITER) and ((changed_alpha_pairs > 0) or (entire_set_checked)):
             changed_alpha_pairs = 0
 
+            # Checks if the entire set has been iterated through already
             if entire_set_checked:
+                # Iterates through the input dataset size
                 for iterator in range(smo_support_optimizer.NUM_ROWS):
+                    # Increments changed alpha pairs from multilevel choice heuristic method
                     changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
                     """ print("FOR THE FULL SET...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs)) """
-                iteration_constant += 1
+                iteration_constant += 1                     # Increments the iteration constant
             
             else:
+                # Creates unbound values from nonzero alpha entries when entire set has not been checked
                 unbound_values = np.nonzero((smo_support_optimizer.alphas.A > 0) * (smo_support_optimizer.alphas.A < absolute_ceiling_constant))[0]
 
+                # Iterates through size of unbound values
                 for iterator in unbound_values:
+                    # Increments changed alpha pairs from multilevel choice heuristic method 
                     changed_alpha_pairs += self.multilevel_choice_heuristic_smo_optimization(iterator, smo_support_optimizer)
                     """ print("FOR THE UNBOUND VALUES...\n\nITERATION CONSTANT IS: {}\nLOOP ITERATOR IS: {}\nCHANGED ALPHA VALUE PAIRS ARE: \n{}\n".format(iteration_constant, iterator, changed_alpha_pairs)) """
-                iteration_constant += 1
+                iteration_constant += 1                     # Increments the iteration constant
             
+            # Alters checked set boolean based on whether set has been checked (pretty self-explanatory)
             if entire_set_checked:
                 entire_set_checked = False
             elif (changed_alpha_pairs == 0):
