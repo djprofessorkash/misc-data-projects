@@ -28,10 +28,10 @@
 
 #### CHAPTER 6: Support Vector Machines
 - STARTED: Monday, December 25, 2017 (Happy Holidays!)
-- COMPLETED: ???
+- COMPLETED: Wednesday, December 27, 2017
 
 #### CHAPTER 7: Improving Classification with the <i>AdaBoost</i> Meta-Algorithm
-- STARTED: ???
+- STARTED: Wednesday, December 27, 2017
 - COMPLETED: ???
 
 ***
