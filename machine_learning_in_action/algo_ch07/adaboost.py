@@ -27,8 +27,8 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 # ====================================================================================
 
 
-import numpy as np                          # Library for simple linear mathematical operations
 from time import time as t                  # Package for tracking modular and program runtime
+import numpy as np                          # Library for simple linear mathematical operations
 
 
 # ====================================================================================

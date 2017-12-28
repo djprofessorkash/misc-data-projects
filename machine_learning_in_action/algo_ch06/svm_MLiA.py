@@ -19,7 +19,11 @@ ADVANTAGE(S):       Computationally cheap
 DISADVANTAGE(S):    Natively only handles binary classification
                     Sensitive to tuning parameters and choice of kernel
 
-NOTE:               Original source code is in Python 2, but my code is in Python 3.
+NOTE:               The handwriting application of SVM requires a subdirectory of images called 
+                    'digits' that is too large to upload to GitHub. Instead, download and unpack
+                    the file titled 'digits.zip'.
+
+                    Original source code is in Python 2, but my code is in Python 3.
 
 CREDIT:             Machine Learning in Action (Peter Harrington)
 """

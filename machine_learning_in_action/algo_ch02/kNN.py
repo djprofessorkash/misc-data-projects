@@ -1,7 +1,7 @@
 """
 NAME:               kNN.py (data_projects/machine_learning_in_action/algo_ch02/)
 
-DESCRIPTION:        Python class application of the k-Nearest Neighbor ML algorithm. 
+DESCRIPTION:        Python class structure of the k-Nearest Neighbor ML algorithm. 
 
                     The kNN algorithm is a basic machine learning algorithm that compares new 
                     data based on comparative similarities to available training data and looks
@@ -21,7 +21,7 @@ DISADVANTAGE(S):    Computationally expensive
 NOTE:               The handwriting application of kNN requires a subdirectory of images called 
                     'digits' that is too large to upload to GitHub. Instead, download and unpack
                     the file titled 'digits.zip'.
-
+                    
                     Original source code is Python 2, but my code is Python 3.
 
 CREDIT:             Machine Learning In Action (Peter Harrington)
@@ -33,11 +33,11 @@ CREDIT:             Machine Learning In Action (Peter Harrington)
 # ====================================================================================
 
 
-import numpy as np                          # Library for simple linear mathematical operations
-import operator as op                       # Library for intrinsic Pythonic mathematical operations
-import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
 from os import listdir as ld                # Package for returning list of directory filenames
 from time import time as t                  # Package for tracking modular and program runtime
+import operator as op                       # Library for intrinsic Pythonic mathematical operations
+import numpy as np                          # Library for simple linear mathematical operations
+import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
 
 
 # ====================================================================================
@@ -55,11 +55,11 @@ class k_Nearest_Neighbors_Algorithm(object):
         self.SAMPLING_RATIO = 0.10                              # Ratio to hold some testing data
 
     # ================= METHOD THAT CLASSIFIES DATASET AGAINST LABELS ================
-    def basic_label_classifier(self, inX, dataset, labels, k):
+    def basic_label_classifier(self, in_dataset, dataset, labels, k):
         dataset_size = dataset.shape[0]
 
         # Distance(s) calculation
-        diff_mat = np.tile(inX, (dataset_size, 1)) - dataset
+        diff_mat = np.tile(in_dataset, (dataset_size, 1)) - dataset
         sq_diff_mat = diff_mat ** 2
         sq_distances = sq_diff_mat.sum(axis = 1)
         distances = sq_distances ** 0.5
@@ -156,8 +156,11 @@ class k_Nearest_Neighbors_Algorithm(object):
         dating_dataset, dating_labels = self.convert_file_to_matrix()
         norm_dataset, ranges, min_vals, max_vals = self.auto_linear_normalization(dating_dataset)
         sample_dataset = norm_dataset.shape[0]
-        # print("\nDATING DATASET: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_dataset, dating_labels[:20]))
-        # print("\nNORMALIZED DATASET: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(norm_dataset, ranges, min_vals, max_vals))
+
+        """
+        print("\nDATING DATASET: \n{}\n\nFIRST TWENTY DATING DATA LABELS: \n{}".format(dating_dataset, dating_labels[:20]))
+        print("\nNORMALIZED DATASET: \n{}\n\nVALUE RANGES: \n{}\n\nMINIMUM VALUES: \n{}\n\nMAXIMUM VALUES: \n{}".format(norm_dataset, ranges, min_vals, max_vals))
+        """
 
         # Creates error count and test vectors from 10% of dating data set
         error_count = 0.0
@@ -168,7 +171,7 @@ class k_Nearest_Neighbors_Algorithm(object):
             classifier_response = self.basic_label_classifier(norm_dataset[iterator, :], norm_dataset[num_test_vectors: sample_dataset, :], dating_labels[num_test_vectors: sample_dataset], 3)
             print("The classifier came back with: {}. \nThe real answer is: {}.".format(classifier_response, dating_labels[iterator]))
 
-            if (classifier_response != dating_labels[iterator]):
+            if classifier_response != dating_labels[iterator]:
                 error_count += 1.0
             
         # Assigns error rate indicative of failures in classifier accuracy
