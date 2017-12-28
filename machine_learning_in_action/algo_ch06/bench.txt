@@ -1,0 +1,6 @@
+KERNEL  BIAS    TRAINING_ERROR  TEST_ERROR      SUPPORT_VECTORS     RUNTIME
+lin     0       0.0548086866    0.0496828752    136                 233.5s
+rbf
+rbf
+rbf
+rbf
