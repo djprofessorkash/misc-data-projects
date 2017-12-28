@@ -3,6 +3,7 @@ NAME:               svm_MLiA.py (data_projects/machine_learning_in_action/algo_c
 
 DESCRIPTION:        Python class application of the support vector machine algorithm.
 
+                    # TODO: Write description
                     ??? 
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
@@ -38,11 +39,13 @@ from time import time as t                  # Package for tracking modular and p
 # ====================================================================================
 
 
+# TODO: Create algorithm copy in separate file for handwriting images example
 class Support_Vector_Machine_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
+        # TODO: Uncomment line below once handwriting example is refactored into new file
         # self.FILE = open("sample_test_set.txt")         # Open filename as read-only for test dataset
 
     # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
@@ -614,6 +617,7 @@ class Support_Vector_Machine_Algorithm(object):
         return self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
+    # TODO: Refactor so output references name of current method (look up libraries that do this)
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
         TIME_F = t()
@@ -654,6 +658,7 @@ class Platt_SMO_Support_Optimization_Structure(object):
 # ====================================================================================
 
 
+# TODO: Refactor method parameters in main() tests as system arguments
 def main():
     # Track starting time of program
     TIME_I = t()
@@ -693,6 +698,7 @@ def main():
     """
 
     # Test handwriting images dataset using kernal transformation with SVM-SMO classifier
+    # TODO: Something is wrong with the runtime. Trace and fix? 
     svm.test_handwriting_digits_with_advanced_svm(("rbf", 1))
 
     return print("\nSupport vector machine class algorithm is done.\n")
