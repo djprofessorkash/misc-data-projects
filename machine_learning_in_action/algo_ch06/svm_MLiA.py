@@ -221,30 +221,63 @@ class Support_Vector_Machine_Algorithm(object):
         return training_mat, handwriting_labels
 
     def test_handwriting_digits_with_advanced_svm(self, kernel_tuple = ("rbf", 10)):
+        # Loads training data, class label vectors, and values for beta and alphas
         training_dataset, training_labels = self.load_images_from_directory("./digits/training_digits/")
         beta, alphas = self.outer_loop_heuristic_smo_optimization(training_dataset, training_labels, 200, 0.0001, 10000, kernel_tuple)
 
+        # Produces formatted matrices for training data and class label vectors
         training_data_mat = np.mat(training_dataset)
         training_label_mat = np.mat(training_labels).transpose()
 
+        # Produces support vectors and conditional SV information for training data
         support_vector_indices = np.nonzero(alphas.A > 0)[0]
         support_vector_mat = training_data_mat[support_vector_indices]
         support_vector_labels = training_label_mat[support_vector_indices]
         print("\nTHERE ARE {} SUPPORT VECTORS FOR THE HANDWRITING IMAGES DATASET.\n".format(np.shape(support_vector_mat)[0]))
 
-        NUM_ROWS, NUM_COLS = np.shape(training_data_mat)
+        # Defines test data's dimensionality constants and initializes test error
+        TRAINING_NUM_ROWS, TRAINING_NUM_COLS = np.shape(training_data_mat)
         training_error_count = 0.0
 
-        for iterator in range(NUM_ROWS):
+        # Iterates over training dataset's length to evaluate and transform kernel data and then write predictions using support vectors
+        for iterator in range(TRAINING_NUM_ROWS):
             training_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, training_data_mat[iterator, :], kernel_tuple)
             training_prediction = training_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
 
+            # Increments test error count for every data prediction mismatch
             if np.sign(training_prediction) != np.sign(training_labels[iterator]):
                 training_error_count += 1.0
 
         # Calculates training error rate over kernel transformation
         training_error_rate = training_error_count / TRAINING_NUM_ROWS
-        print("THE TRAINING ERROR RATE FOR PREDICTING FROM THE RBF KERNEL OF THE HANDWRITING IMAGES DATASET IS: {}\n".format(training_error_rate))
+        print("\nTHE TRAINING ERROR RATE FOR PREDICTING FROM THE RBF KERNEL OF THE HANDWRITING IMAGES DATASET IS: {}\n".format(training_error_rate))
+
+        # Loads test data and class label vectors
+        test_dataset, test_labels = self.load_images_from_directory(".digits/test_digits.txt")
+
+        # Produces formatted matrices for test data and class label vectors
+        test_data_mat = np.mat(test_dataset)
+        test_label_mat = np.mat(test_labels).transpose()
+
+        # Defines test data's dimensionality constants and initializes test error
+        TEST_NUM_ROWS, TEST_NUM_COLS = np.shape(test_data_mat)
+        test_error_count = 0.0
+
+        # Iterates over test dataset's length to evaluate and transform kernel data and then write predictions using support vectors
+        for iterator in range(TEST_NUM_ROWS):
+            test_kernel_evaluation = self.kernel_transformation_linear_RBF(support_vector_mat, test_data_mat[iterator, :], kernel_tuple)
+            test_prediction = test_kernel_evaluation.T * np.multiply(support_vector_labels, alphas[support_vector_indices]) + beta
+
+            # Increments test error count for every data prediction mismatch
+            if np.sign(test_prediction) != np.sign(test_labels[iterator]):
+                test_error_count += 1.0
+
+        # Calculates test error rate over kernel transformation
+        test_error_rate = test_error_count / TEST_NUM_ROWS
+        print("\nTHE TEST ERROR RATE FOR PREDICTING FROM THE RBF KERNEL OF THE HANDWRITING IMAGES DATASET IS: {}\n".format(test_error_rate))
+
+        # Performs runtime tracker for particular method
+        return self.track_runtime()
 
     # ============= METHOD TO CALCULATE POTENTIAL ALPHA RANGE VALUES BY A ============
     # ============== SIMPLE PLATT SEQUENTIAL MINIMAL OPTIMIZATION (SMO) ==============
