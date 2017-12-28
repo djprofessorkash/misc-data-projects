@@ -3,8 +3,10 @@ NAME:               svm_MLiA.py (data_projects/machine_learning_in_action/algo_c
 
 DESCRIPTION:        Python class application of the support vector machine algorithm.
 
-                    # TODO: Write description
-                    ??? 
+                    The support vector machine is a probability-based decision machine
+                    designed to classify data by using support vectors (data values near
+                    the data's line-of-best-fit) to accurately project regressional
+                    relationships and classify new data in a memory-efficient manner.
 
                     All source code is available at www.manning.com/MachineLearningInAction. 
 
@@ -46,7 +48,7 @@ class Support_Vector_Machine_Algorithm(object):
     def __init__(self, TIME_I):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
         # TODO: Uncomment line below once handwriting example is refactored into new file
-        # self.FILE = open("sample_test_set.txt")         # Open filename as read-only for test dataset
+        # self.FILE = open("sample_test_set.txt")       # Open filename as read-only for test dataset
 
     # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
     def load_dataset(self, filename):
