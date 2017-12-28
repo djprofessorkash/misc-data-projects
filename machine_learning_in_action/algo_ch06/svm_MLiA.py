@@ -222,7 +222,7 @@ class Support_Vector_Machine_Algorithm(object):
 
     def test_handwriting_digits_with_advanced_svm(self, kernel_tuple = ("rbf", 10)):
         # Loads training data, class label vectors, and values for beta and alphas
-        training_dataset, training_labels = self.load_images_from_directory("./digits/training_digits/")
+        training_dataset, training_labels = self.load_images_from_directory("digits/training_digits/")
         beta, alphas = self.outer_loop_heuristic_smo_optimization(training_dataset, training_labels, 200, 0.0001, 10000, kernel_tuple)
 
         # Produces formatted matrices for training data and class label vectors
@@ -253,7 +253,7 @@ class Support_Vector_Machine_Algorithm(object):
         print("\nTHE TRAINING ERROR RATE FOR PREDICTING FROM THE RBF KERNEL OF THE HANDWRITING IMAGES DATASET IS: {}\n".format(training_error_rate))
 
         # Loads test data and class label vectors
-        test_dataset, test_labels = self.load_images_from_directory(".digits/test_digits.txt")
+        test_dataset, test_labels = self.load_images_from_directory("digits/test_digits/")
 
         # Produces formatted matrices for test data and class label vectors
         test_data_mat = np.mat(test_dataset)
@@ -687,8 +687,13 @@ def main():
         svm.classify_data_with_machine()
     """
 
+    """
     # Test RBF datasets using kernel transformation with SVM-SMO classifier
     svm.test_kernel_transform_against_rbf()
+    """
+
+    # Test handwriting images dataset using kernal transformation with SVM-SMO classifier
+    svm.test_handwriting_digits_with_advanced_svm(("rbf", 20))
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
