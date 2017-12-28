@@ -51,7 +51,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                              [2.0, 1.0]])
         labels = [1.0, 1.0, -1.0, -1.0, 1.0]
 
-        print("\nSAMPLE DATASET IS: \n{}\n\nSAMPLE CLASS LABEL VECTOR IS: \n{}\n".format(dataset, labels))
+        """ print("\nSAMPLE DATASET IS: \n{}\n\nSAMPLE CLASS LABEL VECTOR IS: \n{}\n".format(dataset, labels)) """
         return dataset, labels
 
     # ================= METHOD TO CLASSIFY ELEMENT FROM DECISION STUMP ===============
@@ -63,7 +63,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         else:
             classification_array[input_dataset[:, dimension] > threshold_value] = -1.0
         
-        print("CLASSIFICATION ARRAY FOR THE SAMPLE DECISION STUMP IS: \n{}\n".format(classification_array))
+        """ print("\nCLASSIFICATION ARRAY FOR THE SAMPLE DECISION STUMP IS: \n{}\n".format(classification_array)) """
         return classification_array
 
     # ============ METHOD TO CONSTRUCT DECISION STUMP WITH WEIGHTED ERRORS ===========
@@ -93,7 +93,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                     error_array[predicted_values == labels] = 0
 
                     weighted_error = data_weight_vector.T * error_array
-                    print("\nDIMENSIONAL SPLIT PARAMETER IS: {}\nDECISION STUMP THRESHOLD VALUE IS: {}\nDECISION STUMP THRESHOLD INEQUALITY IS: {}\nTHE WEIGHTED ERROR FOR THE SAMPLE DATASET IS: {}\n".format(outer_iterator, threshold_value, inequality, weighted_error))
+                    """ print("\nDIMENSIONAL SPLIT PARAMETER IS: {}\nDECISION STUMP THRESHOLD VALUE IS: {}\nDECISION STUMP THRESHOLD INEQUALITY IS: {}\nTHE WEIGHTED ERROR FOR THE SAMPLE DATASET IS: {}\n".format(outer_iterator, threshold_value, inequality, weighted_error)) """
 
                     if weighted_error < minimum_error:
                         minimum_error = weighted_error
@@ -103,7 +103,11 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                         best_stump["threshold"] = threshold_value
                         best_stump["inequality"] = inequality
 
-        print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\nMINIMUM ERROR IS: {}\nBEST CLASS ESTIMATE FOR STUMP IS: {}\n")
+        print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: {}\n".format(best_stump, minimum_error, best_class_estimate))
+
+        # Performs runtime tracker for particular method
+        self.track_runtime()
+
         return best_stump, minimum_error, best_class_estimate
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -130,8 +134,15 @@ def main():
     # Initialize class instance of the AdaBoost ensemble method algorithm
     ada = AdaBoost_Adaptive_Booster_Meta_Algorithm(TIME_I)
 
+    """
     # Test loading a sample dataset in the class instance
     dataset, labels = ada.load_dataset()
+    """
+
+    # Test the decision-stump constructor and classifier
+    dataset, labels = ada.load_dataset()
+    data_weight_vector = np.mat(np.ones((5, 1)) / 5)
+    ada.construct_decision_stump(dataset, labels, data_weight_vector)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
