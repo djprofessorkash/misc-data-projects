@@ -132,10 +132,36 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             # Defines stump structure, relative error, and holding best estimate label
             best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
             
+            error_factor = np.log((1.0 - error) / max(error, 1e-16))
+            print("ERROR FACTOR IS: \n{}\n".format(error_factor))
+
             # Creates alpha value and sets in best stump structure
-            alpha = float(0.5 * np.log10((1.0 - error) / max(error, 1e-16)))
+            alpha = float(0.5 * np.log((1.0 - error) / max(error, 1e-16)))
+            print("RELATIVE ERROR: \n{}\n".format(error))
+            print("ALPHA: \n{}\n".format(alpha))
             best_stump["alpha"] = alpha
             print("\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(best_class_estimate.T))
+            
+            # Creates weighing factors based on class label estimate accuracy and apply to data weighing vectors
+            weighing_exponential_factor = np.multiply(-1 * alpha * np.mat(class_label_vector).T, best_class_estimate)
+            data_weight_vector = np.multiply(data_weight_vector, np.exp(weighing_exponential_factor))
+            data_weight_vector = data_weight_vector / np.sum(data_weight_vector)
+
+            # Creates aggregate class label estimate from previous best estimate label
+            aggregate_class_estimate += alpha * best_class_estimate
+            print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T))
+
+            # Creates aggregate relative errors for class labeling and condenses into error rate across method
+            aggregate_errors = np.multiply(np.sign(aggregate_class_estimate) != np.mat(class_label_vector).T, np.ones((DATASET_SIZE, 1)))
+            error_rate = np.sum(aggregate_errors) / DATASET_SIZE
+            print("\nTOTAL ERROR RATE ACROSS TRAINER IS: \n{}\n".format(error_rate))
+            
+            # Breaks loop if error rate limit tends to zero
+            if error_rate == 0.0:
+                break
+
+        print("\nWEAK CLASS VECTOR IS: \n{}\n".format(weak_class_vector))
+        return weak_class_vector
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -166,10 +192,16 @@ def main():
     dataset, labels = ada.load_dataset()
     """
 
+    """
     # Test the decision-stump constructor and classifier
     dataset, labels = ada.load_dataset()
     data_weight_vector = np.mat(np.ones((5, 1)) / 5)
     ada.construct_decision_stump(dataset, labels, data_weight_vector)
+    """
+
+    # Test the decision-stump-based trainer
+    dataset, labels = ada.load_dataset()
+    ada.adaboost_training_with_decision_stump(dataset, labels, 9)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
