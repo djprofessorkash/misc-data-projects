@@ -110,10 +110,12 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                         best_stump["threshold"] = threshold_value
                         best_stump["inequality"] = inequality
 
-        print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: \n{}\n".format(best_stump, minimum_error, best_class_estimate))
+        """ print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: \n{}\n".format(best_stump, minimum_error, best_class_estimate)) """
 
+        """
         # Performs runtime tracker for particular method
         self.track_runtime()
+        """
 
         return best_stump, minimum_error, best_class_estimate
 
@@ -132,11 +134,18 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             # Defines stump structure, relative error, and holding best estimate label
             best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
             
-            error_factor = np.log((1.0 - error) / max(error, 1e-16))
+            eps = np.finfo(float).eps
+            # return print(eps)
+
+            error_factor = np.log((1.0 - error) / max(error, eps))
             print("ERROR FACTOR IS: \n{}\n".format(error_factor))
+            if error_factor is not type(int):
+                return print("error factor is not understood")
+            else:
+                return print("error factor is understood")
 
             # Creates alpha value and sets in best stump structure
-            alpha = float(0.5 * np.log((1.0 - error) / max(error, 1e-16)))
+            alpha = float(0.5 * np.log((1.0 - error) / max(error, np.eps)))
             print("RELATIVE ERROR: \n{}\n".format(error))
             print("ALPHA: \n{}\n".format(alpha))
             best_stump["alpha"] = alpha
