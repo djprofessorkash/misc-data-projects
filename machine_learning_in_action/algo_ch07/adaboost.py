@@ -110,6 +110,21 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
         return best_stump, minimum_error, best_class_estimate
 
+    def adaboost_training_with_decision_stump(self, input_dataset, class_label_vector, NUM_ITER = 40):
+        weak_class_vector = []
+        DATASET_SIZE = np.shape(input_dataset)[0]
+
+        data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
+        aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
+        print("\nDATA WEIGHT VECTOR IS: \n{}\n".format(data_weight_vector.T))
+
+        for iterator in range(NUM_ITER):
+            best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
+            
+            alpha = float(0.5 * np.log10((1.0 - error) / max(error, 1e-16)))
+            best_stump["alpha"] = alpha
+            print("\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(best_class_estimate.T))
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
