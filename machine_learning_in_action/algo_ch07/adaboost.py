@@ -134,6 +134,8 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             # Defines stump structure, relative error, and holding best estimate label
             best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
             
+            
+            # ISSUE HERE ------------------------------------------------------------------------------
             eps = np.finfo(float).eps
             # return print(eps)
 
@@ -146,6 +148,9 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates alpha value and sets in best stump structure
             alpha = float(0.5 * np.log((1.0 - error) / max(error, np.eps)))
+            # ISSUE HERE ------------------------------------------------------------------------------
+            
+            
             print("RELATIVE ERROR: \n{}\n".format(error))
             print("ALPHA: \n{}\n".format(alpha))
             best_stump["alpha"] = alpha
