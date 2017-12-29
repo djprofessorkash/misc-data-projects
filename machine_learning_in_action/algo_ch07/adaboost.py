@@ -141,12 +141,14 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             error_factor = np.log((1.0 - error) / max(error, eps))
             print("ERROR FACTOR IS: \n{}\n".format(error_factor))
+
             if error_factor is not type(int):
                 return print("ERROR FACTOR IS NOT A NUMBER. METHOD SHOULD BREAK.\n")
             else:
                 return print("ERROR FACTOR IS A NUMBER. METHOD SHOULD WORK SUCCESSFULLY.\n")
 
             # Creates alpha value and sets in best stump structure
+            # TODO: Program crashs here due to NaN issue
             alpha = float(0.5 * np.log((1.0 - error) / max(error, np.eps)))
             # ISSUE HERE ------------------------------------------------------------------------------
             
