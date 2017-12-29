@@ -50,6 +50,11 @@
 * [Data Skeptic Podcast by Kyle Polach (Miscellaneous Podcast)](https://dataskeptic.com/)
 * [Talk Python To Me Podcast (Miscellaneous Podcast)](https://talkpython.fm/)
 * [Machine Learning Guide on OCDevel (Miscellaneous Podcast)](http://ocdevel.com/podcasts/machine-learning)
-* [Coding Blocks Podcast on Machine Learning ](https://www.codingblocks.net/category/podcast/)
-* []()
+* [Coding Blocks Podcast on Machine Learning (Miscellaneous Podcast)](https://www.codingblocks.net/category/podcast/)
+* [A Gentle Introduction to Exploding Gradients in Neural Networks (Miscellaneous Article)](https://machinelearningmastery.com/exploding-gradients-in-neural-networks/)
+* [A Gentle Introduction to Transfer Learning for Deep Learning (Miscellaneous Article)](https://machinelearningmastery.com/transfer-learning-for-deep-learning/)
+* [Why Applied Machine Learning is Hard (Miscellaneous Article)](https://machinelearningmastery.com/applied-machine-learning-is-hard/)
+* [A Gentle Introduction to Applied Machine Learning as a Search Problem (Miscellaneous Article)](https://machinelearningmastery.com/applied-machine-learning-as-a-search-problem/)
+* [Caption Generation with the Inject and Merge Architectures for the Encoder-Decoder Model (Miscellaneous Article)](https://machinelearningmastery.com/caption-generation-inject-merge-architectures-encoder-decoder-model/)
+* [A Gentle Introduction to Neural Machine Translation (Miscellaneous Article)](https://machinelearningmastery.com/introduction-neural-machine-translation/)
 ***
