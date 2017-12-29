@@ -68,48 +68,56 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
     # ============ METHOD TO CONSTRUCT DECISION STUMP WITH WEIGHTED ERRORS ===========
     def construct_decision_stump(self, input_dataset, class_label_vector, data_weight_vector):
-        dataset = np.mat(input_dataset)
-        labels = np.mat(class_label_vector).T
+        dataset = np.mat(input_dataset)                         # Creates dataset
+        labels = np.mat(class_label_vector).T                   # Creates class label vector
 
-        NUM_ROWS, NUM_COLS = np.shape(dataset)
+        NUM_ROWS, NUM_COLS = np.shape(dataset)                  # Creates dimensionality constants of dataset
 
-        number_of_steps = 10.0
-        best_stump = {}
-        best_class_estimate = np.mat(np.zeros((NUM_ROWS)))
-        minimum_error = np.inf
+        number_of_steps = 10.0                                  # Creates number of steps (constant?)
+        best_stump = {}                                         # Creates dictionary to hold best stump
+        best_class_estimate = np.mat(np.zeros((NUM_ROWS)))      # Creates best class estimate matrix
+        minimum_error = np.inf                                  # Creates minimum error value
 
+        # Iterates through column dimensionality of dataset
         for outer_iterator in range(NUM_COLS):
-            minimum_range = np.min(dataset[:, outer_iterator])
-            maximum_range = np.max(dataset[:, outer_iterator])
+            minimum_range = np.min(dataset[:, outer_iterator])              # Creates minimum range of dataset
+            maximum_range = np.max(dataset[:, outer_iterator])              # Creates maximum range of dataset
 
-            step_size = (maximum_range - minimum_range) / number_of_steps
+            step_size = (maximum_range - minimum_range) / number_of_steps   # Creates step size
 
+            # Iterates through number of steps for decision stump and dual search for stump inequality
             for inner_iterator in range(-1, int(number_of_steps) + 1):
                 for inequality in ["lt", "gt"]:
+                    # Creates threshold value and predicted values from decision stump method
                     threshold_value = minimum_range + float(inner_iterator) * step_size
                     predicted_values = self.classify_decision_stump(dataset, outer_iterator, threshold_value, inequality)
 
-                    error_array = np.mat(np.ones((NUM_ROWS, 1)))
-                    error_array[predicted_values == labels] = 0
+                    # Creates array to hold error values
+                    error_transform_array = np.mat(np.ones((NUM_ROWS, 1)))
+                    error_transform_array[predicted_values == labels] = 0
 
-                    weighted_error = data_weight_vector.T * error_array
+                    # Produces array for weighted boosting errors
+                    weighted_error = data_weight_vector.T * error_transform_array
                     """ print("\nDIMENSIONAL SPLIT PARAMETER IS: {}\nDECISION STUMP THRESHOLD VALUE IS: {}\nDECISION STUMP THRESHOLD INEQUALITY IS: {}\nTHE WEIGHTED ERROR FOR THE SAMPLE DATASET IS: {}\n".format(outer_iterator, threshold_value, inequality, weighted_error)) """
 
+                    # Selects minimum error and best class label estimate from weighted errors
                     if weighted_error < minimum_error:
                         minimum_error = weighted_error
                         best_class_estimate = np.copy(predicted_values)
 
+                        # Defines some attributes of best stump dictionary
                         best_stump["dimension"] = outer_iterator
                         best_stump["threshold"] = threshold_value
                         best_stump["inequality"] = inequality
 
-        print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: {}\n".format(best_stump, minimum_error, best_class_estimate))
+        print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: \n{}\n".format(best_stump, minimum_error, best_class_estimate))
 
         # Performs runtime tracker for particular method
         self.track_runtime()
 
         return best_stump, minimum_error, best_class_estimate
 
+    # ============= METHOD TO TRAIN ADAPTIVE BOOSTER FROM DECISION STUMP =============
     def adaboost_training_with_decision_stump(self, input_dataset, class_label_vector, NUM_ITER = 40):
         weak_class_vector = []
         DATASET_SIZE = np.shape(input_dataset)[0]
