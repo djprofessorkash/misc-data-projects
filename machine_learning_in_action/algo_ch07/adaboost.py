@@ -122,13 +122,17 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         weak_class_vector = []
         DATASET_SIZE = np.shape(input_dataset)[0]
 
+        # Creates weight vector and aggregate label estimate for dataset
         data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
         aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
         print("\nDATA WEIGHT VECTOR IS: \n{}\n".format(data_weight_vector.T))
 
+        # Iterates through max iteration number
         for iterator in range(NUM_ITER):
+            # Defines stump structure, relative error, and holding best estimate label
             best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
             
+            # Creates alpha value and sets in best stump structure
             alpha = float(0.5 * np.log10((1.0 - error) / max(error, 1e-16)))
             best_stump["alpha"] = alpha
             print("\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(best_class_estimate.T))
