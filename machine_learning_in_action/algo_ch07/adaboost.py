@@ -127,22 +127,21 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         # Creates weight vector and aggregate label estimate for dataset
         data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
         aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
-        print("\nDATA WEIGHT VECTOR IS: \n{}\n".format(data_weight_vector.T))
+        print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T))
 
         # Iterates through max iteration number
         for iterator in range(NUM_ITER):
             # Defines stump structure, relative error, and holding best estimate label
             best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
-            
 
             # ISSUE HERE ------------------------------------------------------------------------------
             eps = np.finfo(float).eps
-            # return print(eps)
+            # return print("{}\n{}".format(eps, error))
 
-            error_factor = np.log((1.0 - error) / max(error, eps))
+            error_factor = np.log((1.0 - max(error, eps)) / max(error, eps))
             print("ERROR FACTOR IS: \n{}\n".format(error_factor))
 
-            if error_factor is not type(int):
+            if error_factor is not type(float):
                 return print("ERROR FACTOR IS NOT A NUMBER. METHOD SHOULD BREAK.\n")
             else:
                 return print("ERROR FACTOR IS A NUMBER. METHOD SHOULD WORK SUCCESSFULLY.\n")
