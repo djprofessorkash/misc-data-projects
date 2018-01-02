@@ -111,12 +111,6 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                         best_stump["inequality"] = inequality
 
         """ print("\nRELATIVELY BEST DECISION STUMP IS: \n{}\n\nMINIMUM ERROR IS: {}\n\nBEST CLASS ESTIMATE FOR STUMP IS: \n{}\n".format(best_stump, minimum_error, best_class_estimate)) """
-
-        """
-        # Performs runtime tracker for particular method
-        self.track_runtime()
-        """
-
         return best_stump, minimum_error, best_class_estimate
 
     # ========= METHOD TO TRAIN SAMPLE DATA FROM DECISION STUMP WITH BOOSTER =========
@@ -178,10 +172,10 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             # Repeatedly classifies decision stump, producing finer class estimates with each iteration
             iterative_class_estimate = self.classify_decision_stump(dataset, weak_classifiers[iterator]["dimension"], weak_classifiers[iterator]["threshold"], weak_classifiers[iterator]["inequality"])
             aggregate_class_estimate += weak_classifiers[iterator]["alpha"] * iterative_class_estimate
-            print("\nAGGREGATING CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate))
+            """ print("\nAGGREGATING CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate)) """
 
         # Returns sign (+/-) of completely aggregated class label estimates for test dataset
-        print("\nSIGN OF FINAL AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(np.sign(aggregate_class_estimate)))
+        print("\nPREDICTED LABEL VECTOR (SIGNS) OF FINAL AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(np.sign(aggregate_class_estimate)))
         return np.sign(aggregate_class_estimate), self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
@@ -191,10 +185,8 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         delta = TIME_F - self.TIME_I
 
         if delta < 1.5:
-            print("\nReal program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
-        else:
-            print("\nReal program runtime is {0:.4g} seconds.\n".format(delta))
-        return
+            return print("\nReal program runtime is {0:.4g} milliseconds.\n".format(delta * 1000))
+        return print("\nReal program runtime is {0:.4g} seconds.\n".format(delta))
 
 # ====================================================================================
 # ================================ MAIN RUN FUNCTION =================================
@@ -229,7 +221,7 @@ def main():
     # Run the decision-stump-based tester with 30 training iterations and user-inputted test data
     dataset, labels = ada.load_dataset()
     weak_classifiers = ada.adaboost_training_with_decision_stump(dataset, labels, 30)
-    ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0]], weak_classifiers)
+    ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0], [1.5, 1.2], [-1, -1]], weak_classifiers)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
