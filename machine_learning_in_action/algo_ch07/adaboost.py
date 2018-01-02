@@ -127,35 +127,22 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         # Creates weight vector and aggregate label estimate for dataset
         data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
         aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
-        print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T))
+        # print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T))
 
         # Iterates through max iteration number
         for iterator in range(NUM_ITER):
             # Defines stump structure, relative error, and holding best estimate label
-            best_stump, error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
+            best_stump, weighted_sum_error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
 
-            # ISSUE HERE ------------------------------------------------------------------------------
-            eps = np.finfo(float).eps
-            # return print("{}\n{}".format(eps, error))
-
-            error_factor = np.log((1.0 - max(error, eps)) / max(error, eps))
-            print("ERROR FACTOR IS: \n{}\n".format(error_factor))
-
-            if error_factor is not type(float):
-                return print("ERROR FACTOR IS NOT A NUMBER. METHOD SHOULD BREAK.\n")
-            else:
-                return print("ERROR FACTOR IS A NUMBER. METHOD SHOULD WORK SUCCESSFULLY.\n")
+            # Defines epsilon as smallest float value
+            epsilon = np.finfo(float).eps
 
             # Creates alpha value and sets in best stump structure
-            # TODO: Program crashs here due to NaN issue
-            alpha = float(0.5 * np.log((1.0 - error) / max(error, np.eps)))
-            # ISSUE HERE ------------------------------------------------------------------------------
-            
-            
-            print("RELATIVE ERROR: \n{}\n".format(error))
-            print("ALPHA: \n{}\n".format(alpha))
+            alpha = float(0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon)))            
+            # print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T))
+
             best_stump["alpha"] = alpha
-            print("\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(best_class_estimate.T))
+            weak_class_vector.append(best_stump)
             
             # Creates weighing factors based on class label estimate accuracy and apply to data weighing vectors
             weighing_exponential_factor = np.multiply(-1 * alpha * np.mat(class_label_vector).T, best_class_estimate)
@@ -164,12 +151,12 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates aggregate class label estimate from previous best estimate label
             aggregate_class_estimate += alpha * best_class_estimate
-            print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T))
+            # print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T))
 
             # Creates aggregate relative errors for class labeling and condenses into error rate across method
             aggregate_errors = np.multiply(np.sign(aggregate_class_estimate) != np.mat(class_label_vector).T, np.ones((DATASET_SIZE, 1)))
             error_rate = np.sum(aggregate_errors) / DATASET_SIZE
-            print("\nTOTAL ERROR RATE ACROSS TRAINER IS: \n{}\n".format(error_rate))
+            # print("\nTOTAL ERROR RATE ACROSS TRAINER IS: \n{}\n".format(error_rate))
             
             # Breaks loop if error rate limit tends to zero
             if error_rate == 0.0:
