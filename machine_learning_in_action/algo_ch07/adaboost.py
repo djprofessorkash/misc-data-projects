@@ -222,31 +222,33 @@ def main():
     # Track starting time of program
     TIME_I = t()
 
-    # Initialize class instance of the AdaBoost ensemble method algorithm
+    # Initialize class instance of AdaBoost ensemble method algorithm
     ada = AdaBoost_Adaptive_Booster_Meta_Algorithm(TIME_I)
 
     """
-    # Run a sample dataset and vector of labels in the class instance
+    # Run sample dataset and vector of labels in class instance
     dataset, labels = ada.load_sample_data()
     """
 
     """
-    # Run the decision-stump constructor and classifier
+    # Run decision-stump constructor and classifier
     dataset, labels = ada.load_sample_data()
     data_weight_vector = np.mat(np.ones((5, 1)) / 5)
     ada.construct_decision_stump(dataset, labels, data_weight_vector)
     """
 
     """
-    # Run the decision-stump-based trainer for 9 iterations
+    # Run decision-stump-based trainer for 9 iterations
     dataset, labels = ada.load_sample_data()
     ada.adaboost_training_with_decision_stump(dataset, labels, 9)
     """
 
-    # Run the decision-stump-based tester with 30 training iterations and user-inputted test data
+    # Run decision-stump-based tester with 30 training iterations and user-inputted test data
     dataset, labels = ada.load_sample_data()
     weak_classifiers = ada.adaboost_training_with_decision_stump(dataset, labels, 30)
     ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0], [1.5, 1.2], [-1, -1]], weak_classifiers)
+
+    # Run 
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 

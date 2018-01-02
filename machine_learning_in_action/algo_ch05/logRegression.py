@@ -218,13 +218,13 @@ class Logistic_Regression_Optimization_Algorithm(object):
     # ======= METHOD TO APPLY SIGMOID CLASSIFIER AND GRADIENT ASCENT OPTIMIZER =======
     # ================== AGAINST SAMPLE HORSE COLIC DISEASE DATASETS =================
     def test_classifier_against_horse_data(self, current_test_iteration):
-        HORSE_TRAINING_DATA = open("./horse_colic_training.txt")
-        HORSE_TEST_DATA = open("./horse_colic_test.txt")
+        TRAINING_DATA = open("./horse_colic_training01.txt")
+        TEST_DATA = open("./horse_colic_test01.txt")
         training_set = []
         training_labels = []
 
         # Iterate through horse training data and produce training set and training class label vector
-        for line in HORSE_TRAINING_DATA.readlines():
+        for line in TRAINING_DATA.readlines():
             current_line = line.strip().split("\t")
             array_of_lines = []
 
@@ -242,7 +242,7 @@ class Logistic_Regression_Optimization_Algorithm(object):
         number_of_test_vectors = 0.0
 
         # Iterate through horse test data and produce test set and relative multi-algorithmic error count
-        for line in HORSE_TEST_DATA.readlines():
+        for line in TEST_DATA.readlines():
             number_of_test_vectors += 1.0
             current_line = line.strip().split("\t")
             array_of_lines = []
