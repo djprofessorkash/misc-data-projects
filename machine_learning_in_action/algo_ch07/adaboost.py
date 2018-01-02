@@ -127,7 +127,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         # Creates weight vector and aggregate label estimate for dataset
         data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
         aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
-        # print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T))
+        """ print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T)) """
 
         # Iterates through max iteration number
         for iterator in range(NUM_ITER):
@@ -139,7 +139,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates alpha value and sets in best stump structure
             alpha = float(0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon)))            
-            # print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T))
+            """ print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T)) """
 
             best_stump["alpha"] = alpha
             weak_class_vector.append(best_stump)
@@ -151,18 +151,22 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates aggregate class label estimate from previous best estimate label
             aggregate_class_estimate += alpha * best_class_estimate
-            # print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T))
+            """ print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T)) """
 
             # Creates aggregate relative errors for class labeling and condenses into error rate across method
             aggregate_errors = np.multiply(np.sign(aggregate_class_estimate) != np.mat(class_label_vector).T, np.ones((DATASET_SIZE, 1)))
             error_rate = np.sum(aggregate_errors) / DATASET_SIZE
-            # print("\nTOTAL ERROR RATE ACROSS TRAINER IS: \n{}\n".format(error_rate))
+            """ print("\nTOTAL ERROR RATE ACROSS TRAINER IS: \n{}\n".format(error_rate)) """
             
             # Breaks loop if error rate limit tends to zero
             if error_rate == 0.0:
                 break
 
         print("\nWEAK CLASS VECTOR IS: \n{}\n".format(weak_class_vector))
+
+        # Performs runtime tracker for particular method
+        self.track_runtime()
+        
         return weak_class_vector
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
