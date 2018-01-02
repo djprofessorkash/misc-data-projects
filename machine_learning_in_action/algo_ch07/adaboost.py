@@ -43,7 +43,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
 
     # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
-    def load_dataset(self):
+    def load_sample_data(self):
         dataset = np.matrix([[1.0, 2.1],
                              [2.0, 1.1],
                              [1.3, 1.0],
@@ -52,6 +52,31 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         labels = [1.0, 1.0, -1.0, -1.0, 1.0]
 
         """ print("\nSAMPLE DATASET IS: \n{}\n\nSAMPLE CLASS LABEL VECTOR IS: \n{}\n".format(dataset, labels)) """
+        return dataset, labels
+
+    # ====================== METHOD TO ADAPTIVELY LOAD IN DATASET ====================
+    def adaptive_load_data(self, FILENAME):
+        num_features = len(open(FILENAME).readline().split("\t"))
+        
+        # Defines dataset and class label vector as empty arrays
+        dataset = []
+        labels = []
+
+        # Iterates through each line in loaded file
+        for line in open(FILENAME).readlines():
+            lines = []
+            current_line = line.strip().split("\t")
+
+            # Iterates through all features
+            for iterator in range(num_features - 1):
+                # Creates array of lines with each value from dataset
+                lines.append(float(current_line[iterator]))
+            
+            # Creates dataset and class label vector from parsed data
+            dataset.append(lines)
+            labels.append(float(current_line[-1]))
+        
+        print("\nFIRST 20 ENTRIES IN DATASET ARE: \n{}\n\nCLASS LABEL VECTOR IS: \n{}\n".format(dataset[:20], labels))
         return dataset, labels
 
     # ================= METHOD TO CLASSIFY ELEMENT FROM DECISION STUMP ===============
@@ -202,24 +227,24 @@ def main():
 
     """
     # Run a sample dataset and vector of labels in the class instance
-    dataset, labels = ada.load_dataset()
+    dataset, labels = ada.load_sample_data()
     """
 
     """
     # Run the decision-stump constructor and classifier
-    dataset, labels = ada.load_dataset()
+    dataset, labels = ada.load_sample_data()
     data_weight_vector = np.mat(np.ones((5, 1)) / 5)
     ada.construct_decision_stump(dataset, labels, data_weight_vector)
     """
 
     """
     # Run the decision-stump-based trainer for 9 iterations
-    dataset, labels = ada.load_dataset()
+    dataset, labels = ada.load_sample_data()
     ada.adaboost_training_with_decision_stump(dataset, labels, 9)
     """
 
     # Run the decision-stump-based tester with 30 training iterations and user-inputted test data
-    dataset, labels = ada.load_dataset()
+    dataset, labels = ada.load_sample_data()
     weak_classifiers = ada.adaboost_training_with_decision_stump(dataset, labels, 30)
     ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0], [1.5, 1.2], [-1, -1]], weak_classifiers)
 
