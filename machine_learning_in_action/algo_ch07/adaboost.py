@@ -243,12 +243,18 @@ def main():
     ada.adaboost_training_with_decision_stump(dataset, labels, 9)
     """
 
+    """
     # Run decision-stump-based tester with 30 training iterations and user-inputted test data
     dataset, labels = ada.load_sample_data()
     weak_classifiers = ada.adaboost_training_with_decision_stump(dataset, labels, 30)
     ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0], [1.5, 1.2], [-1, -1]], weak_classifiers)
+    """
 
-    # Run 
+    # Apply full AdaBoost against horse colic data with 10 training iterations
+    training_dataset, training_labels = ada.adaptive_load_data("./horse_colic_training02.txt")
+    weak_classifiers = ada.adaboost_training_with_decision_stump(training_dataset, training_labels, 10)
+    test_dataset, test_labels = ada.adaptive_load_data("./horse_colic_test02.txt")
+    predicted_labels = ada.adaboost_testing_with_decision_stump(test_dataset, weak_classifiers)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
