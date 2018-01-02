@@ -1,7 +1,7 @@
 """
 NAME:               adaboost.py (data_projects/machine_learning_in_action/algo_ch07/)
 
-DESCRIPTION:        Python class application of ???.
+DESCRIPTION:        Python class application of the adaptive booster meta-algorithm.
 
                     ???
 
@@ -119,12 +119,12 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
         return best_stump, minimum_error, best_class_estimate
 
-    # ============= METHOD TO TRAIN ADAPTIVE BOOSTER FROM DECISION STUMP =============
+    # ========= METHOD TO TRAIN SAMPLE DATA FROM DECISION STUMP WITH BOOSTER =========
     def adaboost_training_with_decision_stump(self, input_dataset, class_label_vector, NUM_ITER = 40):
         weak_class_vector = []
         DATASET_SIZE = np.shape(input_dataset)[0]
 
-        # Creates weight vector and aggregate label estimate for dataset
+        # Creates weight vector and continuously constructing label estimates for dataset
         data_weight_vector = np.mat(np.ones((DATASET_SIZE, 1)))
         aggregate_class_estimate = np.mat(np.zeros((DATASET_SIZE, 1)))
         """ print("\nDATA WEIGHT VECTOR IS: \n{}\n\nAGGREGATE CLASS ESTIMATE IS: \n{}\n".format(data_weight_vector.T, aggregate_class_estimate.T)) """
@@ -151,7 +151,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates aggregate class label estimate from previous best estimate label
             aggregate_class_estimate += alpha * best_class_estimate
-            """ print("\nITERATIVE AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T)) """
+            """ print("\nAGGREGATING CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T)) """
 
             # Creates aggregate relative errors for class labeling and condenses into error rate across method
             aggregate_errors = np.multiply(np.sign(aggregate_class_estimate) != np.mat(class_label_vector).T, np.ones((DATASET_SIZE, 1)))
@@ -163,11 +163,26 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
                 break
 
         print("\nWEAK CLASS VECTOR IS: \n{}\n".format(weak_class_vector))
-
-        # Performs runtime tracker for particular method
-        self.track_runtime()
-        
         return weak_class_vector
+
+    # ========= METHOD TO TEST SAMPLE DATA FROM DECISION STUMP WITH BOOSTER ==========
+    def adaboost_testing_with_decision_stump(self, input_dataset, weak_classifiers):
+        dataset = np.mat(input_dataset)
+        NUM_ROWS = np.shape(input_dataset)[0]
+
+        # Creates continuously constructing label estimates for dataset
+        aggregate_class_estimate = np.mat(np.zeros((NUM_ROWS, 1)))
+
+        # Iterates through range of weak classifier array size
+        for iterator in range(len(weak_classifiers)):
+            # Repeatedly classifies decision stump, producing finer class estimates with each iteration
+            iterative_class_estimate = self.classify_decision_stump(dataset, weak_classifiers[iterator]["dimension"], weak_classifiers[iterator]["threshold"], weak_classifiers[iterator]["inequality"])
+            aggregate_class_estimate += weak_classifiers[iterator]["alpha"] * iterative_class_estimate
+            print("\nAGGREGATING CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate))
+
+        # Returns sign (+/-) of completely aggregated class label estimates for test dataset
+        print("\nSIGN OF FINAL AGGREGATE CLASS ESTIMATE IS: \n{}\n".format(np.sign(aggregate_class_estimate)))
+        return np.sign(aggregate_class_estimate), self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -194,20 +209,27 @@ def main():
     ada = AdaBoost_Adaptive_Booster_Meta_Algorithm(TIME_I)
 
     """
-    # Test loading a sample dataset in the class instance
+    # Run a sample dataset and vector of labels in the class instance
     dataset, labels = ada.load_dataset()
     """
 
     """
-    # Test the decision-stump constructor and classifier
+    # Run the decision-stump constructor and classifier
     dataset, labels = ada.load_dataset()
     data_weight_vector = np.mat(np.ones((5, 1)) / 5)
     ada.construct_decision_stump(dataset, labels, data_weight_vector)
     """
 
-    # Test the decision-stump-based trainer
+    """
+    # Run the decision-stump-based trainer for 9 iterations
     dataset, labels = ada.load_dataset()
     ada.adaboost_training_with_decision_stump(dataset, labels, 9)
+    """
+
+    # Run the decision-stump-based tester with 30 training iterations and user-inputted test data
+    dataset, labels = ada.load_dataset()
+    weak_classifiers = ada.adaboost_training_with_decision_stump(dataset, labels, 30)
+    ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0]], weak_classifiers)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
