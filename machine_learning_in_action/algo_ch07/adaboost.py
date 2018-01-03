@@ -158,7 +158,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
 
             # Creates alpha value and sets in best stump structure
             alpha = float(0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon)))            
-            """ print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T)) """
+            print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T))
 
             best_stump["alpha"] = alpha
             weak_class_vector.append(best_stump)
@@ -250,11 +250,13 @@ def main():
     ada.adaboost_testing_with_decision_stump([[5, 5], [0, 0], [1.5, 1.2], [-1, -1]], weak_classifiers)
     """
 
+    
     # Apply full AdaBoost against horse colic data with 10 training iterations
     training_dataset, training_labels = ada.adaptive_load_data("./horse_colic_training02.txt")
     weak_classifiers = ada.adaboost_training_with_decision_stump(training_dataset, training_labels, 10)
     test_dataset, test_labels = ada.adaptive_load_data("./horse_colic_test02.txt")
     predicted_labels = ada.adaboost_testing_with_decision_stump(test_dataset, weak_classifiers)
+    
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
