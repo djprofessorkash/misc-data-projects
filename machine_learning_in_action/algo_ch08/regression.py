@@ -25,6 +25,7 @@ CREDIT:             Machine Learning in Action (Peter Harrington)
 
 
 from time import time as t                  # Package for tracking modular and program runtime
+import matplotlib.pyplot as plt             # Module for MATLAB-like data visualization capability
 import numpy as np                          # Library for simple linear mathematical operations
 
 
@@ -103,9 +104,22 @@ def main():
     # Initialize class instance of linear regression model
     lin_regr = linear_Regression(TIME_I)
 
+    """
     # Testing the calculator for prediction factors from sample data
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
     prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
+    """
+
+    # Testing to see predictive equation calculation
+    x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
+    prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
+    x_mat = np.mat(x_arr)
+    y_mat = np.mat(y_arr).T
+    y_hat = x_mat * prediction_factors
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(x_mat[:, 1].flatten().A[0], y_mat.T[:, 0].flatten().A[0])
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
