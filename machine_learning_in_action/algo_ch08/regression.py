@@ -62,15 +62,20 @@ class linear_Regression(object):
         print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels))
         return dataset, labels
 
+    # ======= METHOD TO CALCULATE STANDARD LINEAR REGRESSION PREDICTION FACTORS ======
     def standard_linear_regression_calculation(self, x_arr, y_arr):
+        # Creates formatted matrices for x- and y-data
         x_mat = np.mat(x_arr)
         y_mat = np.mat(y_arr).T
 
+        # Creates linearly transformational x-data matrix 
         xTx = x_mat.T * x_mat
 
+        # Checks that transformational x-data matrix is not singular
         if np.linalg.det(xTx) == 0.0:
             return print("\nTHIS MATRIX IS SINGULAR: INVERSE CANNOT BE CALCULATED.\n")
 
+        # Calculates prediction factors as multiplier constants from transformational matrices
         prediction_factors = xTx.I * (x_mat.T * y_mat)
         print("\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(prediction_factors))
         return prediction_factors
