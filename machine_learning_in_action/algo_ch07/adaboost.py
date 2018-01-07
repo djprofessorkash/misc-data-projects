@@ -152,12 +152,13 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
         for iterator in range(NUM_ITER):
             # Defines stump structure, relative error, and holding best estimate label
             best_stump, weighted_sum_error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
+            """ print("\nBEST STUMP IS: \n{}\n\nWEIGHTED SUM OF ERRORS IS: \n{}\n\nBEST CLASS ESTIMATE IS: \n{}\n".format(best_stump, weighted_sum_error, best_class_estimate)) """
 
             # Defines epsilon as smallest float value
             epsilon = np.finfo(float).eps
 
             # Creates alpha value and sets in best stump structure
-            alpha = float(np.log(np.exp(0.5) * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon))))
+            alpha = float(0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon)))
             print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T))
 
             best_stump["alpha"] = alpha
