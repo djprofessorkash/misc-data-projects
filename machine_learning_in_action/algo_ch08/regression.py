@@ -57,3 +57,11 @@ class linear_Regression(object):
 def main():
     # Track starting time of program
     TIME_I = t()
+
+    # Initialize class instance of linear regression model
+    lin_regr = linear_Regression(TIME_I)
+
+    return print("\nAdaBoost class meta-algorithm is done.\n")
+
+if __name__ == "__main__":
+    main()
