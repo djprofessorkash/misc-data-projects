@@ -38,23 +38,26 @@ class linear_Regression(object):
     def __init__(self, TIME_I):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
 
+    # ======================== METHOD TO LOAD IN SAMPLE DATASET ======================
     def load_sample_data(self, FILENAME):
-        num_of_features = len(open(FILENAME).readline().split("\t")) - 1
+        num_of_features = len(open(FILENAME).readline().split("\t")) - 1        # Produces integer to hold number of data features
         
-        dataset = []
-        labels = []
+        dataset = []                                                            # Initializes sample dataset
+        labels = []                                                             # Initializes class label vector for sample data
 
-        f = open(FILENAME)
+        f = open(FILENAME)                                                      # Opens file holding sample data
 
+        # Iterates through each line in the sample data file
         for line in f.readlines():
             line_arr = []
-            current_line = line.strip().split("\t")
+            current_line = line.strip().split("\t")                             # Defines the current line as formatted line string
 
+            # Iterates through the number of data features
             for iterator in range(num_of_features):
-                line_arr.append(float(current_line[iterator]))
+                line_arr.append(float(current_line[iterator]))                  # Produces array of lines from dataset
             
-            dataset.append(line_arr)
-            labels.append(float(current_line[-1]))
+            dataset.append(line_arr)                                            # Creates dataset from line array
+            labels.append(float(current_line[-1]))                              # Creates class label vector from line array
 
         print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels))
         return dataset, labels
