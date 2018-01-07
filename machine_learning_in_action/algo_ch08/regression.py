@@ -102,6 +102,8 @@ def main():
 
     # Initialize class instance of linear regression model
     lin_regr = linear_Regression(TIME_I)
+
+    # Testing the calculator for prediction factors from sample data
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
     prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
 
