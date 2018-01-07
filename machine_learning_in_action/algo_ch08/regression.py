@@ -79,7 +79,7 @@ class linear_Regression(object):
         # Calculates prediction factors as multiplier constants from transformational matrices
         prediction_factors = xTx.I * (x_mat.T * y_mat)
         print("\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(prediction_factors))
-        return prediction_factors, self.track_runtime()
+        return prediction_factors
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -114,12 +114,18 @@ def main():
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
     prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
     x_mat = np.mat(x_arr)
-    y_mat = np.mat(y_arr).T
+    y_mat = np.mat(y_arr)
     y_hat = x_mat * prediction_factors
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.scatter(x_mat[:, 1].flatten().A[0], y_mat.T[:, 0].flatten().A[0])
+
+    x_copy = x_mat.copy()
+    x_copy.sort(0)
+    y_hat = x_copy * prediction_factors
+    ax.plot(x_copy[:, 1], y_hat)
+    plt.show()
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
