@@ -110,7 +110,8 @@ def main():
     prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
     """
 
-    # Testing to see predictive equation calculation
+    """
+    # Modeling the predictive y-hat equation over the sample data
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
     prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
     x_mat = np.mat(x_arr)
@@ -126,6 +127,15 @@ def main():
     y_hat = x_copy * prediction_factors
     ax.plot(x_copy[:, 1], y_hat)
     plt.show()
+    """
+
+    # Determining the correlation of y-hat on the sample data
+    x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
+    prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
+    x_mat = np.mat(x_arr)
+    y_mat = np.mat(y_arr)
+    y_hat = x_mat * prediction_factors
+    print("\nCORRELATION FACTOR VECTORS ARE: \n{}\n".format(np.corrcoef(y_hat.T, y_mat)))
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
