@@ -62,6 +62,19 @@ class linear_Regression(object):
         print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels))
         return dataset, labels
 
+    def standard_linear_regression_calculation(self, x_arr, y_arr):
+        x_mat = np.mat(x_arr)
+        y_mat = np.mat(y_arr).T
+
+        xTx = x_mat.T * x_mat
+
+        if np.linalg.det(xTx) == 0.0:
+            return print("\nTHIS MATRIX IS SINGULAR: INVERSE CANNOT BE CALCULATED.\n")
+
+        prediction_factors = xTx.I * (x_mat.T * y_mat)
+        print("\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(prediction_factors))
+        return prediction_factors
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
