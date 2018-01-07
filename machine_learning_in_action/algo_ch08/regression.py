@@ -91,7 +91,7 @@ class linear_Regression(object):
 
         for iterator in range(NUM_ROWS):
             differential_mat = test_point - x_mat[iterator, :]
-            weights[iterator, iterator] = np.exp(differential_mat * differential_mat.T / (-2.0 * k ** 2))
+            local_weights[iterator, iterator] = np.exp(differential_mat * differential_mat.T / (-2.0 * k ** 2))
 
         xTx = x_mat.T * (local_weights * x_mat)
 
@@ -169,6 +169,11 @@ def main():
     y_hat = x_mat * prediction_factors
     print("\nCORRELATION FACTOR VECTORS ARE: \n{}\n".format(np.corrcoef(y_hat.T, y_mat)))
     """
+
+    # Testing the LWLR model for entire sample dataset
+    x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
+    y_hat = lin_regr.locally_weighted_linear_regression_tester(x_arr, x_arr, y_arr, 0.003)
+    print("\n{}\n".format(y_hat))
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
