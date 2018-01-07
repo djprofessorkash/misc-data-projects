@@ -38,6 +38,27 @@ class linear_Regression(object):
     def __init__(self, TIME_I):
         self.TIME_I = TIME_I                            # Initial time measure for runtime tracker
 
+    def load_sample_data(self, FILENAME):
+        num_of_features = len(open(FILENAME).readline().split("\t")) - 1
+        
+        dataset = []
+        labels = []
+
+        f = open(FILENAME)
+
+        for line in f.readlines():
+            line_arr = []
+            current_line = line.strip().split("\t")
+
+            for iterator in range(num_of_features):
+                line_arr.append(float(current_line[iterator]))
+            
+            dataset.append(line_arr)
+            labels.append(float(current_line[-1]))
+
+        print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels))
+        return dataset, labels
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
