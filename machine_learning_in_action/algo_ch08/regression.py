@@ -59,7 +59,7 @@ class linear_Regression(object):
             dataset.append(line_arr)                                            # Creates dataset from line array
             labels.append(float(current_line[-1]))                              # Creates class label vector from line array
 
-        print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels))
+        """ print("\nSAMPLE DATASET IS: \n{}\n\nCLASS LABEL VECTOR FOR SAMPLE DATA IS: \n{}\n".format(dataset, labels)) """
         return dataset, labels
 
     # ======= METHOD TO CALCULATE STANDARD LINEAR REGRESSION PREDICTION FACTORS ======
@@ -78,7 +78,7 @@ class linear_Regression(object):
         # Calculates prediction factors as multiplier constants from transformational matrices
         prediction_factors = xTx.I * (x_mat.T * y_mat)
         print("\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(prediction_factors))
-        return prediction_factors
+        return prediction_factors, self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -102,6 +102,8 @@ def main():
 
     # Initialize class instance of linear regression model
     lin_regr = linear_Regression(TIME_I)
+    x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
+    prediction_factors = lin_regr.standard_linear_regression_calculation(x_arr, y_arr)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
