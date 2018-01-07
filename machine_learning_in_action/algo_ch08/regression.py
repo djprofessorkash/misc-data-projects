@@ -81,6 +81,7 @@ class linear_Regression(object):
         print("\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(prediction_factors))
         return prediction_factors
 
+    # ========== METHOD TO CALCULATE REGRESSION FACTORS USING LOCAL WEIGHTS ==========
     def locally_weighted_linear_regression_calculator(self, test_point, x_arr, y_arr, k=1.0):
         x_mat = np.mat(x_arr)
         y_mat = np.mat(y_arr).T
@@ -100,6 +101,16 @@ class linear_Regression(object):
         prediction_factors = xTx.I * (x_mat.T * (local_weights * y_mat))
         print("\nTEST POINT IS: {}\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(test_point, prediction_factors))
         return test_point * prediction_factors
+
+    def locally_weighted_linear_regression_tester(self, test_arr, x_arr, y_arr, k=1.0):
+        NUM_ROWS = np.shape(test_arr)[0]
+        y_hat = np.zeros(NUM_ROWS)
+
+        for iterator in range(NUM_ROWS):
+            y_hat[iterator] = self.locally_weighted_linear_regression_calculator(test_arr[iterator], x_arr, y_arr, k)
+
+        print("\nPREDICTED Y-FUNCTION FOR SAMPLE DATA REGRESSION IS: \n{}\n".format(y_hat))
+        return y_hat
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
