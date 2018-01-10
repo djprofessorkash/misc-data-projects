@@ -154,6 +154,10 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             best_stump, weighted_sum_error, best_class_estimate = self.construct_decision_stump(input_dataset, class_label_vector, data_weight_vector)
             """ print("\nBEST STUMP IS: \n{}\n\nWEIGHTED SUM OF ERRORS IS: \n{}\n\nBEST CLASS ESTIMATE IS: \n{}\n".format(best_stump, weighted_sum_error, best_class_estimate)) """
 
+            # =========================================================================================================================================
+            # ======================================================== ERROR IS OCCURRING HERE ========================================================
+            # =========================================================================================================================================
+
             # Defines epsilon as smallest float value
             epsilon = np.finfo(float).eps
 
@@ -172,6 +176,10 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             # Creates aggregate class label estimate from previous best estimate label
             aggregate_class_estimate += alpha * best_class_estimate
             """ print("\nAGGREGATING CLASS ESTIMATE IS: \n{}\n".format(aggregate_class_estimate.T)) """
+
+            # =========================================================================================================================================
+            # ======================================================== ERROR IS OCCURRING HERE ========================================================
+            # =========================================================================================================================================
 
             # Creates aggregate relative errors for class labeling and condenses into error rate across method
             aggregate_errors = np.multiply(np.sign(aggregate_class_estimate) != np.mat(class_label_vector).T, np.ones((DATASET_SIZE, 1)))
