@@ -158,7 +158,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
             epsilon = np.finfo(float).eps
 
             # Creates alpha value and sets in best stump structure
-            alpha = float(0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon)))
+            alpha = 0.5 * np.log((1.0 - weighted_sum_error + epsilon) / (weighted_sum_error + epsilon))
             print("\nRELATIVE WEIGHTED SUM OF ERRORS: \n{}\n\nALPHA: \n{}\n\nITERATIVE CLASS ESTIMATE IS: \n{}\n".format(weighted_sum_error, alpha, best_class_estimate.T))
 
             best_stump["alpha"] = alpha
