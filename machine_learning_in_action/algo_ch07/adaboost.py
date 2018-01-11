@@ -83,6 +83,7 @@ class AdaBoost_Adaptive_Booster_Meta_Algorithm(object):
     def classify_decision_stump(self, input_dataset, dimension, threshold_value, threshold_inequality):
         classification_array = np.ones((np.shape(input_dataset)[0], 1))
 
+        # Checks type of threshold inequality and sets corresponding labels
         if threshold_inequality == "lt":
             classification_array[input_dataset[:, dimension] <= threshold_value] = -1.0
         else:
