@@ -89,15 +89,20 @@ class linear_Regression(object):
         NUM_ROWS = np.shape(x_mat)[0]
         local_weights = np.mat(np.eye((NUM_ROWS)))
 
+        # Iterates through size of input matrix
         for iterator in range(NUM_ROWS):
+            # Creates transformational arrays based on difference between input data and test values, then applies differentials to local weights
             differential_mat = test_point - x_mat[iterator, :]
             local_weights[iterator, iterator] = np.exp(differential_mat * differential_mat.T / (-2.0 * k ** 2))
 
+        # Creates linearly transformational array 
         xTx = x_mat.T * (local_weights * x_mat)
 
+        # Rejects regression calculation if linear matrix is singular
         if np.linalg.det(xTx) == 0.0:
             return print("\nTHIS MATRIX IS SINGULAR: INVERSE CANNOT BE CALCULATED.\n")
 
+        # Determines weighed prediction factors from transformational data
         prediction_factors = xTx.I * (x_mat.T * (local_weights * y_mat))
         print("\nTEST POINT IS: {}\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(test_point, prediction_factors))
         return test_point * prediction_factors
