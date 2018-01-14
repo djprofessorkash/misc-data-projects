@@ -104,9 +104,10 @@ class linear_Regression(object):
 
         # Determines weighed prediction factors from transformational data
         prediction_factors = xTx.I * (x_mat.T * (local_weights * y_mat))
-        print("\nTEST POINT IS: {}\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(test_point, prediction_factors))
+        # print("\nTEST POINT IS: {}\nPREDICTION FACTORS FOR THE SAMPLE DATA ARE: \n{}\n".format(test_point, prediction_factors))
         return test_point * prediction_factors
-
+    
+    # ========== METHOD TO TEST LOCAL WEIGHING REGRESSION WITH SAMPLE DATA ===========
     def locally_weighted_linear_regression_tester(self, test_arr, x_arr, y_arr, k=1.0):
         NUM_ROWS = np.shape(test_arr)[0]
         y_hat = np.zeros(NUM_ROWS)
@@ -116,6 +117,20 @@ class linear_Regression(object):
 
         print("\nPREDICTED Y-FUNCTION FOR SAMPLE DATA REGRESSION IS: \n{}\n".format(y_hat))
         return y_hat
+
+    # ========= METHOD TO VISUALLY REPRESENT LOCAL WEIGHTED REGRESSION DATA ==========
+    def visual_plot_locally_weighted_linear_regression(self, x_arr, y_arr, y_hat):
+        # Initializes sorting information and formatted data matrices for easier MatPlotLib integration
+        x_mat = np.mat(x_arr)
+        sort_index = x_mat[:, 1].argsort(0)
+        x_sort = x_mat[sort_index][:, 0, :]
+
+        # Defines MatPlotLib plotter with local data
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(x_sort[:, 1], y_hat[sort_index])
+        ax.scatter(x_mat[:, 1].flatten().A[0], np.mat(y_arr).T.flatten().A[0], s = 2, c = "red")
+        return self.track_runtime(), plt.show()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
@@ -175,10 +190,11 @@ def main():
     print("\nCORRELATION FACTOR VECTORS ARE: \n{}\n".format(np.corrcoef(y_hat.T, y_mat)))
     """
 
+    
     # Testing the LWLR model for entire sample dataset
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
-    y_hat = lin_regr.locally_weighted_linear_regression_tester(x_arr, x_arr, y_arr, 0.003)
-    print("\n{}\n".format(y_hat))
+    y_hat = lin_regr.locally_weighted_linear_regression_tester(x_arr, x_arr, y_arr)      # Alter k-value to strengthen/weaken fitness accuracy
+    lin_regr.visual_plot_locally_weighted_linear_regression(x_arr, y_arr, y_hat)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
