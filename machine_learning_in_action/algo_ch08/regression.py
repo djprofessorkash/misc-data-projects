@@ -132,6 +132,19 @@ class linear_Regression(object):
         ax.scatter(x_mat[:, 1].flatten().A[0], np.mat(y_arr).T.flatten().A[0], s = 2, c = "red")
         return self.track_runtime(), plt.show()
 
+    # ========== METHOD TO APPROXIMATE DISTANCE-WISE LOCAL REGRESSION ERROR ==========
+    def estimate_regression_distance_error(self, y_arr, y_hat_arr):
+        print("\nY_ARR: \n{}\n\nY_HAT_ARR: \n{}\n".format(y_arr, y_hat_arr))
+        print("\nSHAPE OF Y_ARR: {}\nSHAPE OF Y_HAT_ARR: {}\n".format(np.shape(y_arr), np.shape(y_hat_arr)))
+        regr_dist_error = np.sum((y_arr - y_hat_arr) ** 2)
+
+        return print("\nREGRESSION DISTANCE ERROR IS: {}\n".format(regr_dist_error))
+
+    # ====== METHOD TO TEST REGRESSION ERROR CALCULATION ACROSS SHELLFISH DATA =======
+    def test_regression_distances_from_sample_data(self, input_dataset, class_label_vector, k=1.0):
+        y_hat_k = self.locally_weighted_linear_regression_tester(input_dataset[0:99], input_dataset[0:99], class_label_vector[0:99], k)
+        return self.estimate_regression_distance_error(input_dataset[0:99], y_hat_k.T), self.track_runtime()
+
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
         # Track ending time of program and determine overall program runtime
@@ -189,12 +202,17 @@ def main():
     y_hat = x_mat * prediction_factors
     print("\nCORRELATION FACTOR VECTORS ARE: \n{}\n".format(np.corrcoef(y_hat.T, y_mat)))
     """
-
     
+    """
     # Testing the LWLR model for entire sample dataset
     x_arr, y_arr = lin_regr.load_sample_data("./sample0.txt")
     y_hat = lin_regr.locally_weighted_linear_regression_tester(x_arr, x_arr, y_arr)      # Alter k-value to strengthen/weaken fitness accuracy
     lin_regr.visual_plot_locally_weighted_linear_regression(x_arr, y_arr, y_hat)
+    """
+
+    # Testing regression calculations across shellfish data
+    shellfish_dataset, shellfish_labels = lin_regr.load_sample_data("./abalone_shellfish_data.txt")
+    lin_regr.test_regression_distances_from_sample_data(shellfish_dataset, shellfish_labels)
 
     return print("\nAdaBoost class meta-algorithm is done.\n")
 
