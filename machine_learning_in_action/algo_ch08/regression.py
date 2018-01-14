@@ -1,7 +1,7 @@
 """
 NAME:               regression.py (data_projects/machine_learning_in_action/algo_ch08/)
 
-DESCRIPTION:        Python class application of ???.
+DESCRIPTION:        Python class application of a standard linear regression algorithm.
 
                     ???
 
