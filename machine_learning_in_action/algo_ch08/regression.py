@@ -132,6 +132,11 @@ class linear_Regression(object):
         ax.scatter(x_mat[:, 1].flatten().A[0], np.mat(y_arr).T.flatten().A[0], s = 2, c = "red")
         return self.track_runtime(), plt.show()
 
+
+    # =========================================================================================================================================
+    # ======================================================== ERROR IS OCCURRING HERE ========================================================
+    # =========================================================================================================================================
+
     # ========== METHOD TO APPROXIMATE DISTANCE-WISE LOCAL REGRESSION ERROR ==========
     def estimate_regression_distance_error(self, y_arr, y_hat_arr):
         print("\nY_ARR: \n{}\n\nY_HAT_ARR: \n{}\n".format(y_arr, y_hat_arr))
@@ -139,6 +144,10 @@ class linear_Regression(object):
         regr_dist_error = np.sum((y_arr - y_hat_arr) ** 2)
 
         return print("\nREGRESSION DISTANCE ERROR IS: {}\n".format(regr_dist_error))
+
+    # =========================================================================================================================================
+    # ======================================================== ERROR IS OCCURRING HERE ========================================================
+    # =========================================================================================================================================
 
     # ====== METHOD TO TEST REGRESSION ERROR CALCULATION ACROSS SHELLFISH DATA =======
     def test_regression_distances_from_sample_data(self, input_dataset, class_label_vector, k=1.0):
