@@ -33,7 +33,7 @@ import numpy as np                          # Library for simple linear mathemat
 # ================================ CLASS DEFINITION ==================================
 # ====================================================================================
 
-class linear_Regression(object):
+class linear_Regression_Algorithm(object):
 
     # ======================== CLASS INITIALIZERS/DECLARATIONS =======================
     def __init__(self, TIME_I):
@@ -175,7 +175,7 @@ def main():
     TIME_I = t()
 
     # Initialize class instance of linear regression model
-    lin_regr = linear_Regression(TIME_I)
+    lin_regr = linear_Regression_Algorithm(TIME_I)
 
     """
     # Testing the calculator for prediction factors from sample data
