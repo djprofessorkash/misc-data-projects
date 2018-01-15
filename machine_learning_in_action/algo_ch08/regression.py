@@ -141,7 +141,10 @@ class linear_Regression_Algorithm(object):
     def estimate_regression_distance_error(self, y_arr, y_hat_arr):
         print("\nY_ARR: \n{}\n\nY_HAT_ARR: \n{}\n".format(y_arr, y_hat_arr))
         print("\nSHAPE OF Y_ARR: {}\nSHAPE OF Y_HAT_ARR: {}\n".format(np.shape(y_arr), np.shape(y_hat_arr)))
-        regr_dist_error = np.sum((y_arr - y_hat_arr) ** 2)
+        print("\n{}\n{}\n".format())
+        y_sum = y_arr - y_hat_arr
+        return print("success")
+        # regr_dist_error = np.sum((y_arr - y_hat_arr) ** 2)
 
         return print("\nREGRESSION DISTANCE ERROR IS: {}\n".format(regr_dist_error))
 
@@ -152,7 +155,7 @@ class linear_Regression_Algorithm(object):
     # ====== METHOD TO TEST REGRESSION ERROR CALCULATION ACROSS SHELLFISH DATA =======
     def test_regression_distances_from_sample_data(self, input_dataset, class_label_vector, k=1.0):
         y_hat_k = self.locally_weighted_linear_regression_tester(input_dataset[0:99], input_dataset[0:99], class_label_vector[0:99], k)
-        return self.estimate_regression_distance_error(input_dataset[0:99], y_hat_k.T), self.track_runtime()
+        return self.estimate_regression_distance_error(np.array(input_dataset[0:99]), np.array(y_hat_k.T)), self.track_runtime()
 
     # ================ METHOD TO BENCHMARK RUNTIME OF SPECIFIC METHOD ================
     def track_runtime(self):
