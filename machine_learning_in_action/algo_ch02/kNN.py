@@ -264,8 +264,8 @@ def main():
 
     # kNN.create_scatterplot(t0)
     # kNN.dating_class_set(t0)
-    # kNN.classify_person(t0)
-    kNN.handwriting_class_test(t0)
+    kNN.classify_person(t0)
+    # kNN.handwriting_class_test(t0)
     return
 
 if __name__ == "__main__":
