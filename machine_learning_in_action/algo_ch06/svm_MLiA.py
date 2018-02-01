@@ -705,7 +705,7 @@ def main():
 
     # Test handwriting images dataset using kernal transformation with SVM-SMO classifier
     # TODO: Something is wrong with the runtime. Trace and fix? 
-    svm.test_handwriting_digits_with_advanced_svm(("rbf", 1))
+    svm.test_handwriting_digits_with_advanced_svm(("lin", 1))
 
     return print("\nSupport vector machine class algorithm is done.\n")
 
