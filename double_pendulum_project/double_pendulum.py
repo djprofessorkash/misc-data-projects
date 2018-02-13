@@ -168,7 +168,7 @@ class Double_Pendulum(object):
         # TODO: Allow user to specify what filename the frames are stored to
         with open("fig_dir.txt", "w") as file:
             for item in self.fig_dir:
-                file.write("%s\n" % item)
+                file.write("{}\n".format(item))
 
         # Convert text file of figure addresses to animated GIF (ImageMagick)
         # TODO: Allow user to specify which file frames are read from
